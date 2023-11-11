@@ -14,19 +14,19 @@ void main2()
         CheckFPS();
         bitmap->Fill(BLACK);
 
-        // int height = 300
+        Vector3 p0;
+        Vector3 p1;
+        Vector3 p2;
 
-        Vector3 p0 = { 200, 50, 0 };
-        Vector3 p1 = { 150, 100, 0 };
-        Vector3 p2 = { 250, 150, 0 };
+        p0 = { 200, 50, 0 };
+        p1 = { 150, 100, 0 };
+        p2 = { 250, 150, 0 };
 
         bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
 
-        p1 = { 250, 100, 0 };
-        p2 = { 150, 150, 0 };
-        p0.x -= 100;
-        p1.x -= 100;
-        p2.x -= 100;
+        p0 = { 100, 50, 0 };
+        p1 = { 150, 100, 0 };
+        p2 = { 50, 150, 0 };
 
         bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, RED);
 
