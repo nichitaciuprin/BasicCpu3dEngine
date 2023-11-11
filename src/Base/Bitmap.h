@@ -184,7 +184,7 @@ public:
         int dir2 = MathSign(xMiddle - xTop);
         int dx1 = abs(xBottom - xTop);
         int dx2 = abs(xMiddle - xTop);
-        int dx3 = abs(xBottom - xMiddle);
+        int dx3 = abs(xMiddle - xBottom);
         int dy1 = yBottom - yTop;
         int dy2 = yMiddle - yTop;
         int dy3 = yBottom - yMiddle;
@@ -195,53 +195,31 @@ public:
         int x1 = xTop;
         int x2 = xTop;
 
-        // #define DRAW(X1, X2)                               \
-        // for (int i = 0; i < dy2; i++)                      \
-        // {                                                  \
-        //     DrawHorizontalLine(y, X1, X2, pixel);          \
-        //     y++;                                           \
-        //     err1 -= dx1;                                   \
-        //     err2 -= dx2;                                   \
-        //     while (err1 < 0) { err1 += dy1; x2 += dir1; }  \
-        //     while (err2 < 0) { err2 += dy2; x1 += dir2; }  \
-        // }                                                  \
-        // dir2 = -dir2;                                      \
-        // for (int i = 0; i < dy3; i++)                      \
-        // {                                                  \
-        //     DrawHorizontalLine(y, X1, X2, pixel);          \
-        //     y++;                                           \
-        //     err1 -= dx1;                                   \
-        //     err3 -= dx3;                                   \
-        //     while (err1 < 0) { err1 += dy1; x2 += dir1; }  \
-        //     while (err3 < 0) { err3 += dy3; x1 += dir2; }  \
-        // }                                                  \
+        #define DRAW(X1, X2)                               \
+        for (int i = 0; i < dy2; i++)                      \
+        {                                                  \
+            DrawHorizontalLine(y, X1, X2, pixel);          \
+            y++;                                           \
+            err1 -= dx1;                                   \
+            err2 -= dx2;                                   \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
+        }                                                  \
+        dir2 = -dir2;                                      \
+        for (int i = 0; i < dy3; i++)                      \
+        {                                                  \
+            DrawHorizontalLine(y, X1, X2, pixel);          \
+            y++;                                           \
+            err1 -= dx1;                                   \
+            err3 -= dx3;                                   \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err3 < 0) { err3 += dy3; x2 += dir2; }  \
+        }                                                  \
 
-        // if (xTop < xBottom) { DRAW(x1, x2) }
-        // else                { DRAW(x2, x1) }
+        if (xBottom < xTop) { DRAW(x1, x2) }
+        else                { DRAW(x2, x1) }
 
-        // #undef DRAW
-
-        for (int i = 0; i < dy2; i++)
-        {
-            DrawHorizontalLine(y, x2, x1, pixel);
-            y++;
-            err1 -= dx1;
-            err2 -= dx2;
-            while (err1 < 0) { err1 += dy1; x2 += dir1; }
-            while (err2 < 0) { err2 += dy2; x1 += dir2; }
-        }
-
-        dir2 = -dir2;
-
-        for (int i = 0; i < dy3; i++)
-        {
-            DrawHorizontalLine(y, x2, x1, pixel);
-            y++;
-            err1 -= dx1;
-            err3 -= dx3;
-            while (err1 < 0) { err1 += dy1; x2 += dir1; }
-            while (err3 < 0) { err3 += dy3; x1 += dir2; }
-        }
+        #undef DRAW
     }
 
     int FindPointXMiddle2(int x0, int y0, int x1, int y1, int x2, int y2)
