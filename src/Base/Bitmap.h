@@ -166,7 +166,7 @@ public:
         if (p1.y > p0.y) swap(p1, p0);
         if (p2.y > p1.y) swap(p2, p1);
 
-        DrawTriangle2
+        ScreenSpaceDrawTriangle2
         (
             (int)p2.x,
             (int)p2.y,
@@ -178,13 +178,17 @@ public:
         );
     }
 
-    void DrawTriangle2(int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom, Pixel pixel)
+    void ScreenSpaceDrawTriangle2(int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom, Pixel pixel)
     {
-        int dir1 = MathSign(xBottom - xTop);
-        int dir2 = MathSign(xMiddle - xTop);
-        int dx1 = abs(xBottom - xTop);
-        int dx2 = abs(xMiddle - xTop);
-        int dx3 = abs(xMiddle - xBottom);
+        int diff1 = xBottom - xTop;
+        int diff2 = xMiddle - xTop;
+        int diff3 = xBottom - xMiddle;
+        int dir1 = MathSign(diff1);
+        int dir2 = MathSign(diff2);
+        int dir3 = MathSign(diff3);
+        int dx1 = abs(diff1);
+        int dx2 = abs(diff2);
+        int dx3 = abs(diff3);
         int dy1 = yBottom - yTop;
         int dy2 = yMiddle - yTop;
         int dy3 = yBottom - yMiddle;
@@ -205,139 +209,20 @@ public:
             while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
             while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
         }                                                  \
-        dir2 = -dir2;                                      \
-        for (int i = 0; i < dy3; i++)                      \
+        for (int i = 0; i < dy3 + 1; i++)                  \
         {                                                  \
             DrawHorizontalLine(y, X1, X2, pixel);          \
             y++;                                           \
             err1 -= dx1;                                   \
             err3 -= dx3;                                   \
             while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err3 < 0) { err3 += dy3; x2 += dir2; }  \
+            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
 
         if (xBottom < xTop) { DRAW(x1, x2) }
         else                { DRAW(x2, x1) }
 
         #undef DRAW
-    }
-
-    int FindPointXMiddle2(int x0, int y0, int x1, int y1, int x2, int y2)
-    {
-        UNREFERENCED_PARAMETER(x1);
-        return x0 + ((y1 - y0) / (y2 - y0)) * (x2 - x0);
-    }
-
-    // void DrawTriangleTop(int x0, int y0, int x1, int y1, int x2, int y2, Pixel pixel)
-    // {
-    //     int dx = abs(x1 - x0);
-    //     int dy = abs(y1 - y0);
-
-    //     int sx = x0 < x1 ? 1 : -1;
-    //     int sy = y0 < y1 ? 1 : -1;
-
-    //     if (dx > dy)
-    //     {
-    //         int err = dx / 2;
-    //         for (int i = 0; i < dx; i++)
-    //         {
-    //             SetPixel(x0, y0, pixel);
-    //             if (err < dy) { err += dx; y0 += sy; }
-    //                           { err -= dy; x0 += sx; }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         int err = dy / 2;
-    //         for (int i = 0; i < dy; i++)
-    //         {
-    //             SetPixel(x0, y0, pixel);
-    //             if (err < dx) { err += dy; x0 += sx; }
-    //                           { err -= dx; y0 += sy; }
-    //         }
-    //     }
-    // }
-
-    void DrawTriangleTop(int x0, int y0, int x1, int y1, int x2, int y2, Pixel pixel)
-    {
-        //      0
-        //      /\
-        //     /  \
-        //    /    \
-        //  1 ------ 2
-
-        UNREFERENCED_PARAMETER(y2);
-
-        int dy = y1 - y0;
-
-        int x1Diff = x0 - x1;
-        int x2Diff = x2 - x0;
-
-        int x1Length = abs(x1Diff);
-        int x2Length = abs(x2Diff);
-
-        int x1Dir = x1Diff > 0 ? -1 :  1;
-        int x2Dir = x2Diff > 0 ?  1 : -1;
-
-        int x1Err = dy / 2;
-        int x2Err = dy / 2;
-
-        x1 = x0;
-        x2 = x0;
-
-        for (int i = 0; i < dy; i++)
-        {
-            DrawHorizontalLine(y0, x1, x2, pixel);
-
-            y0++;
-
-            x1Err -= x1Length;
-            x2Err -= x2Length;
-
-            while (x1Err < 0) { x1Err += dy; x1 += x1Dir; }
-            while (x2Err < 0) { x2Err += dy; x2 += x2Dir; }
-        }
-    }
-
-    void DrawTriangleBottom(int x0, int y0, int x1, int y1, int x2, int y2, Pixel pixel)
-    {
-        //  1 ------ 2
-        //    \    /
-        //     \  /
-        //      \/
-        //      0
-
-        UNREFERENCED_PARAMETER(y2);
-
-        int dy = y0 - y1;
-
-        int x1Diff = x0 - x1;
-        int x2Diff = x2 - x0;
-
-        int x1Length = abs(x1Diff);
-        int x2Length = abs(x2Diff);
-
-        int x1Dir = x1Diff > 0 ? -1 :  1;
-        int x2Dir = x2Diff > 0 ?  1 : -1;
-
-        int x1Err = dy / 2;
-        int x2Err = dy / 2;
-
-        x1 = x0;
-        x2 = x0;
-
-        for (int i = 0; i < dy; i++)
-        {
-            DrawHorizontalLine(y0, x1, x2, pixel);
-
-            y0--;
-
-            x1Err -= x1Length;
-            x2Err -= x2Length;
-
-            while (x1Err <= 0) { x1Err += dy; x1 += x1Dir; }
-            while (x2Err <= 0) { x2Err += dy; x2 += x2Dir; }
-        }
     }
 
     inline void DrawHorizontalLine(int y, int xLeft, int xRight, Pixel pixel)
