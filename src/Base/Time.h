@@ -10,6 +10,8 @@ TICKS TimeNew = 0;
 TICKS PerfTimeStart = 0;
 TICKS PerfTimeEnd = 0;
 
+int skipMessageCount = 0;
+
 TICKS TicksPerSecond()
 {
     if (TicksPerSecondCache == 0)
@@ -66,7 +68,14 @@ void CheckFPS()
     auto milliseconds = ToMilliseconds(diff);
     if (milliseconds == 0) return;
 
-    auto fps = 1000/milliseconds;
+    if (skipMessageCount > 0)
+    {
+        skipMessageCount--;
+        return;
+    }
+    skipMessageCount = 100;
+
+    auto fps = 1000 / milliseconds;
     if (fps < 240)
         printf("=== FPS:%zu ===\n",fps);
 }
