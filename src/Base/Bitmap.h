@@ -186,23 +186,23 @@ public:
         int x1 = xTop;
         int x2 = xTop;
 
-        // int* lx; int* rx;
-        // if (xTop < xBottom) { lx = &x1; rx = &x2; }
-        // else                { lx = &x2; rx = &x1; }
+        int* lx; int* rx;
+        if (xTop < xBottom) { lx = &x1; rx = &x2; }
+        else                { lx = &x2; rx = &x1; }
 
-        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
-        int err = MAX / 2;                                \
-        for (int i = 0; i < MAX; i++)                     \
-        {                                                 \
-            SetPixel(x0, y0, pixel);                      \
-            if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
-                           { err -= MIN; AXIS2 += VAL2; } \
-        }                                                 \
+        // #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
+        // int err = MAX / 2;                                \
+        // for (int i = 0; i < MAX; i++)                     \
+        // {                                                 \
+        //     SetPixel(x0, y0, pixel);                      \
+        //     if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
+        //                    { err -= MIN; AXIS2 += VAL2; } \
+        // }                                                 \
 
-        if (dx > dy) { DRAW(dx, dy, y0, x0, sy, sx); }
-        else         { DRAW(dy, dx, x0, y0, sx, sy); }
+        // if (dx > dy) { DRAW(dx, dy, y0, x0, sy, sx); }
+        // else         { DRAW(dy, dx, x0, y0, sx, sy); }
 
-        #undef DRAW
+        // #undef DRAW
 
         for (int i = 0; i < dy2; i++)
         {

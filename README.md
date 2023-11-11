@@ -1,7 +1,7 @@
-![](.gif)
+<!-- ![](.gif) -->
 
 ```
-cd src/Main
+cd src/Name
 build
 run
 ```
