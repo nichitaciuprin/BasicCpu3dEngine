@@ -195,44 +195,39 @@ public:
         int x1 = xTop;
         int x2 = xTop;
 
-        int* lx; int* rx;
-        if (xTop < xBottom) { lx = &x1; rx = &x2; }
-        else                { lx = &x2; rx = &x1; }
+        // #define DRAW(VAL, X1, X2)                     \
+        // DrawHorizontalLine(L1, L2, X1, X2, pixel);    \
+        // y++;                                          \
+        // err1 -= dx1;                                  \
+        // err3 -= dx3;                                  \
+        // while (err1 < 0) { err1 += L1; X2 += dir1; }  \
+        // while (err3 < 0) { err3 += L2; X1 += dir2; }  \
 
-        // #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
-        // int err = MAX / 2;                                \
-        // for (int i = 0; i < MAX; i++)                     \
-        // {                                                 \
-        //     SetPixel(x0, y0, pixel);                      \
-        //     if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
-        //                    { err -= MIN; AXIS2 += VAL2; } \
-        // }                                                 \
-
-        // if (dx > dy) { DRAW(dx, dy, y0, x0, sy, sx); }
-        // else         { DRAW(dy, dx, x0, y0, sx, sy); }
+        // if (xTop < xBottom) { DRAW(dy1, ) }
+        // else                { DRAW() }
 
         // #undef DRAW
 
         for (int i = 0; i < dy2; i++)
         {
-            DrawHorizontalLine(y, *lx, *rx, pixel);
+            DrawHorizontalLine(y, x1, x2, pixel);
             y++;
             err1 -= dx1;
             err2 -= dx2;
-            while (err1 < 0) { err1 += dy1; *rx += dir1; }
-            while (err2 < 0) { err2 += dy2; *lx += dir2; }
+            while (err1 < 0) { err1 += dy1; x2 += dir1; }
+            while (err2 < 0) { err2 += dy2; x1 += dir2; }
         }
 
         dir2 = -dir2;
 
         for (int i = 0; i < dy3; i++)
         {
-            DrawHorizontalLine(y, *lx, *rx, pixel);
+            DrawHorizontalLine(y, x1, x2, pixel);
             y++;
             err1 -= dx1;
             err3 -= dx3;
-            while (err1 < 0) { err1 += dy1; *rx += dir1; }
-            while (err3 < 0) { err3 += dy3; *lx += dir2; }
+            while (err1 < 0) { err1 += dy1; x2 += dir1; }
+            while (err3 < 0) { err3 += dy3; x1 += dir2; }
         }
     }
 
