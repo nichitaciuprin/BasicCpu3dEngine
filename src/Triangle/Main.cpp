@@ -18,10 +18,10 @@ void main2()
 
         {
             Vector3 p0 = { 200, 50, 0 };
-            // Vector3 p1 = { 150, 100, 0 };
-            // Vector3 p2 = { 250, 150, 0 };
-            Vector3 p1 = { 250, 100, 0 };
-            Vector3 p2 = { 150, 150, 0 };
+            Vector3 p1 = { 150, 100, 0 };
+            Vector3 p2 = { 250, 150, 0 };
+            // Vector3 p1 = { 250, 100, 0 };
+            // Vector3 p2 = { 150, 150, 0 };
             bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
             // DrawTriangle2
         }
