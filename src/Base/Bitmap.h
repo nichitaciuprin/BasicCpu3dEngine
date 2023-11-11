@@ -195,22 +195,35 @@ public:
         int x1 = xTop;
         int x2 = xTop;
 
-        // #define DRAW(VAL, X1, X2)                     \
-        // DrawHorizontalLine(L1, L2, X1, X2, pixel);    \
-        // y++;                                          \
-        // err1 -= dx1;                                  \
-        // err3 -= dx3;                                  \
-        // while (err1 < 0) { err1 += L1; X2 += dir1; }  \
-        // while (err3 < 0) { err3 += L2; X1 += dir2; }  \
+        // #define DRAW(X1, X2)                               \
+        // for (int i = 0; i < dy2; i++)                      \
+        // {                                                  \
+        //     DrawHorizontalLine(y, X1, X2, pixel);          \
+        //     y++;                                           \
+        //     err1 -= dx1;                                   \
+        //     err2 -= dx2;                                   \
+        //     while (err1 < 0) { err1 += dy1; x2 += dir1; }  \
+        //     while (err2 < 0) { err2 += dy2; x1 += dir2; }  \
+        // }                                                  \
+        // dir2 = -dir2;                                      \
+        // for (int i = 0; i < dy3; i++)                      \
+        // {                                                  \
+        //     DrawHorizontalLine(y, X1, X2, pixel);          \
+        //     y++;                                           \
+        //     err1 -= dx1;                                   \
+        //     err3 -= dx3;                                   \
+        //     while (err1 < 0) { err1 += dy1; x2 += dir1; }  \
+        //     while (err3 < 0) { err3 += dy3; x1 += dir2; }  \
+        // }                                                  \
 
-        // if (xTop < xBottom) { DRAW(dy1, ) }
-        // else                { DRAW() }
+        // if (xTop < xBottom) { DRAW(x1, x2) }
+        // else                { DRAW(x2, x1) }
 
         // #undef DRAW
 
         for (int i = 0; i < dy2; i++)
         {
-            DrawHorizontalLine(y, x1, x2, pixel);
+            DrawHorizontalLine(y, x2, x1, pixel);
             y++;
             err1 -= dx1;
             err2 -= dx2;
@@ -222,7 +235,7 @@ public:
 
         for (int i = 0; i < dy3; i++)
         {
-            DrawHorizontalLine(y, x1, x2, pixel);
+            DrawHorizontalLine(y, x2, x1, pixel);
             y++;
             err1 -= dx1;
             err3 -= dx3;
