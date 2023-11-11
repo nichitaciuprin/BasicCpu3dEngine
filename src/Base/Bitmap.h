@@ -69,39 +69,11 @@ public:
         bool include1; ProjectLine(v3, v4, include1);
         bool include2; ProjectLine(v5, v0, include2);
 
-        bool includeAll = include0 && include1 && include2;
+        if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
 
-        if (!includeAll) return;
-
-        if (includeAll)
-        {
-            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
-            DrawLineProjected(v1, v2, pixel);
-            DrawLineProjected(v3, v4, pixel);
-            DrawLineProjected(v5, v0, pixel);
-            return;
-        }
-        // if (!include0)
-        // {
-        //     if (!Vector3TriangleIsClockwise(v3, v4, v0)) return;
-        //     DrawLineProjected(v3, v4, pixel);
-        //     DrawLineProjected(v5, v0, pixel);
-        //     return;
-        // }
-        // if (!include1)
-        // {
-        //     if (!Vector3TriangleIsClockwise(v1, v2, v0)) return;
-        //     DrawLineProjected(v1, v2, pixel);
-        //     DrawLineProjected(v5, v0, pixel);
-        //     return;
-        // }
-        // if (!include2)
-        // {
-        //     if (!Vector3TriangleIsClockwise(v1, v2, v4)) return;
-        //     DrawLineProjected(v1, v2, pixel);
-        //     DrawLineProjected(v3, v4, pixel);
-        //     return;
-        // }
+        if (include0) { DrawLineProjected(v1, v2, pixel); }
+        if (include1) { DrawLineProjected(v3, v4, pixel); }
+        if (include2) { DrawLineProjected(v5, v0, pixel); }
     }
     void DrawLine(Vector3 v0, Vector3 v1, Pixel pixel)
     {
@@ -136,7 +108,6 @@ public:
         ToScreenSpace(v1, &outX1, &outY1);
         DrawLine(outX0, outY0, outX1, outY1, pixel);
     }
-
     void DrawLine(int x0, int y0, int x1, int y1, Pixel pixel)
     {
         int dx = abs(x1 - x0);
@@ -159,7 +130,6 @@ public:
 
         #undef DRAW
     }
-
     void ScreenSpaceDrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         if (p2.y > p1.y) swap(p2, p1);
@@ -177,7 +147,6 @@ public:
             pixel
         );
     }
-
     void ScreenSpaceDrawTriangle2(int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom, Pixel pixel)
     {
         int diff1 = xBottom - xTop;
@@ -224,7 +193,6 @@ public:
 
         #undef DRAW
     }
-
     inline void DrawHorizontalLine(int y, int xLeft, int xRight, Pixel pixel)
     {
         int count = xRight - xLeft + 1;
