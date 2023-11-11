@@ -166,7 +166,16 @@ public:
         if (p1.y > p0.y) swap(p1, p0);
         if (p2.y > p1.y) swap(p2, p1);
 
-        DrawTriangle2(p2.x, p2.y, p1.x, p1.y, p0.x, p0.y, pixel);
+        DrawTriangle2
+        (
+            (int)p2.x,
+            (int)p2.y,
+            (int)p1.x,
+            (int)p1.y,
+            (int)p0.x,
+            (int)p0.y,
+            pixel
+        );
     }
 
     void DrawTriangle2(int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom, Pixel pixel)
@@ -271,6 +280,8 @@ public:
         //    /    \
         //  1 ------ 2
 
+        UNREFERENCED_PARAMETER(y2);
+
         int dy = y1 - y0;
 
         int x1Diff = x0 - x1;
@@ -309,6 +320,8 @@ public:
         //     \  /
         //      \/
         //      0
+
+        UNREFERENCED_PARAMETER(y2);
 
         int dy = y0 - y1;
 
