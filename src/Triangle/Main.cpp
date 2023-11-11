@@ -42,6 +42,18 @@ void main2()
 
         bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
 
+        // p2.x = 160.207
+        // p2.y = 159.7
+        // p1.x = 160.207
+        // p1.y = 239.3
+        // p0.x = 240.005
+        // p0.y = 239.502
+        // p2 = { 150, 150, 0 };
+        // p1 = { 150, 250, 0 };
+        // p0 = { 250, 250, 0 };
+
+        // bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
+
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);
         BitmapWindow1::Update();

@@ -10,11 +10,6 @@ const Pixel RED   = 0x00FF0000;
 const Pixel GREEN = 0x0000FF00;
 const Pixel BLUE  = 0x000000FF;
 
-struct Vector3Int
-{
-    int x, y, z;
-};
-
 class Bitmap
 {
 public:
@@ -65,16 +60,43 @@ public:
         Vector3 v3 = p1; Vector3 v4 = p2;
         Vector3 v5 = p2; Vector3 v0 = p0;
 
-        bool include0; ProjectLine(v1, v2, include0);
-        bool include1; ProjectLine(v3, v4, include1);
-        bool include2; ProjectLine(v5, v0, include2);
+        int outCode1; ProjectLine2(v1, v2, outCode1);
+        int outCode2; ProjectLine2(v3, v4, outCode2);
+        int outCode3; ProjectLine2(v5, v0, outCode3);
 
-        if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+        if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
+        if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
+        {
+            // if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+            ScreenSpaceDrawTriangle(v1, v3, v5, pixel);
+            // DrawLineProjected(v1, v2, pixel);
+            // DrawLineProjected(v3, v4, pixel);
+            // DrawLineProjected(v5, v0, pixel);
+        }
 
-        if (include0) { DrawLineProjected(v1, v2, pixel); }
-        if (include1) { DrawLineProjected(v3, v4, pixel); }
-        if (include2) { DrawLineProjected(v5, v0, pixel); }
+        // all in back
+        // all in front
+        // 2 lines cliped
+        // 2 lines cliped + 1 line drop
+
+        // ClipLineByZ3()
     }
+    // void DrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    // {
+    //     Vector3 v1 = p0; Vector3 v2 = p1;
+    //     Vector3 v3 = p1; Vector3 v4 = p2;
+    //     Vector3 v5 = p2; Vector3 v0 = p0;
+
+    //     bool include0; ProjectLine(v1, v2, include0);
+    //     bool include1; ProjectLine(v3, v4, include1);
+    //     bool include2; ProjectLine(v5, v0, include2);
+
+    //     if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+
+    //     if (include0) { DrawLineProjected(v1, v2, pixel); }
+    //     if (include1) { DrawLineProjected(v3, v4, pixel); }
+    //     if (include2) { DrawLineProjected(v5, v0, pixel); }
+    // }
     void DrawLine(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         float nearZ = 0.1f;
@@ -99,14 +121,24 @@ public:
         if (v0.z != 0) v0 /= v0.z;
         if (v1.z != 0) v1 /= v1.z;
     }
+    void ProjectLine2(Vector3& v0, Vector3& v1, int& outCode)
+    {
+        float nearZ = 0.1f;
+        v0.z -= nearZ;
+        v1.z -= nearZ;
+        ClipLineByZ4(v0, v1, outCode);
+        if (outCode == 0) return;
+        v0.z += nearZ;
+        v1.z += nearZ;
+        if (v0.z != 0) v0 /= v0.z;
+        if (v1.z != 0) v1 /= v1.z;
+    }
     void DrawLineProjected(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         if (!ClipLine(v0.x, v0.y, v1.x, v1.y)) return;
-        int outX0, outY0;
-        int outX1, outY1;
-        ToScreenSpace(v0, &outX0, &outY0);
-        ToScreenSpace(v1, &outX1, &outY1);
-        DrawLine(outX0, outY0, outX1, outY1, pixel);
+        ToScreenSpace2(v0);
+        ToScreenSpace2(v1);
+        DrawLine((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, pixel);
     }
     void DrawLine(int x0, int y0, int x1, int y1, Pixel pixel)
     {
@@ -132,6 +164,10 @@ public:
     }
     void ScreenSpaceDrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
+        ToScreenSpace2(p0);
+        ToScreenSpace2(p1);
+        ToScreenSpace2(p2);
+
         if (p2.y > p1.y) swap(p2, p1);
         if (p1.y > p0.y) swap(p1, p0);
         if (p2.y > p1.y) swap(p2, p1);
@@ -178,7 +214,7 @@ public:
             while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
             while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
         }                                                  \
-        for (int i = 0; i < dy3 + 1; i++)                  \
+        for (int i = 0; i < dy3; i++)                      \
         {                                                  \
             DrawHorizontalLine(y, X1, X2, pixel);          \
             y++;                                           \
@@ -308,6 +344,16 @@ public:
         point.y /= 2;
         *outX = (int)((width - 1) * point.x);
         *outY = (int)((height - 1) * point.y);
+    }
+    void ToScreenSpace2(Vector3& point)
+    {
+        point.y = -point.y;
+        point.x += 1.0f;
+        point.y += 1.0f;
+        point.x /= 2;
+        point.y /= 2;
+        point.x = (width - 1) * point.x;
+        point.y = (height - 1) * point.y;
     }
 
     void DrawBorder(Pixel pixel)
