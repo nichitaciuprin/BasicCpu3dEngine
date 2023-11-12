@@ -18,29 +18,36 @@ void main2()
         Vector3 p1;
         Vector3 p2;
 
-        p0 = { 200, 50, 0 };
-        p1 = { 150, 100, 0 };
-        p2 = { 250, 150, 0 };
+        // p0 = { 200, 50, 0 };
+        // p1 = { 150, 100, 0 };
+        // p2 = { 250, 150, 0 };
 
-        bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
+        // bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
 
-        p0 = { 100, 50, 0 };
-        p1 = { 150, 100, 0 };
-        p2 = { 50, 150, 0 };
+        // p0 = { 100, 50, 0 };
+        // p1 = { 150, 100, 0 };
+        // p2 = { 50, 150, 0 };
+
+        // bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, RED);
+
+        // p0 = { 200, 50  + 200, 0 };
+        // p1 = { 200, 100 + 200, 0 };
+        // p2 = { 150, 150 + 200, 0 };
+
+        // bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, BLUE);
+
+        // p0 = { 200, 50  + 200, 0 };
+        // p1 = { 200, 100 + 200, 0 };
+        // p2 = { 250, 150 + 200, 0 };
+
+        // bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
+
+        p2 = { 200, 250, 0 };
+        p1 = { 250, 200, 0 };
+        p0 = { 200, 200, 0 };
 
         bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, RED);
-
-        p0 = { 200, 50  + 200, 0 };
-        p1 = { 200, 100 + 200, 0 };
-        p2 = { 150, 150 + 200, 0 };
-
-        bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, BLUE);
-
-        p0 = { 200, 50  + 200, 0 };
-        p1 = { 200, 100 + 200, 0 };
-        p2 = { 250, 150 + 200, 0 };
-
-        bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
+        // bitmap->ScreenSpaceDrawTriangle(p2, p1, p0, RED);
 
         // p2.x = 160.207
         // p2.y = 159.7

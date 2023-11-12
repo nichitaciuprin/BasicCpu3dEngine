@@ -67,11 +67,11 @@ public:
         if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
         if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
         {
-            // if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
             ScreenSpaceDrawTriangle(v1, v3, v5, pixel);
-            // DrawLineProjected(v1, v2, pixel);
-            // DrawLineProjected(v3, v4, pixel);
-            // DrawLineProjected(v5, v0, pixel);
+            DrawLineProjected(v1, v2, BLUE);
+            DrawLineProjected(v3, v4, BLUE);
+            DrawLineProjected(v5, v0, BLUE);
         }
 
         // all in back
@@ -168,9 +168,14 @@ public:
         ToScreenSpace2(p1);
         ToScreenSpace2(p2);
 
-        if (p2.y > p1.y) swap(p2, p1);
-        if (p1.y > p0.y) swap(p1, p0);
-        if (p2.y > p1.y) swap(p2, p1);
+        if (p2.y >= p1.y) swap(p2, p1);
+        if (p1.y >= p0.y) swap(p1, p0);
+        if (p2.y >= p1.y) swap(p2, p1);
+
+        // cout << "p2 == " << p2.x << "," << p2.y << endl;
+        // cout << "p1 == " << p1.x << "," << p1.y << endl;
+        // cout << "p0 == " << p0.x << "," << p0.y << endl;
+        // cout << "-----------" << endl;
 
         ScreenSpaceDrawTriangle2
         (
@@ -191,6 +196,10 @@ public:
         int dir1 = MathSign(diff1);
         int dir2 = MathSign(diff2);
         int dir3 = MathSign(diff3);
+        // cout << dir1 << endl;
+        // cout << dir2 << endl;
+        // cout << dir3 << endl;
+        // cout << "----" << endl;
         int dx1 = abs(diff1);
         int dx2 = abs(diff2);
         int dx3 = abs(diff3);
@@ -201,8 +210,19 @@ public:
         int err2 = dy2 / 2;
         int err3 = dy3 / 2;
         int y = yTop;
-        int x1 = xTop;
-        int x2 = xTop;
+
+        int x1;
+        int x2;
+        if (dy2 != 0)
+        {
+            x1 = xTop;
+            x2 = xTop;
+        }
+        else
+        {
+            x1 = xTop;
+            x2 = xMiddle;
+        }
 
         #define DRAW(X1, X2)                               \
         for (int i = 0; i < dy2; i++)                      \
@@ -224,7 +244,7 @@ public:
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
 
-        if (xBottom < xTop) { DRAW(x1, x2) }
+        if (xTop <= xMiddle) { DRAW(x1, x2) }
         else                { DRAW(x2, x1) }
 
         #undef DRAW
@@ -320,20 +340,77 @@ public:
             DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], RED);
         }
 
-        // for (int i = 1; i < 12; i++)
-        // {
-        //     auto i0 = indexData[i][0];
-        //     auto i1 = indexData[i][1];
-        //     auto i2 = indexData[i][2];
-        //     DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
-        // }
+        {
+            auto i0 = indexData[0][0];
+            auto i1 = indexData[0][1];
+            auto i2 = indexData[0][2];
+            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
+        }
+        {
+            auto i0 = indexData[1][0];
+            auto i1 = indexData[1][1];
+            auto i2 = indexData[1][2];
+            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
+        }
+        {
+            auto i0 = indexData[3][0];
+            auto i1 = indexData[3][1];
+            auto i2 = indexData[3][2];
+            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
+        }
+        {
+            auto i0 = indexData[4][0];
+            auto i1 = indexData[4][1];
+            auto i2 = indexData[4][2];
+            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
+        }
+    }
+    void DrawCube3(Matrix modelView)
+    {
+        float h = 0.5f;
 
-        // {
-        //     auto i0 = indexData[0][0];
-        //     auto i1 = indexData[0][1];
-        //     auto i2 = indexData[0][2];
-        //     DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], RED);
-        // }
+        Vector3 vertexData[] =
+        {
+            Vector3{-h,-h,-h},
+            Vector3{-h,-h, h},
+            Vector3{-h, h,-h},
+            Vector3{-h, h, h},
+            Vector3{ h,-h,-h},
+            Vector3{ h,-h, h},
+            Vector3{ h, h,-h},
+            Vector3{ h, h, h}
+        };
+
+        int indexData[12][3] =
+        {
+            0, 2, 6,
+            6, 4, 0,
+            4, 6, 7,
+            7, 5, 4,
+            5, 7, 3,
+            3, 1, 5,
+            1, 3, 2,
+            2, 0, 1,
+            2, 3, 7,
+            7, 6, 2,
+            1, 0, 4,
+            4, 5, 1,
+        };
+
+        for (int i = 0; i < 8; i++)
+            vertexData[i] *= modelView;
+
+        for (int i = 0; i < 12; i++)
+        {
+            auto i0 = indexData[i][0];
+            auto i1 = indexData[i][1];
+            auto i2 = indexData[i][2];
+            Pixel pixel;
+            if (i % 3 == 0) pixel = RED;
+            if (i % 3 == 1) pixel = GREEN;
+            if (i % 3 == 2) pixel = BLUE;
+            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], pixel);
+        }
     }
     void ToScreenSpace(Vector3 point, int* outX, int* outY)
     {
