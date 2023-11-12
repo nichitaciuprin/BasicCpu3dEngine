@@ -58,7 +58,7 @@ public:
         pixels[i] = pixel;
     }
 
-    void DrawLine(Vector3 v0, Vector3 v1, Pixel pixel)
+    void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         float nearZ = 0.1f;
         v0.z -= nearZ;
@@ -102,23 +102,7 @@ public:
         #undef DRAW
     }
 
-    void DrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
-    {
-        Vector3 v1 = p0; Vector3 v2 = p1;
-        Vector3 v3 = p1; Vector3 v4 = p2;
-        Vector3 v5 = p2; Vector3 v0 = p0;
-
-        int outCode1; ProjectLine(v1, v2, outCode1);
-        int outCode2; ProjectLine(v3, v4, outCode2);
-        int outCode3; ProjectLine(v5, v0, outCode3);
-
-        if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
-
-        if (outCode1 != 0) { DrawLine2(v1, v2, pixel); }
-        if (outCode2 != 0) { DrawLine2(v3, v4, pixel); }
-        if (outCode3 != 0) { DrawLine2(v5, v0, pixel); }
-    }
-    void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         Vector3 v1 = p0; Vector3 v2 = p1;
         Vector3 v3 = p1; Vector3 v4 = p2;
@@ -132,7 +116,7 @@ public:
         if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
         {
             if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
-            DrawTriangle3(v1, v3, v5, pixel);
+            DrawTriangle2(v1, v3, v5, pixel);
             DrawLine2(v1, v2, WHITE);
             DrawLine2(v3, v4, WHITE);
             DrawLine2(v5, v0, WHITE);
@@ -145,7 +129,7 @@ public:
 
         // ClipLineByZ3()
     }
-    void DrawTriangle3(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         ToScreenSpace(p0);
         ToScreenSpace(p1);
@@ -153,9 +137,9 @@ public:
         Vector2Int v0 = { (int)p0.x, (int)p0.y };
         Vector2Int v1 = { (int)p1.x, (int)p1.y };
         Vector2Int v2 = { (int)p2.x, (int)p2.y };
-        DrawTriangle4(v0, v1, v2, pixel);
+        DrawTriangle3(v0, v1, v2, pixel);
     }
-    void DrawTriangle4(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
+    void DrawTriangle3(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
         if (p0.y >= p1.y) swap(p0, p1);
         if (p1.y >= p2.y) swap(p1, p2);
@@ -268,7 +252,7 @@ public:
         {
             auto i0 = indices[i][0];
             auto i1 = indices[i][1];
-            DrawLine(vertices[i0], vertices[i1], RED);
+            DrawLine1(vertices[i0], vertices[i1], RED);
         }
     }
     void DrawCube2(Matrix modelView)
@@ -311,32 +295,32 @@ public:
             auto i0 = indexData[i][0];
             auto i1 = indexData[i][1];
             auto i2 = indexData[i][2];
-            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], RED);
+            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], RED);
         }
 
         {
             auto i0 = indexData[0][0];
             auto i1 = indexData[0][1];
             auto i2 = indexData[0][2];
-            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
+            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
         }
         {
             auto i0 = indexData[1][0];
             auto i1 = indexData[1][1];
             auto i2 = indexData[1][2];
-            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
+            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
         }
         {
             auto i0 = indexData[3][0];
             auto i1 = indexData[3][1];
             auto i2 = indexData[3][2];
-            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
+            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
         }
         {
             auto i0 = indexData[4][0];
             auto i1 = indexData[4][1];
             auto i2 = indexData[4][2];
-            DrawTriangle(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
+            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
         }
     }
     void DrawCube3(Matrix modelView)
@@ -384,7 +368,7 @@ public:
             if (i % 3 == 1) pixel = GREEN;
             if (i % 3 == 2) pixel = BLUE;
 
-            DrawTriangle2(vertexData[i0], vertexData[i1], vertexData[i2], pixel);
+            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], pixel);
         }
     }
 
