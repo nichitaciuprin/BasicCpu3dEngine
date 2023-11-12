@@ -34,6 +34,7 @@ public:
         if (pixels.size() < pixelCount)
             pixels.resize(pixelCount);
     }
+
     int Width() const
     {
         return width;
