@@ -149,26 +149,11 @@ public:
         ToScreenSpace(p1);
         ToScreenSpace(p2);
 
-        // if (p2.y >= p1.y) swap(p2, p1);
-        // if (p1.y >= p0.y) swap(p1, p0);
-        // if (p2.y >= p1.y) swap(p2, p1);
-
-        // ScreenSpaceDrawTriangle2
-        // (
-        //     (int)p2.x,
-        //     (int)p2.y,
-        //     (int)p1.x,
-        //     (int)p1.y,
-        //     (int)p0.x,
-        //     (int)p0.y,
-        //     pixel
-        // );
-
         Vector2Int v0 = { (int)p0.x, (int)p0.y };
         Vector2Int v1 = { (int)p1.x, (int)p1.y };
         Vector2Int v2 = { (int)p2.x, (int)p2.y };
 
-        ScreenSpaceDrawTriangle2(v2, v1, v0, pixel);
+        ScreenSpaceDrawTriangle(v2, v1, v0, pixel);
     }
 
     void ScreenSpaceDrawLine(int x0, int y0, int x1, int y1, Pixel pixel)
@@ -193,16 +178,14 @@ public:
 
         #undef DRAW
     }
-    void ScreenSpaceDrawTriangle2(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
+    void ScreenSpaceDrawTriangle(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
-        if (p2.y >= p1.y) swap(p2, p1);
-        if (p1.y >= p0.y) swap(p1, p0);
-        if (p2.y >= p1.y) swap(p2, p1);
-
-        Vector2Int top    = p2;
+        if (p0.y >= p1.y) swap(p0, p1);
+        if (p1.y >= p2.y) swap(p1, p2);
+        if (p0.y >= p1.y) swap(p0, p1);
+        Vector2Int top = p0;
         Vector2Int middle = p1;
-        Vector2Int bottom = p0;
-
+        Vector2Int bottom = p2;
         int diff1 = bottom.x - top.x;
         int diff2 = middle.x - top.x;
         int diff3 = bottom.x - middle.x;
