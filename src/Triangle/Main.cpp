@@ -30,21 +30,21 @@ void main2()
 
         bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, RED);
 
-        p0 = { 200, 50  + 200 };
-        p1 = { 200, 100 + 200 };
-        p2 = { 150, 150 + 200 };
+        p0 = { 200, 250 };
+        p1 = { 200, 300 };
+        p2 = { 150, 350 };
 
         bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, BLUE);
 
-        p0 = { 200, 50  + 200 };
-        p1 = { 200, 100 + 200 };
-        p2 = { 250, 150 + 200 };
+        p0 = { 200, 250 };
+        p1 = { 200, 300 };
+        p2 = { 250, 350 };
 
         bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, GREEN);
 
-        p0 = { 200, 200 };
-        p1 = { 250, 200 };
-        p2 = { 200, 250 };
+        // p0 = { 200, 200 };
+        // p1 = { 250, 200 };
+        // p2 = { 200, 250 };
 
         // bitmap->ScreenSpaceDrawTriangle(p0, p1, p2, RED);
         // bitmap->ScreenSpaceDrawTriangle(p2, p1, p0, RED);

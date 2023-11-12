@@ -153,7 +153,7 @@ public:
         Vector2Int v1 = { (int)p1.x, (int)p1.y };
         Vector2Int v2 = { (int)p2.x, (int)p2.y };
 
-        ScreenSpaceDrawTriangle(v2, v1, v0, pixel);
+        ScreenSpaceDrawTriangle(v0, v1, v2, pixel);
     }
 
     void ScreenSpaceDrawLine(int x0, int y0, int x1, int y1, Pixel pixel)
