@@ -413,29 +413,21 @@ public:
     {
         int x = width - 1;
         int y = height - 1;
-        ScreenSpaceDrawLine(0, 0, 0, y, pixel);
-        ScreenSpaceDrawLine(0, 0, x, 0, pixel);
-        ScreenSpaceDrawLine(x, y, x, 0, pixel);
-        ScreenSpaceDrawLine(x, y, 0, y, pixel);
-    }
-    void DrawX(Pixel pixel)
-    {
-        int x = width - 1;
-        int y = height - 1;
-        ScreenSpaceDrawLine(0, 0, x, y, pixel);
-        ScreenSpaceDrawLine(x, 0, 0, y, pixel);
+        for (int i = 0; i < width;  i++) SetPixel(i, 0, pixel);
+        for (int i = 0; i < width;  i++) SetPixel(i, y, pixel);
+        for (int i = 0; i < height; i++) SetPixel(0, i, pixel);
+        for (int i = 0; i < height; i++) SetPixel(x, i, pixel);
     }
     void DrawCross(Pixel pixel)
     {
         int centerX = width / 2;
         int centerY = height / 2;
-        int x = width - 1;
-        int y = height - 1;
-        ScreenSpaceDrawLine(centerX, 0, centerX, y, pixel);
-        ScreenSpaceDrawLine(0, centerY, x, centerY, pixel);
+        for (int i = 0; i < width;  i++) SetPixel(i, centerY, pixel);
+        for (int i = 0; i < height; i++) SetPixel(centerX, i, pixel);
     }
     void DrawSquare(Pixel pixel)
     {
+        // TODO
         int size = 20;
         for (int x = 0; x < MathClamp(size, 0, width - 1); x++)
         for (int y = 0; y < MathClamp(size, 0, height - 1); y++)
