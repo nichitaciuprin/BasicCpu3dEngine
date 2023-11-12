@@ -149,20 +149,26 @@ public:
         ToScreenSpace(p1);
         ToScreenSpace(p2);
 
-        if (p2.y >= p1.y) swap(p2, p1);
-        if (p1.y >= p0.y) swap(p1, p0);
-        if (p2.y >= p1.y) swap(p2, p1);
+        // if (p2.y >= p1.y) swap(p2, p1);
+        // if (p1.y >= p0.y) swap(p1, p0);
+        // if (p2.y >= p1.y) swap(p2, p1);
 
-        ScreenSpaceDrawTriangle2
-        (
-            (int)p2.x,
-            (int)p2.y,
-            (int)p1.x,
-            (int)p1.y,
-            (int)p0.x,
-            (int)p0.y,
-            pixel
-        );
+        // ScreenSpaceDrawTriangle2
+        // (
+        //     (int)p2.x,
+        //     (int)p2.y,
+        //     (int)p1.x,
+        //     (int)p1.y,
+        //     (int)p0.x,
+        //     (int)p0.y,
+        //     pixel
+        // );
+
+        Vector2Int v0 = { (int)p0.x, (int)p0.y };
+        Vector2Int v1 = { (int)p1.x, (int)p1.y };
+        Vector2Int v2 = { (int)p2.x, (int)p2.y };
+
+        ScreenSpaceDrawTriangle2(v2, v1, v0, pixel);
     }
 
     void ScreenSpaceDrawLine(int x0, int y0, int x1, int y1, Pixel pixel)
@@ -187,48 +193,36 @@ public:
 
         #undef DRAW
     }
-    // void ScreenSpaceDrawTriangleDuno(Vector3Int x0, Vector3Int x1, Vector3Int x2, Pixel pixel)
-    // {
-    //     if (p2.y >= p1.y) swap(p2, p1);
-    //     if (p1.y >= p0.y) swap(p1, p0);
-    //     if (p2.y >= p1.y) swap(p2, p1);
-    // }
-    void ScreenSpaceDrawTriangle2(int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom, Pixel pixel)
+    void ScreenSpaceDrawTriangle2(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
-        // if (p2.y >= p1.y) swap(p2, p1);
-        // if (p1.y >= p0.y) swap(p1, p0);
-        // if (p2.y >= p1.y) swap(p2, p1);
-        // int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom
+        if (p2.y >= p1.y) swap(p2, p1);
+        if (p1.y >= p0.y) swap(p1, p0);
+        if (p2.y >= p1.y) swap(p2, p1);
 
-        int diff1 = xBottom - xTop;
-        int diff2 = xMiddle - xTop;
-        int diff3 = xBottom - xMiddle;
+        Vector2Int top    = p2;
+        Vector2Int middle = p1;
+        Vector2Int bottom = p0;
+
+        int diff1 = bottom.x - top.x;
+        int diff2 = middle.x - top.x;
+        int diff3 = bottom.x - middle.x;
         int dir1 = MathSign(diff1);
         int dir2 = MathSign(diff2);
         int dir3 = MathSign(diff3);
         int dx1 = abs(diff1);
         int dx2 = abs(diff2);
         int dx3 = abs(diff3);
-        int dy1 = yBottom - yTop;
-        int dy2 = yMiddle - yTop;
-        int dy3 = yBottom - yMiddle;
+        int dy1 = bottom.y - top.y;
+        int dy2 = middle.y - top.y;
+        int dy3 = bottom.y - middle.y;
         int err1 = dy1 / 2;
         int err2 = dy2 / 2;
         int err3 = dy3 / 2;
-        int y = yTop;
+        int y = top.y;
 
-        int x1;
-        int x2;
-        if (dy2 != 0)
-        {
-            x1 = xTop;
-            x2 = xTop;
-        }
-        else
-        {
-            x1 = xTop;
-            x2 = xMiddle;
-        }
+        int x1; int x2;
+        if (dy2 != 0) { x1 = top.x; x2 = top.x;    }
+        else          { x1 = top.x; x2 = middle.x; }
 
         #define DRAW(X1, X2)                               \
         for (int i = 0; i < dy2; i++)                      \
@@ -250,8 +244,8 @@ public:
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
 
-        if (xTop <= xMiddle) { DRAW(x1, x2) }
-        else                { DRAW(x2, x1) }
+        if (top.x <= middle.x) { DRAW(x1, x2) }
+        else                   { DRAW(x2, x1) }
 
         #undef DRAW
     }
