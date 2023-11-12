@@ -227,8 +227,8 @@ public:
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
 
-        if (top.x <= middle.x) { DRAW(x1, x2) }
-        else                   { DRAW(x2, x1) }
+        if (bottom.x <= top.x && top.x <= middle.x) { DRAW(x1, x2) }
+        else                                        { DRAW(x2, x1) }
 
         #undef DRAW
     }
