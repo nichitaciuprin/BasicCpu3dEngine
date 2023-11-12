@@ -141,7 +141,9 @@ public:
         if (!ClipLine(v0.x, v0.y, v1.x, v1.y)) return;
         ToScreenSpace(v0);
         ToScreenSpace(v1);
-        ScreenSpaceDrawLine((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, pixel);
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
+        ScreenSpaceDrawLine(p0, p1, pixel);
     }
     void ScreenSpaceDrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
@@ -156,25 +158,25 @@ public:
         ScreenSpaceDrawTriangle(v0, v1, v2, pixel);
     }
 
-    void ScreenSpaceDrawLine(int x0, int y0, int x1, int y1, Pixel pixel)
+    void ScreenSpaceDrawLine(Vector2Int p0, Vector2Int p1, Pixel pixel)
     {
-        int dx = abs(x1 - x0);
-        int dy = abs(y1 - y0);
+        int dx = abs(p1.x - p0.x);
+        int dy = abs(p1.y - p0.y);
 
-        int sx = x0 < x1 ? 1 : -1;
-        int sy = y0 < y1 ? 1 : -1;
+        int sx = p0.x < p1.x ? 1 : -1;
+        int sy = p0.y < p1.y ? 1 : -1;
 
         #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
         int err = MAX / 2;                                \
         for (int i = 0; i < MAX; i++)                     \
         {                                                 \
-            SetPixel(x0, y0, pixel);                      \
+            SetPixel(p0.x, p0.y, pixel);                  \
             if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
                            { err -= MIN; AXIS2 += VAL2; } \
         }                                                 \
 
-        if (dx > dy) { DRAW(dx, dy, y0, x0, sy, sx); }
-        else         { DRAW(dy, dx, x0, y0, sx, sy); }
+        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
+        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
 
         #undef DRAW
     }
