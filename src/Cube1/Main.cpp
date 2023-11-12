@@ -21,7 +21,7 @@ void main2()
         Vector3 rotation = { 0, time, 0 };
         Vector3 scale = { 1, 1, 1 };
         auto world = MatrixWorld(position, rotation, scale);
-        bitmap->DrawCube(world * view);
+        bitmap->DrawCube1(world * view);
 
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);
