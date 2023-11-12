@@ -57,49 +57,6 @@ public:
         pixels[i] = pixel;
     }
 
-    void DrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
-    {
-        Vector3 v1 = p0; Vector3 v2 = p1;
-        Vector3 v3 = p1; Vector3 v4 = p2;
-        Vector3 v5 = p2; Vector3 v0 = p0;
-
-        bool include0; ProjectLine(v1, v2, include0);
-        bool include1; ProjectLine(v3, v4, include1);
-        bool include2; ProjectLine(v5, v0, include2);
-
-        if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
-
-        if (include0) { DrawLineProjected(v1, v2, pixel); }
-        if (include1) { DrawLineProjected(v3, v4, pixel); }
-        if (include2) { DrawLineProjected(v5, v0, pixel); }
-    }
-    void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
-    {
-        Vector3 v1 = p0; Vector3 v2 = p1;
-        Vector3 v3 = p1; Vector3 v4 = p2;
-        Vector3 v5 = p2; Vector3 v0 = p0;
-
-        int outCode1; ProjectLine2(v1, v2, outCode1);
-        int outCode2; ProjectLine2(v3, v4, outCode2);
-        int outCode3; ProjectLine2(v5, v0, outCode3);
-
-        if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
-        if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
-        {
-            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
-            ScreenSpaceDrawTriangle(v1, v3, v5, pixel);
-            DrawLineProjected(v1, v2, WHITE);
-            DrawLineProjected(v3, v4, WHITE);
-            DrawLineProjected(v5, v0, WHITE);
-        }
-
-        // all in back
-        // all in front
-        // 2 lines cliped
-        // 2 lines cliped + 1 line drop
-
-        // ClipLineByZ3()
-    }
     void DrawLine(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         float nearZ = 0.1f;
@@ -110,55 +67,18 @@ public:
         v1.z += nearZ;
         if (v0.z != 0) v0 /= v0.z;
         if (v1.z != 0) v1 /= v1.z;
-        DrawLineProjected(v0, v1, pixel);
+        DrawLine2(v0, v1, pixel);
     }
-    void ProjectLine(Vector3& v0, Vector3& v1, bool& include)
-    {
-        float nearZ = 0.1f;
-        v0.z -= nearZ;
-        v1.z -= nearZ;
-        include = ClipLineByZ(v0, v1);
-        if (!include) return;
-        v0.z += nearZ;
-        v1.z += nearZ;
-        if (v0.z != 0) v0 /= v0.z;
-        if (v1.z != 0) v1 /= v1.z;
-    }
-    void ProjectLine2(Vector3& v0, Vector3& v1, int& outCode)
-    {
-        float nearZ = 0.1f;
-        v0.z -= nearZ;
-        v1.z -= nearZ;
-        ClipLineByZ4(v0, v1, outCode);
-        if (outCode == 0) return;
-        v0.z += nearZ;
-        v1.z += nearZ;
-        if (v0.z != 0) v0 /= v0.z;
-        if (v1.z != 0) v1 /= v1.z;
-    }
-    void DrawLineProjected(Vector3 v0, Vector3 v1, Pixel pixel)
+    void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         if (!ClipLine(v0.x, v0.y, v1.x, v1.y)) return;
         ToScreenSpace(v0);
         ToScreenSpace(v1);
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
-        ScreenSpaceDrawLine(p0, p1, pixel);
+        DrawLine3(p0, p1, pixel);
     }
-    void ScreenSpaceDrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
-    {
-        ToScreenSpace(p0);
-        ToScreenSpace(p1);
-        ToScreenSpace(p2);
-
-        Vector2Int v0 = { (int)p0.x, (int)p0.y };
-        Vector2Int v1 = { (int)p1.x, (int)p1.y };
-        Vector2Int v2 = { (int)p2.x, (int)p2.y };
-
-        ScreenSpaceDrawTriangle(v0, v1, v2, pixel);
-    }
-
-    void ScreenSpaceDrawLine(Vector2Int p0, Vector2Int p1, Pixel pixel)
+    void DrawLine3(Vector2Int p0, Vector2Int p1, Pixel pixel)
     {
         int dx = abs(p1.x - p0.x);
         int dy = abs(p1.y - p0.y);
@@ -180,7 +100,61 @@ public:
 
         #undef DRAW
     }
-    void ScreenSpaceDrawTriangle(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
+
+    void DrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    {
+        Vector3 v1 = p0; Vector3 v2 = p1;
+        Vector3 v3 = p1; Vector3 v4 = p2;
+        Vector3 v5 = p2; Vector3 v0 = p0;
+
+        int outCode1; ProjectLine(v1, v2, outCode1);
+        int outCode2; ProjectLine(v3, v4, outCode2);
+        int outCode3; ProjectLine(v5, v0, outCode3);
+
+        if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+
+        if (outCode1 != 0) { DrawLine2(v1, v2, pixel); }
+        if (outCode2 != 0) { DrawLine2(v3, v4, pixel); }
+        if (outCode3 != 0) { DrawLine2(v5, v0, pixel); }
+    }
+    void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    {
+        Vector3 v1 = p0; Vector3 v2 = p1;
+        Vector3 v3 = p1; Vector3 v4 = p2;
+        Vector3 v5 = p2; Vector3 v0 = p0;
+
+        int outCode1; ProjectLine(v1, v2, outCode1);
+        int outCode2; ProjectLine(v3, v4, outCode2);
+        int outCode3; ProjectLine(v5, v0, outCode3);
+
+        if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
+        if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
+        {
+            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+            DrawTriangle3(v1, v3, v5, pixel);
+            DrawLine2(v1, v2, WHITE);
+            DrawLine2(v3, v4, WHITE);
+            DrawLine2(v5, v0, WHITE);
+        }
+
+        // all in back
+        // all in front
+        // 2 lines cliped
+        // 2 lines cliped + 1 line drop
+
+        // ClipLineByZ3()
+    }
+    void DrawTriangle3(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    {
+        ToScreenSpace(p0);
+        ToScreenSpace(p1);
+        ToScreenSpace(p2);
+        Vector2Int v0 = { (int)p0.x, (int)p0.y };
+        Vector2Int v1 = { (int)p1.x, (int)p1.y };
+        Vector2Int v2 = { (int)p2.x, (int)p2.y };
+        DrawTriangle4(v0, v1, v2, pixel);
+    }
+    void DrawTriangle4(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
         if (p0.y >= p1.y) swap(p0, p1);
         if (p1.y >= p2.y) swap(p1, p2);
@@ -233,6 +207,19 @@ public:
         else                                        { DRAW(x2, x1) }
 
         #undef DRAW
+    }
+
+    void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)
+    {
+        float nearZ = 0.1f;
+        v0.z -= nearZ;
+        v1.z -= nearZ;
+        ClipLineByZ4(v0, v1, outCode);
+        if (outCode == 0) return;
+        v0.z += nearZ;
+        v1.z += nearZ;
+        if (v0.z != 0) v0 /= v0.z;
+        if (v1.z != 0) v1 /= v1.z;
     }
 
     inline void DrawHorizontalLine(int y, int xLeft, int xRight, Pixel pixel)
