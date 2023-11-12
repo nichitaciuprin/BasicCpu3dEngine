@@ -187,11 +187,19 @@ public:
 
         #undef DRAW
     }
-    // void ScreenSpaceDrawTriangle(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    // void ScreenSpaceDrawTriangleDuno(Vector3Int x0, Vector3Int x1, Vector3Int x2, Pixel pixel)
     // {
+    //     if (p2.y >= p1.y) swap(p2, p1);
+    //     if (p1.y >= p0.y) swap(p1, p0);
+    //     if (p2.y >= p1.y) swap(p2, p1);
     // }
     void ScreenSpaceDrawTriangle2(int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom, Pixel pixel)
     {
+        // if (p2.y >= p1.y) swap(p2, p1);
+        // if (p1.y >= p0.y) swap(p1, p0);
+        // if (p2.y >= p1.y) swap(p2, p1);
+        // int xTop, int yTop, int xMiddle, int yMiddle, int xBottom, int yBottom
+
         int diff1 = xBottom - xTop;
         int diff2 = xMiddle - xTop;
         int diff3 = xBottom - xMiddle;
