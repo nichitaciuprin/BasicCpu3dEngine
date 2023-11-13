@@ -188,8 +188,24 @@ public:
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
 
-        if (bottom.x <= top.x && top.x <= middle.x) { DRAW(x1, x2) }
-        else                                        { DRAW(x2, x1) }
+        // 11        0   0     DRAW(x1, x2);
+
+        // 00       -1  -1     DRAW(x1, x2);
+        // 20        1  -1     DRAW(x1, x2);
+        // 22        1   1     DRAW(x2, x1);
+        // 02       -1   1     DRAW(x2, x1);
+
+        // 10        0  -1     DRAW(x1, x2);
+        // 21        1   0     DRAW(x1, x2);
+
+        // 12        0   1     DRAW(x2, x1);
+        // 01       -1   0     DRAW(x2, x1);
+
+        if (dy2 == -1 && dy3 == -1) { DRAW(x1, x2); return; }
+        if (dy2 ==  1 && dy3 ==  1) { DRAW(x2, x1); return; }
+
+        // if (bottom.x <= top.x && top.x <= middle.x) { DRAW(x1, x2) }
+        // else                                        { DRAW(x2, x1) }
 
         #undef DRAW
     }
