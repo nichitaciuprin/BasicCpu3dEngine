@@ -188,13 +188,21 @@ public:
         if (dy2 > 0) { x1 = top.x; x2 = top.x;    }
         else         { x1 = top.x; x2 = middle.x; }
 
-        if (top.x < middle.x || middle.x > bottom.x)
+        if (top.x < middle.x)
         {
             DRAW(x1, x2)
         }
-        else if (top.x > middle.x || middle.x < bottom.x)
+        else if (top.x > middle.x)
         {
             DRAW(x2, x1)
+        }
+        else if (middle.x < bottom.x)
+        {
+            DRAW(x2, x1)
+        }
+        else if (middle.x > bottom.x)
+        {
+            DRAW(x1, x2)
         }
         else
         {
