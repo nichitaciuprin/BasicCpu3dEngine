@@ -164,9 +164,49 @@ public:
         int err3 = dy3 / 2;
         int y = top.y;
 
+        int state = 0;
+        switch (dir2)
+        {
+            case -1: state += 1; break;
+            case  0: state += 2; break;
+            case  1: state += 4; break;
+            default: abort(); break;
+        }
+        switch (dir3)
+        {
+            case -1: state +=  8; break;
+            case  0: state += 16; break;
+            case  1: state += 32; break;
+            default: abort(); break;
+        }
+
+        // 010010    0    0   18  DRAW(x1, x2);
+
+        // 001001   -1   -1    9  DRAW(x1, x2);
+        // 100001    1   -1   33  DRAW(x2, x1);
+        // 010001    0   -1   17  DRAW(x2, x1);
+        // 001010   -1    0   10  DRAW(x1, x2);
+
+        // 100100    1    1   36  DRAW(x2, x1);
+        // 001100   -1    1   12  DRAW(x1, x2);
+        // 100010    1    0   34  DRAW(x2, x1);
+        // 010100    0    1   20  DRAW(x1, x2);
+
+        //---------------
+
+        // 010010    0    0   18  DRAW(x1, x2);
+        // 001001   -1   -1    9  DRAW(x1, x2);
+        // 001010   -1    0   10  DRAW(x1, x2);
+        // 001100   -1    1   12  DRAW(x1, x2);
+        // 010100    0    1   20  DRAW(x1, x2);
+        // 010001    0   -1   17  DRAW(x2, x1);
+        // 100001    1   -1   33  DRAW(x2, x1);
+        // 100010    1    0   34  DRAW(x2, x1);
+        // 100100    1    1   36  DRAW(x2, x1);
+
         int x1; int x2;
-        if (dy2 != 0) { x1 = top.x; x2 = top.x;    }
-        else          { x1 = top.x; x2 = middle.x; }
+        if (dy2 == 0) { x1 = top.x; x2 = middle.x; }
+        else          { x1 = top.x; x2 = top.x;    }
 
         #define DRAW(X1, X2)                               \
         for (int i = 0; i < dy2; i++)                      \
@@ -188,24 +228,34 @@ public:
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
 
-        // 11        0   0     DRAW(x1, x2);
+        if (top.x <= middle.x)
+        {
+            DRAW(x1, x2)
+        }
+        else
+        {
+            DRAW(x2, x1)
+        }
 
-        // 00       -1  -1     DRAW(x1, x2);
-        // 20        1  -1     DRAW(x1, x2);
-        // 22        1   1     DRAW(x2, x1);
-        // 02       -1   1     DRAW(x2, x1);
-
-        // 10        0  -1     DRAW(x1, x2);
-        // 21        1   0     DRAW(x1, x2);
-
-        // 12        0   1     DRAW(x2, x1);
-        // 01       -1   0     DRAW(x2, x1);
-
-        if (dy2 == -1 && dy3 == -1) { DRAW(x1, x2); return; }
-        if (dy2 ==  1 && dy3 ==  1) { DRAW(x2, x1); return; }
-
-        // if (bottom.x <= top.x && top.x <= middle.x) { DRAW(x1, x2) }
-        // else                                        { DRAW(x2, x1) }
+        // switch (state)
+        // {
+        //     case 18:
+        //     case  9:
+        //     case 10:
+        //     case 12:
+        //     case 20:
+        //         DRAW(x1, x2);
+        //         break;
+        //     case 17:
+        //     case 33:
+        //     case 34:
+        //     case 36:
+        //         DRAW(x2, x1);
+        //         break;
+        //     default:
+        //         abort();
+        //         break;
+        // }
 
         #undef DRAW
     }

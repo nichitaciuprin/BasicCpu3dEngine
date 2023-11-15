@@ -26,24 +26,24 @@ void main2()
             p2 /= 10;
             bitmap->DrawTriangle1(p0, p1, p2, RED);
         }
-        // {
-        //     Vector3 p0 = {  3, -1,  zFar };
-        //     Vector3 p1 = {  3, -2,  zFar };
-        //     Vector3 p2 = { -3, -1,  zClose };
-        //     p0 /= 10;
-        //     p1 /= 10;
-        //     p2 /= 10;
-        //     bitmap->DrawTriangle1(p0, p1, p2, GREEN);
-        // }
-        // {
-        //     Vector3 p0 = { -2, -2,  zFar };
-        //     Vector3 p1 = { -3, -2,  zFar };
-        //     Vector3 p2 = {  1,  3,  zClose };
-        //     p0 /= 10;
-        //     p1 /= 10;
-        //     p2 /= 10;
-        //     bitmap->DrawTriangle1(p0, p1, p2, BLUE);
-        // }
+        {
+            Vector3 p0 = {  3, -1,  zFar };
+            Vector3 p1 = {  3, -2,  zFar };
+            Vector3 p2 = { -3, -1,  zClose };
+            p0 /= 10;
+            p1 /= 10;
+            p2 /= 10;
+            bitmap->DrawTriangle1(p0, p1, p2, GREEN);
+        }
+        {
+            Vector3 p0 = { -2, -2,  zFar };
+            Vector3 p1 = { -3, -2,  zFar };
+            Vector3 p2 = {  1,  3,  zClose };
+            p0 /= 10;
+            p1 /= 10;
+            p2 /= 10;
+            bitmap->DrawTriangle1(p0, p1, p2, BLUE);
+        }
 
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);
