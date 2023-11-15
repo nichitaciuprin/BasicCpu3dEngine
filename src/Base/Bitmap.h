@@ -196,11 +196,11 @@ public:
         {
             DRAW(x2, x1)
         }
-        else if (middle.x > bottom.x)
+        else if (bottom.x < middle.x)
         {
             DRAW(x1, x2)
         }
-        else if (middle.x < bottom.x)
+        else if (bottom.x > middle.x)
         {
             DRAW(x2, x1)
         }
