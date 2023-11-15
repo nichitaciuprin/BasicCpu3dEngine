@@ -141,9 +141,9 @@ public:
     }
     void DrawTriangle3(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
-        if (p0.y >= p1.y) swap(p0, p1);
-        if (p1.y >= p2.y) swap(p1, p2);
-        if (p0.y >= p1.y) swap(p0, p1);
+        if (p0.y > p1.y) swap(p0, p1);
+        if (p1.y > p2.y) swap(p1, p2);
+        if (p0.y > p1.y) swap(p0, p1);
         Vector2Int top = p0;
         Vector2Int middle = p1;
         Vector2Int bottom = p2;
@@ -163,50 +163,6 @@ public:
         int err2 = dy2 / 2;
         int err3 = dy3 / 2;
         int y = top.y;
-
-        int state = 0;
-        switch (dir2)
-        {
-            case -1: state += 1; break;
-            case  0: state += 2; break;
-            case  1: state += 4; break;
-            default: abort(); break;
-        }
-        switch (dir3)
-        {
-            case -1: state +=  8; break;
-            case  0: state += 16; break;
-            case  1: state += 32; break;
-            default: abort(); break;
-        }
-
-        // 010010    0    0   18  DRAW(x1, x2);
-
-        // 001001   -1   -1    9  DRAW(x1, x2);
-        // 100001    1   -1   33  DRAW(x2, x1);
-        // 010001    0   -1   17  DRAW(x2, x1);
-        // 001010   -1    0   10  DRAW(x1, x2);
-
-        // 100100    1    1   36  DRAW(x2, x1);
-        // 001100   -1    1   12  DRAW(x1, x2);
-        // 100010    1    0   34  DRAW(x2, x1);
-        // 010100    0    1   20  DRAW(x1, x2);
-
-        //---------------
-
-        // 010010    0    0   18  DRAW(x1, x2);
-        // 001001   -1   -1    9  DRAW(x1, x2);
-        // 001010   -1    0   10  DRAW(x1, x2);
-        // 001100   -1    1   12  DRAW(x1, x2);
-        // 010100    0    1   20  DRAW(x1, x2);
-        // 010001    0   -1   17  DRAW(x2, x1);
-        // 100001    1   -1   33  DRAW(x2, x1);
-        // 100010    1    0   34  DRAW(x2, x1);
-        // 100100    1    1   36  DRAW(x2, x1);
-
-        int x1; int x2;
-        if (dy2 == 0) { x1 = top.x; x2 = middle.x; }
-        else          { x1 = top.x; x2 = top.x;    }
 
         #define DRAW(X1, X2)                               \
         for (int i = 0; i < dy2; i++)                      \
@@ -228,34 +184,22 @@ public:
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
 
-        if (top.x <= middle.x)
+        int x1; int x2;
+        if (dy2 > 0) { x1 = top.x; x2 = top.x;    }
+        else         { x1 = top.x; x2 = middle.x; }
+
+        if (top.x < middle.x || middle.x > bottom.x)
         {
             DRAW(x1, x2)
         }
-        else
+        else if (top.x > middle.x || middle.x < bottom.x)
         {
             DRAW(x2, x1)
         }
-
-        // switch (state)
-        // {
-        //     case 18:
-        //     case  9:
-        //     case 10:
-        //     case 12:
-        //     case 20:
-        //         DRAW(x1, x2);
-        //         break;
-        //     case 17:
-        //     case 33:
-        //     case 34:
-        //     case 36:
-        //         DRAW(x2, x1);
-        //         break;
-        //     default:
-        //         abort();
-        //         break;
-        // }
+        else
+        {
+            DRAW(x1, x2)
+        }
 
         #undef DRAW
     }
