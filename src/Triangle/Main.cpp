@@ -53,6 +53,11 @@ void main2()
         p2 = { 350 + 25, 250 };
         bitmap->DrawTriangle3(p0, p1, p2, RED);
 
+        p0 = { 100, 200 };
+        p1 = {  50, 200 };
+        p2 = { 150, 150 };
+        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);
         BitmapWindow1::Update();
