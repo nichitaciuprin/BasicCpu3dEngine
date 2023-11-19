@@ -19,59 +19,56 @@ void main2()
         Vector2Int p2;
         Vector2Int p3;
 
-        p0 = {  0,  0 };
-        p1 = { 25,  0 };
-        p2 = { 25, 25 };
-        p3 = {  0, 25 };
-        bitmap->DrawTriangle3(p2, p3, p0, RED);
-        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+        // MAIN
+        {
+            p0 = { 250,  50 };
+            p1 = { 200, 100 };
+            p2 = { 300, 150 };
+            bitmap->DrawTriangle3(p0, p1, p2, RED);
 
-        p0 = {  0 + 50,  0 };
-        p1 = { 25 + 50,  0 };
-        p2 = { 25 + 50, 25 };
-        p3 = {  0 + 50, 25 };
-        bitmap->DrawTriangle3(p0, p3, p2, BLUE);
-        bitmap->DrawTriangle3(p1, p0, p2, YELLOW);
+            p0 = { 150,  50 };
+            p1 = { 200, 100 };
+            p2 = { 100,  150 };
+            bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+        }
 
-        p0 = { 200,  50 };
-        p1 = { 150, 100 };
-        p2 = { 250, 150 };
-        bitmap->DrawTriangle3(p0, p1, p2, RED);
+        // SQUARES
+        {
+            p0 = {  0,  0 };
+            p1 = { 25,  0 };
+            p2 = { 25, 25 };
+            p3 = {  0, 25 };
+            bitmap->DrawTriangle3(p2, p3, p0, RED);
+            bitmap->DrawTriangle3(p0, p1, p2, GREEN);
 
-        p0 = { 100,  50 };
-        p1 = { 150, 100 };
-        p2 = { 50,  150 };
-        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+            p0 = {  0 + 50,  0 };
+            p1 = { 25 + 50,  0 };
+            p2 = { 25 + 50, 25 };
+            p3 = {  0 + 50, 25 };
+            bitmap->DrawTriangle3(p0, p3, p2, BLUE);
+            bitmap->DrawTriangle3(p1, p0, p2, YELLOW);
+        }
 
-        p0 = { 200, 250 };
-        p1 = { 200, 300 };
-        p2 = { 150, 350 };
-        bitmap->DrawTriangle3(p0, p1, p2, BLUE);
+        // BIRDS
+        {
+            p0 = { 200, 250 };
 
-        p0 = { 200, 250 };
-        p1 = { 200, 300 };
-        p2 = { 250, 350 };
-        bitmap->DrawTriangle3(p0, p1, p2, CYAN);
+            p1 = { 200, 300 };
+            p2 = { 150, 350 }; bitmap->DrawTriangle3(p0, p1, p2, RED);
+            p2 = { 250, 350 }; bitmap->DrawTriangle3(p0, p2, p1, RED);
 
-        p0 = { 250, 250 };
-        p1 = { 200, 250 };
-        p2 = { 300, 300 };
-        bitmap->DrawTriangle3(p0, p1, p2, RED);
+            p1 = { 250, 250 };
+            p2 = { 300, 300 }; bitmap->DrawTriangle3(p1, p0, p2, GREEN);
+            p2 = { 300, 200 }; bitmap->DrawTriangle3(p1, p2, p0, GREEN);
 
-        p0 = { 250, 250 };
-        p1 = { 200, 250 };
-        p2 = { 300, 200 };
-        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+            p1 = { 150, 250 };
+            p2 = { 100, 300 }; bitmap->DrawTriangle3(p2, p1, p0, BLUE);
+            p2 = { 100, 200 }; bitmap->DrawTriangle3(p2, p0, p1, BLUE);
 
-        p0 = { 100, 300 };
-        p1 = { 200, 250 };
-        p2 = { 150, 250 };
-        bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
-
-        p0 = { 100, 200 };
-        p1 = { 200, 250 };
-        p2 = { 150, 250 };
-        bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
+            p1 = { 200, 200 };
+            p2 = { 150, 150 }; bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
+            p2 = { 250, 150 }; bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
+        }
 
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);
