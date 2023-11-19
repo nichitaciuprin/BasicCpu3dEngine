@@ -148,9 +148,9 @@ public:
         if (p0.y > p1.y) swap(p0, p1);
         if (p1.y > p2.y) swap(p1, p2);
         if (p0.y > p1.y) swap(p0, p1);
-        Vector2Int top = p0;
-        Vector2Int middle = p1;
-        Vector2Int bottom = p2;
+        Vector2Int top = { p0.x, p0.y };
+        Vector2Int middle = { p1.x, p1.y };
+        Vector2Int bottom = { p2.x, p2.y };
         int diff1 = bottom.x - top.x;
         int diff2 = middle.x - top.x;
         int diff3 = bottom.x - middle.x;
@@ -166,6 +166,10 @@ public:
         int err1 = dy1 / 2;
         int err2 = dy2 / 2;
         int err3 = dy3 / 2;
+
+        Vector2Int v0 = { diff1, dy1 };
+        Vector2Int v1 = { diff2, dy2 };
+        int cross = v0.x * v1.y - v0.y * v1.x;
 
         int y = top.y;
         int x1, x2;
@@ -212,22 +216,7 @@ public:
         }                                                 \
         DRAWLINE(y, X1, X2, pixel)                        \
 
-        if (top.y == middle.y)
-        {
-            if (top.x < middle.x)
-            {
-                DRAW(x1, x2)
-            }
-            else
-            {
-                DRAW(x2, x1)
-            }
-        }
-        else if (top.x < middle.x)
-        {
-            DRAW(x1, x2)
-        }
-        else if (bottom.x < middle.x)
+        if (cross < 0)
         {
             DRAW(x1, x2)
         }
