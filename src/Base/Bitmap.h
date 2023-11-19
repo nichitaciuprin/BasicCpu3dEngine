@@ -151,24 +151,24 @@ public:
         Vector2Int top = { p0.x, p0.y };
         Vector2Int middle = { p1.x, p1.y };
         Vector2Int bottom = { p2.x, p2.y };
-        int diff1 = bottom.x - top.x;
-        int diff2 = middle.x - top.x;
-        int diff3 = bottom.x - middle.x;
-        int dir1 = MathSign(diff1);
-        int dir2 = MathSign(diff2);
-        int dir3 = MathSign(diff3);
-        int dx1 = abs(diff1);
-        int dx2 = abs(diff2);
-        int dx3 = abs(diff3);
+        int dx1 = bottom.x - top.x;
         int dy1 = bottom.y - top.y;
+        int dx2 = middle.x - top.x;
         int dy2 = middle.y - top.y;
+        int dx3 = bottom.x - middle.x;
         int dy3 = bottom.y - middle.y;
         int err1 = dy1 / 2;
         int err2 = dy2 / 2;
         int err3 = dy3 / 2;
+        int dir1 = MathSign(dx1);
+        int dir2 = MathSign(dx2);
+        int dir3 = MathSign(dx3);
+        int dx1abs = abs(dx1);
+        int dx2abs = abs(dx2);
+        int dx3abs = abs(dx3);
 
-        Vector2Int v0 = { diff1, dy1 };
-        Vector2Int v1 = { diff2, dy2 };
+        Vector2Int v0 = { dx1, dy1 };
+        Vector2Int v1 = { dx2, dy2 };
         int cross = v0.x * v1.y - v0.y * v1.x;
 
         int y = top.y;
@@ -200,8 +200,8 @@ public:
         {                                                 \
             DRAWLINE(y, X1, X2, pixel)                    \
             y++;                                          \
-            err1 -= dx1;                                  \
-            err2 -= dx2;                                  \
+            err1 -= dx1abs;                               \
+            err2 -= dx2abs;                               \
             while (err1 < 0) { err1 += dy1; x1 += dir1; } \
             while (err2 < 0) { err2 += dy2; x2 += dir2; } \
         }                                                 \
@@ -209,8 +209,8 @@ public:
         {                                                 \
             DRAWLINE(y, X1, X2, pixel)                    \
             y++;                                          \
-            err1 -= dx1;                                  \
-            err3 -= dx3;                                  \
+            err1 -= dx1abs;                               \
+            err3 -= dx3abs;                               \
             while (err1 < 0) { err1 += dy1; x1 += dir1; } \
             while (err3 < 0) { err3 += dy3; x2 += dir3; } \
         }                                                 \
