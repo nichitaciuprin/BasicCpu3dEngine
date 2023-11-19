@@ -54,7 +54,7 @@ void main2()
             p0 = { 200, 250 };
 
             p1 = { 200, 300 };
-            p2 = { 150, 350 }; bitmap->DrawTriangle3(p0, p1, p2, RED2);
+            p2 = { 150, 350 }; bitmap->DrawTriangle3(p0, p1, p2, RED);
             p2 = { 250, 350 }; bitmap->DrawTriangle3(p0, p2, p1, RED);
 
             p1 = { 250, 250 };
