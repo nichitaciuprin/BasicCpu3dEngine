@@ -119,7 +119,7 @@ public:
         if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
         if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
         {
-            if (Vector3TriangleIsClockwise(v1, v3, v5)) return;
+            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
             DrawTriangle2(v1, v3, v5, pixel);
             DrawLine2(v1, v2, WHITE);
             DrawLine2(v3, v4, WHITE);
@@ -181,7 +181,7 @@ public:
         #define DRAW(X1, X2)                              \
         for (int i = 0; i < dy2; i++)                     \
         {                                                 \
-            DrawHorizontalLine(y, X1, X2, pixel)          \
+            DrawHorizontalLine(y, X1, X2, pixel);         \
             y++;                                          \
             err1 -= dx1abs;                               \
             err2 -= dx2abs;                               \
@@ -190,7 +190,7 @@ public:
         }                                                 \
         for (int i = 0; i < dy3; i++)                     \
         {                                                 \
-            DrawHorizontalLine(y, X1, X2, pixel)          \
+            DrawHorizontalLine(y, X1, X2, pixel);         \
             y++;                                          \
             err1 -= dx1abs;                               \
             err3 -= dx3abs;                               \
