@@ -54,7 +54,7 @@ void main2()
             p0 = { 200, 250 };
 
             p1 = { 200, 300 };
-            p2 = { 150, 350 }; bitmap->DrawTriangle3(p0, p1, p2, RED);
+            p2 = { 150, 350 }; bitmap->DrawTriangle3(p0, p1, p2, RED2);
             p2 = { 250, 350 }; bitmap->DrawTriangle3(p0, p2, p1, RED);
 
             p1 = { 250, 250 };
@@ -62,8 +62,8 @@ void main2()
             p2 = { 300, 200 }; bitmap->DrawTriangle3(p1, p2, p0, GREEN);
 
             p1 = { 150, 250 };
-            p2 = { 100, 300 }; bitmap->DrawTriangle3(p2, p1, p0, BLUE);
-            p2 = { 100, 200 }; bitmap->DrawTriangle3(p2, p0, p1, BLUE);
+            p2 = { 100, 200 }; bitmap->DrawTriangle3(p0, p1, p2, BLUE);
+            p2 = { 100, 300 }; bitmap->DrawTriangle3(p2, p0, p1, BLUE);
 
             p1 = { 200, 200 };
             p2 = { 150, 150 }; bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);

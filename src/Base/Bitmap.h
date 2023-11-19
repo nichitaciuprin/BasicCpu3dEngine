@@ -6,12 +6,16 @@ typedef uint32_t Pixel;
 
 const Pixel BLACK    = 0x00000000;
 const Pixel WHITE    = 0xFFFFFFFF;
+
 const Pixel RED      = 0x00FF0000;
 const Pixel GREEN    = 0x0000FF00;
 const Pixel BLUE     = 0x000000FF;
+
 const Pixel YELLOW   = 0x00FFFF00;
 const Pixel MAGENTA  = 0x00FF00FF;
 const Pixel CYAN     = 0x0000FFFF;
+
+const Pixel ORANGE   = 0x00FF8000;
 
 class Bitmap
 {
