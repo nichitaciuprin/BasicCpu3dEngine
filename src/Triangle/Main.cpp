@@ -17,15 +17,30 @@ void main2()
         Vector2Int p0;
         Vector2Int p1;
         Vector2Int p2;
+        Vector2Int p3;
 
-        p0 = { 200, 50 };
+        p0 = {  0,  0 };
+        p1 = { 25,  0 };
+        p2 = { 25, 25 };
+        p3 = {  0, 25 };
+        bitmap->DrawTriangle3(p2, p3, p0, RED);
+        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+
+        p0 = {  0 + 50,  0 };
+        p1 = { 25 + 50,  0 };
+        p2 = { 25 + 50, 25 };
+        p3 = {  0 + 50, 25 };
+        bitmap->DrawTriangle3(p0, p3, p2, BLUE);
+        bitmap->DrawTriangle3(p1, p0, p2, YELLOW);
+
+        p0 = { 200,  50 };
         p1 = { 150, 100 };
         p2 = { 250, 150 };
         bitmap->DrawTriangle3(p0, p1, p2, RED);
 
-        p0 = { 100, 50 };
+        p0 = { 100,  50 };
         p1 = { 150, 100 };
-        p2 = { 50, 150 };
+        p2 = { 50,  150 };
         bitmap->DrawTriangle3(p0, p1, p2, GREEN);
 
         p0 = { 200, 250 };
@@ -38,25 +53,25 @@ void main2()
         p2 = { 250, 350 };
         bitmap->DrawTriangle3(p0, p1, p2, CYAN);
 
-        p0 = { 200, 200 };
-        p1 = { 250, 200 };
-        p2 = { 200, 250 };
-        bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
-
-        p0 = { 200, 200 };
-        p1 = { 150, 200 };
-        p2 = { 200, 250 };
-        bitmap->DrawTriangle3(p0, p1, p2, YELLOW);
-
-        p0 = { 250 + 25, 200 };
-        p1 = { 300 + 25, 200 };
-        p2 = { 350 + 25, 250 };
+        p0 = { 250, 250 };
+        p1 = { 200, 250 };
+        p2 = { 300, 300 };
         bitmap->DrawTriangle3(p0, p1, p2, RED);
 
-        p0 = { 100, 200 };
-        p1 = {  50, 200 };
-        p2 = { 150, 150 };
+        p0 = { 250, 250 };
+        p1 = { 200, 250 };
+        p2 = { 300, 200 };
         bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+
+        p0 = { 100, 300 };
+        p1 = { 200, 250 };
+        p2 = { 150, 250 };
+        bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
+
+        p0 = { 100, 200 };
+        p1 = { 200, 250 };
+        p2 = { 150, 250 };
+        bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
 
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);

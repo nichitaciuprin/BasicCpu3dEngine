@@ -115,7 +115,7 @@ public:
         if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
         if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
         {
-            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+            if (Vector3TriangleIsClockwise(v1, v3, v5)) return;
             DrawTriangle2(v1, v3, v5, pixel);
             DrawLine2(v1, v2, WHITE);
             DrawLine2(v3, v4, WHITE);
@@ -162,54 +162,78 @@ public:
         int err1 = dy1 / 2;
         int err2 = dy2 / 2;
         int err3 = dy3 / 2;
+
         int y = top.y;
-
-        #define DRAW(X1, X2)                               \
-        for (int i = 0; i < dy2; i++)                      \
-        {                                                  \
-            DrawHorizontalLine(y, X1, X2, pixel);          \
-            y++;                                           \
-            err1 -= dx1;                                   \
-            err2 -= dx2;                                   \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
-        }                                                  \
-        for (int i = 0; i < dy3; i++)                      \
-        {                                                  \
-            DrawHorizontalLine(y, X1, X2, pixel);          \
-            y++;                                           \
-            err1 -= dx1;                                   \
-            err3 -= dx3;                                   \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
-        }                                                  \
-
-        int x1; int x2;
+        int x1, x2;
         if (dy2 > 0) { x1 = top.x; x2 = top.x;    }
         else         { x1 = top.x; x2 = middle.x; }
 
-        if (top.x < middle.x)
+        // #define DRAWLINE(Y, XLEFT, XRIGHT, PIXEL) \
+        // if (XLEFT < XRIGHT)                       \
+        // {                                         \
+        //     int count = XRIGHT - XLEFT + 1;       \
+        //     for (int j = 0; j < count; j++)       \
+        //         SetPixel(XLEFT + j, Y, PIXEL);    \
+        // }                                         \
+        // else                                      \
+        // {                                         \
+        //     int count = XLEFT - XRIGHT + 1;       \
+        //     for (int j = 0; j < count; j++)       \
+        //         SetPixel(XRIGHT + j, Y, PIXEL);   \
+        // }                                         \
+
+        #define DRAWLINE(Y, XLEFT, XRIGHT, PIXEL) \
+        int count = XRIGHT - XLEFT + 1;           \
+        for (int j = 0; j < count; j++)           \
+            SetPixel(XLEFT + j, Y, PIXEL);        \
+
+        #define DRAW(X1, X2)                              \
+        for (int i = 0; i < dy2; i++)                     \
+        {                                                 \
+            DRAWLINE(y, X1, X2, pixel)                    \
+            y++;                                          \
+            err1 -= dx1;                                  \
+            err2 -= dx2;                                  \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
+            while (err2 < 0) { err2 += dy2; x2 += dir2; } \
+        }                                                 \
+        for (int i = 0; i < dy3; i++)                     \
+        {                                                 \
+            DRAWLINE(y, X1, X2, pixel)                    \
+            y++;                                          \
+            err1 -= dx1;                                  \
+            err3 -= dx3;                                  \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
+            while (err3 < 0) { err3 += dy3; x2 += dir3; } \
+        }                                                 \
+        DRAWLINE(y, X1, X2, pixel)                        \
+
+        if (top.y == middle.y)
+        {
+            if (top.x < middle.x)
+            {
+                DRAW(x1, x2)
+            }
+            else
+            {
+                DRAW(x2, x1)
+            }
+        }
+        else if (top.x < middle.x)
         {
             DRAW(x1, x2)
-        }
-        else if (top.x > middle.x)
-        {
-            DRAW(x2, x1)
         }
         else if (bottom.x < middle.x)
         {
             DRAW(x1, x2)
         }
-        else if (bottom.x > middle.x)
+        else
         {
             DRAW(x2, x1)
         }
-        else
-        {
-            DRAW(x1, x2)
-        }
 
         #undef DRAW
+        #undef DRAWLINE
     }
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)
@@ -225,12 +249,27 @@ public:
         if (v1.z != 0) v1 /= v1.z;
     }
 
-    inline void DrawHorizontalLine(int y, int xLeft, int xRight, Pixel pixel)
-    {
-        int count = xRight - xLeft + 1;
-        for (int i = 0; i < count; i++)
-            SetPixel(xLeft + i, y, pixel);
-    }
+    // inline void DrawHorizontalLine(int y, int xLeft, int xRight, Pixel pixel)
+    // {
+    //     int count = xRight - xLeft + 1;
+    //     for (int i = 0; i < count; i++)
+    //         SetPixel(xLeft + i, y, pixel);
+    // }
+    // inline void DrawHorizontalLine2(int y, int xLeft, int xRight, Pixel pixel)
+    // {
+    //     if (xLeft < xRight)
+    //     {
+    //         int count = xRight - xLeft + 1;
+    //         for (int i = 0; i < count; i++)
+    //             SetPixel(xLeft + i, y, pixel);
+    //     }
+    //     else
+    //     {
+    //         int count = xLeft - xRight + 1;
+    //         for (int i = 0; i < count; i++)
+    //             SetPixel(xRight + i, y, pixel);
+    //     }
+    // }
 
     void DrawCube1(Matrix modelView)
     {
