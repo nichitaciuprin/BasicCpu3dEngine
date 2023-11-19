@@ -15,7 +15,12 @@ const Pixel YELLOW   = 0x00FFFF00;
 const Pixel MAGENTA  = 0x00FF00FF;
 const Pixel CYAN     = 0x0000FFFF;
 
-const Pixel ORANGE   = 0x00FF8000;
+const Pixel ORANGE     = 0x00FF8000;
+const Pixel PINK       = 0x00FF0080;
+const Pixel LIME       = 0x0080FF00;
+const Pixel GREENCOLD  = 0x0000FF80;
+const Pixel VIOLET     = 0x008000FF;
+const Pixel LIGHTBLUE  = 0x000080FF;
 
 class Bitmap
 {

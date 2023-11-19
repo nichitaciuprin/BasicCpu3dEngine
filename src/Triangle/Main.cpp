@@ -66,8 +66,8 @@ void main2()
             p2 = { 100, 300 }; bitmap->DrawTriangle3(p2, p0, p1, BLUE);
 
             p1 = { 200, 200 };
-            p2 = { 150, 150 }; bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
-            p2 = { 250, 150 }; bitmap->DrawTriangle3(p0, p1, p2, MAGENTA);
+            p2 = { 150, 150 }; bitmap->DrawTriangle3(p0, p1, p2, LIME);
+            p2 = { 250, 150 }; bitmap->DrawTriangle3(p0, p1, p2, LIME);
         }
 
         // ROMB
