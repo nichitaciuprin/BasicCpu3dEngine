@@ -178,11 +178,6 @@ public:
         if (dy2 > 0) { x1 = p0.x; x2 = p0.x; }
         else         { x1 = p0.x; x2 = p1.x; }
 
-        #define DRAWLINE(Y, XLEFT, XRIGHT, PIXEL) \
-        int count = XRIGHT - XLEFT + 1;           \
-        for (int j = 0; j < count; j++)           \
-            SetPixel(XLEFT + j, Y, PIXEL);        \
-
         #define DRAW(X1, X2)                              \
         for (int i = 0; i < dy2; i++)                     \
         {                                                 \
@@ -202,7 +197,7 @@ public:
             while (err1 < 0) { err1 += dy1; x1 += dir1; } \
             while (err3 < 0) { err3 += dy3; x2 += dir3; } \
         }                                                 \
-        DRAWLINE(y, X1, X2, pixel)                        \
+        DrawHorizontalLine(y, X1, X2, pixel);             \
 
         if (cross < 0)
         {
@@ -214,7 +209,6 @@ public:
         }
 
         #undef DRAW
-        #undef DRAWLINE
     }
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)
