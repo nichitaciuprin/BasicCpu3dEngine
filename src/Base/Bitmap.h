@@ -4,16 +4,16 @@
 
 typedef uint32_t Pixel;
 
-const Pixel BLACK    = 0x00000000;
-const Pixel WHITE    = 0xFFFFFFFF;
+const Pixel BLACK      = 0x00000000;
+const Pixel WHITE      = 0xFFFFFFFF;
 
-const Pixel RED      = 0x00FF0000;
-const Pixel GREEN    = 0x0000FF00;
-const Pixel BLUE     = 0x000000FF;
+const Pixel RED        = 0x00FF0000;
+const Pixel GREEN      = 0x0000FF00;
+const Pixel BLUE       = 0x000000FF;
 
-const Pixel YELLOW   = 0x00FFFF00;
-const Pixel MAGENTA  = 0x00FF00FF;
-const Pixel CYAN     = 0x0000FFFF;
+const Pixel YELLOW     = 0x00FFFF00;
+const Pixel MAGENTA    = 0x00FF00FF;
+const Pixel CYAN       = 0x0000FFFF;
 
 const Pixel ORANGE     = 0x00FF8000;
 const Pixel PINK       = 0x00FF0080;
@@ -90,11 +90,16 @@ public:
     }
     void DrawLine3(Vector2Int p0, Vector2Int p1, Pixel pixel)
     {
-        int dx = abs(p1.x - p0.x);
-        int dy = abs(p1.y - p0.y);
+        // int dx = abs(p1.x - p0.x);
+        // int dy = abs(p1.y - p0.y);
 
-        int sx = p0.x < p1.x ? 1 : -1;
-        int sy = p0.y < p1.y ? 1 : -1;
+        // int sx = p0.x < p1.x ? 1 : -1;
+        // int sy = p0.y < p1.y ? 1 : -1;
+
+        int dx, dy, sx, sy;
+
+        if (p0.x < p1.x) { sx =  1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
+        if (p0.y < p1.y) { sy =  1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
 
         #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
         int err = MAX / 2;                                \
