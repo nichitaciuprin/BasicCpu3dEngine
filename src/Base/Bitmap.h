@@ -96,10 +96,8 @@ public:
         // int sx = p0.x < p1.x ? 1 : -1;
         // int sy = p0.y < p1.y ? 1 : -1;
 
-        int dx, dy, sx, sy;
-
-        if (p0.x < p1.x) { sx =  1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
-        if (p0.y < p1.y) { sy =  1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
+        int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
+        int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
 
         #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
         int err = MAX / 2;                                \
