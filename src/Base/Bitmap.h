@@ -71,11 +71,11 @@ public:
     {
         int outCode; ProjectLine(v0, v1, outCode);
         if (outCode == 0) return;
-        if (!ClipLine(v0.x, v0.y, v1.x, v1.y)) return;
         DrawLine2(v0, v1, pixel);
     }
     void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
     {
+        if (!ClipLine(v0.x, v0.y, v1.x, v1.y)) return;
         ToScreenSpace(v0);
         ToScreenSpace(v1);
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
