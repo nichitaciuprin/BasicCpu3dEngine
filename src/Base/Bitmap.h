@@ -26,22 +26,20 @@ class Bitmap
 {
 public:
     vector<uint32_t> pixels;
+    vector<float> zbuffer;
 
     Bitmap(int widthNew, int heightNew)
     {
-        pixels = vector<uint32_t>();
-        Resize(widthNew, heightNew);
-    }
-
-    void Resize(int widthNew, int heightNew)
-    {
         if (widthNew < 1) throw exception("Bitmap widthNew < 1");
         if (heightNew < 1) throw exception("Bitmap heightNew < 1");
+
         width = widthNew;
         height = heightNew;
-        auto pixelCount = width * height;
-        if (pixels.size() < pixelCount)
-            pixels.resize(pixelCount);
+
+        auto size = width * height;
+
+        pixels = vector<uint32_t>(size, 0);
+        zbuffer = vector<float>(size, 0);
     }
 
     int Width() const
@@ -69,6 +67,14 @@ public:
 
     void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
     {
+        // auto count = 4;
+        // auto duno1 = v1.z - v0.z;
+        // auto duno2 = count - 1;
+        // auto duno3 = duno1 / duno2;
+        // cout << v0.z;
+        // for (int i = 0; i < duno1; i++)
+        //     v0 += duno3;
+
         int outCode; ProjectLine(v0, v1, outCode);
         if (outCode == 0) return;
         DrawLine2(v0, v1, pixel);
@@ -89,6 +95,28 @@ public:
 
         // int sx = p0.x < p1.x ? 1 : -1;
         // int sy = p0.y < p1.y ? 1 : -1;
+
+        int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
+        int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
+
+        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
+        int err = MAX / 2;                                \
+        for (int i = 0; i < MAX + 1; i++)                 \
+        {                                                 \
+            SetPixel(p0.x, p0.y, pixel);                  \
+            if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
+                           { err -= MIN; AXIS2 += VAL2; } \
+        }                                                 \
+
+        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
+        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
+
+        #undef DRAW
+    }
+    void DrawLine4(Vector3 v0, Vector3 v1, Pixel pixel)
+    {
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
 
         int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
         int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
