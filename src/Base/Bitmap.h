@@ -1,6 +1,6 @@
-#pragma once
-
 // http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html
+
+#pragma once
 
 typedef uint32_t Pixel;
 
