@@ -176,7 +176,76 @@ public:
         Vector2Int v2 = { (int)p2.x, (int)p2.y };
         DrawTriangle3(v0, v1, v2, pixel);
     }
-    void DrawTriangle3(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
+    void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
+    {
+        Vector2Int p0 = { (int)p0.x, (int)p0.y };
+        Vector2Int p1 = { (int)p1.x, (int)p1.y };
+        Vector2Int p2 = { (int)p2.x, (int)p2.y };
+
+        // p0 is top
+        // p1 is middle
+        // p2 is bottom
+        if (p0.y > p1.y) swap(p0, p1);
+        if (p1.y > p2.y) swap(p1, p2);
+        if (p0.y > p1.y) swap(p0, p1);
+        int dx1 = p2.x - p0.x;
+        int dx2 = p1.x - p0.x;
+        int dx3 = p2.x - p1.x;
+        int dy1 = p2.y - p0.y;
+        int dy2 = p1.y - p0.y;
+        int dy3 = p2.y - p1.y;
+        int err1 = dy1 / 2;
+        int err2 = dy2 / 2;
+        int err3 = dy3 / 2;
+        int dir1 = MathSign(dx1);
+        int dir2 = MathSign(dx2);
+        int dir3 = MathSign(dx3);
+        int dx1abs = abs(dx1);
+        int dx2abs = abs(dx2);
+        int dx3abs = abs(dx3);
+        int cross = dx1 * dy2 - dy1 * dx2;
+
+        float diff1 = v2.z - v0.z;
+        float diff2 = v1.z - v0.z;
+
+        int y = p0.y;
+        int x1, x2;
+        if (dy2 > 0) { x1 = p0.x; x2 = p0.x; }
+        else         { x1 = p0.x; x2 = p1.x; }
+
+        #define DRAW(X1, X2)                              \
+        for (int i = 0; i < dy2; i++)                     \
+        {                                                 \
+            DrawHorizontalLine(y, X1, X2, pixel);         \
+            y++;                                          \
+            err1 -= dx1abs;                               \
+            err2 -= dx2abs;                               \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
+            while (err2 < 0) { err2 += dy2; x2 += dir2; } \
+        }                                                 \
+        for (int i = 0; i < dy3; i++)                     \
+        {                                                 \
+            DrawHorizontalLine(y, X1, X2, pixel);         \
+            y++;                                          \
+            err1 -= dx1abs;                               \
+            err3 -= dx3abs;                               \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
+            while (err3 < 0) { err3 += dy3; x2 += dir3; } \
+        }                                                 \
+        DrawHorizontalLine(y, X1, X2, pixel);             \
+
+        if (cross < 0)
+        {
+            DRAW(x1, x2)
+        }
+        else
+        {
+            DRAW(x2, x1)
+        }
+
+        #undef DRAW
+    }
+    void DrawTriangle4(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
         // p0 is top
         // p1 is middle
