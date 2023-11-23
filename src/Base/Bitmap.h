@@ -39,7 +39,7 @@ public:
         auto size = width * height;
 
         pixels = vector<uint32_t>(size, 0);
-        zbuffer = vector<float>(size, 0);
+        zbuffer = vector<float>(size, 100000000.0f); // TODO
     }
 
     int Width() const
@@ -53,6 +53,8 @@ public:
 
     void Fill(Pixel pixel)
     {
+        // TODO Move to BeginDraw()
+        fill(zbuffer.begin(), zbuffer.end(), 100000000.0f);
         fill(pixels.begin(), pixels.end(), pixel);
     }
     void SetPixel(int x, int y, Pixel pixel)
@@ -60,21 +62,75 @@ public:
         // TODO remove guard
         // if (x > width - 1) return;
         // if (y > height - 1) return;
-
         auto i = x + y * width;
         pixels[i] = pixel;
     }
+    void SetPixel2(int x, int y, float z, Pixel pixel)
+    {
+        // TODO remove guard
+        // if (x > width - 1) return;
+        // if (y > height - 1) return;
+        auto i = x + y * width;
+        if (zbuffer[i] > z)
+        {
+            // cout << (zbuffer[i]) << "," << z << endl;
+            // cout << z << endl;
+            zbuffer[i] = z;
+            pixels[i] = pixel;
+        }
+    }
+
+    // void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
+    // {
+    //     // auto count = 4;
+    //     // auto duno1 = v1.z - v0.z;
+    //     // auto duno2 = count - 1;
+    //     // auto duno3 = duno1 / duno2;
+    //     // cout << v0.z;
+    //     // for (int i = 0; i < duno1; i++)
+    //     //     v0 += duno3;
+
+    //     int outCode; ProjectLine(v0, v1, outCode);
+    //     if (outCode == 0) return;
+    //     DrawLine2(v0, v1, pixel);
+    // }
+    // void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
+    // {
+    //     if (!ClipLine(v0.x, v0.y, v1.x, v1.y)) return;
+    //     ToScreenSpace(v0);
+    //     ToScreenSpace(v1);
+    //     Vector2Int p0 = { (int)v0.x, (int)v0.y };
+    //     Vector2Int p1 = { (int)v1.x, (int)v1.y };
+    //     DrawLine3(p0, p1, pixel);
+    // }
+    // void DrawLine3(Vector2Int p0, Vector2Int p1, Pixel pixel)
+    // {
+    //     // int dx = abs(p1.x - p0.x);
+    //     // int dy = abs(p1.y - p0.y);
+
+    //     // int sx = p0.x < p1.x ? 1 : -1;
+    //     // int sy = p0.y < p1.y ? 1 : -1;
+
+    //     int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
+    //     int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
+
+    //     #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
+    //     int err = MAX / 2;                                \
+    //     for (int i = 0; i < MAX + 1; i++)                 \
+    //     {                                                 \
+    //         SetPixel(p0.x, p0.y, pixel);                  \
+    //         if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
+    //                        { err -= MIN; AXIS2 += VAL2; } \
+    //     }                                                 \
+
+    //     if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
+    //     else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
+
+    //     #undef DRAW
+    // }
 
     void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
     {
-        // auto count = 4;
-        // auto duno1 = v1.z - v0.z;
-        // auto duno2 = count - 1;
-        // auto duno3 = duno1 / duno2;
-        // cout << v0.z;
-        // for (int i = 0; i < duno1; i++)
-        //     v0 += duno3;
-
         int outCode; ProjectLine(v0, v1, outCode);
         if (outCode == 0) return;
         DrawLine2(v0, v1, pixel);
@@ -84,48 +140,33 @@ public:
         if (!ClipLine(v0.x, v0.y, v1.x, v1.y)) return;
         ToScreenSpace(v0);
         ToScreenSpace(v1);
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
-        DrawLine3(p0, p1, pixel);
+        DrawLine3(v0, v1, pixel);
     }
-    void DrawLine3(Vector2Int p0, Vector2Int p1, Pixel pixel)
-    {
-        // int dx = abs(p1.x - p0.x);
-        // int dy = abs(p1.y - p0.y);
-
-        // int sx = p0.x < p1.x ? 1 : -1;
-        // int sy = p0.y < p1.y ? 1 : -1;
-
-        int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
-        int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
-
-        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
-        int err = MAX / 2;                                \
-        for (int i = 0; i < MAX + 1; i++)                 \
-        {                                                 \
-            SetPixel(p0.x, p0.y, pixel);                  \
-            if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
-                           { err -= MIN; AXIS2 += VAL2; } \
-        }                                                 \
-
-        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
-        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
-
-        #undef DRAW
-    }
-    void DrawLine4(Vector3 v0, Vector3 v1, Pixel pixel)
+    void DrawLine3(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
 
+        // auto count = 4;
+        // auto duno2 = count - 1;
+        // auto duno3 = diff / duno2;
+        // cout << v0.z;
+        // for (int i = 0; i < duno2; i++)
+        //     v0 += duno3;
+
         int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
         int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
 
+
         #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
         int err = MAX / 2;                                \
+        float diff = v1.z - v0.z;                         \
+        float offset = diff / MAX;                        \
+        float z = v0.z;                                   \
         for (int i = 0; i < MAX + 1; i++)                 \
         {                                                 \
-            SetPixel(p0.x, p0.y, pixel);                  \
+            SetPixel2(p0.x, p0.y, z, pixel);              \
+            z += offset;                                  \
             if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
                            { err -= MIN; AXIS2 += VAL2; } \
         }                                                 \
@@ -245,8 +286,10 @@ public:
         if (outCode == 0) return;
         v0.z += nearZ;
         v1.z += nearZ;
-        if (v0.z != 0) v0 /= v0.z;
-        if (v1.z != 0) v1 /= v1.z;
+        // if (v0.z != 0) v0 /= v0.z;
+        // if (v1.z != 0) v1 /= v1.z;
+        if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
+        if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
     }
 
     inline void DrawHorizontalLine(int y, int xLeft, int xRight, Pixel pixel)
