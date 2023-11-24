@@ -73,8 +73,6 @@ public:
         auto i = x + y * width;
         if (zbuffer[i] > z)
         {
-            // cout << (zbuffer[i]) << "," << z << endl;
-            // cout << z << endl;
             zbuffer[i] = z;
             pixels[i] = pixel;
         }
