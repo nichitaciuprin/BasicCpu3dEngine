@@ -154,9 +154,9 @@ public:
         {
             if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
             DrawTriangle2(v1, v3, v5, pixel);
-            DrawLine2(v1, v2, WHITE);
-            DrawLine2(v3, v4, WHITE);
-            DrawLine2(v5, v0, WHITE);
+            // DrawLine2(v1, v2, WHITE);
+            // DrawLine2(v3, v4, WHITE);
+            // DrawLine2(v5, v0, WHITE);
         }
 
         // all in back
@@ -168,19 +168,24 @@ public:
     }
     void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
+        // TODO replace with proper triangle cliping
+        if (abs(p0.x) > 1) return;
+        if (abs(p0.y) > 1) return;
+        if (abs(p1.x) > 1) return;
+        if (abs(p1.y) > 1) return;
+        if (abs(p2.x) > 1) return;
+        if (abs(p2.y) > 1) return;
+
         ToScreenSpace(p0);
         ToScreenSpace(p1);
         ToScreenSpace(p2);
-        Vector2Int v0 = { (int)p0.x, (int)p0.y };
-        Vector2Int v1 = { (int)p1.x, (int)p1.y };
-        Vector2Int v2 = { (int)p2.x, (int)p2.y };
-        DrawTriangle3(v0, v1, v2, pixel);
+        DrawTriangle3(p0, p1, p2, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
-        Vector2Int p0 = { (int)p0.x, (int)p0.y };
-        Vector2Int p1 = { (int)p1.x, (int)p1.y };
-        Vector2Int p2 = { (int)p2.x, (int)p2.y };
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
+        Vector2Int p2 = { (int)v2.x, (int)v2.y };
 
         // p0 is top
         // p1 is middle
@@ -205,42 +210,50 @@ public:
         int dx3abs = abs(dx3);
         int cross = dx1 * dy2 - dy1 * dx2;
 
-        float diff1 = v2.z - v0.z;
-        float diff2 = v1.z - v0.z;
+        float offset1 = (v2.z - v0.z) / dy1;
+        float offset2 = (v1.z - v0.z) / dy2;
+        float offset3 = (v2.z - v1.z) / dy3;
 
         int y = p0.y;
         int x1, x2;
-        if (dy2 > 0) { x1 = p0.x; x2 = p0.x; }
-        else         { x1 = p0.x; x2 = p1.x; }
+        float z1, z2;
 
-        #define DRAW(X1, X2)                              \
-        for (int i = 0; i < dy2; i++)                     \
-        {                                                 \
-            DrawHorizontalLine(y, X1, X2, pixel);         \
-            y++;                                          \
-            err1 -= dx1abs;                               \
-            err2 -= dx2abs;                               \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
-            while (err2 < 0) { err2 += dy2; x2 += dir2; } \
-        }                                                 \
-        for (int i = 0; i < dy3; i++)                     \
-        {                                                 \
-            DrawHorizontalLine(y, X1, X2, pixel);         \
-            y++;                                          \
-            err1 -= dx1abs;                               \
-            err3 -= dx3abs;                               \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
-            while (err3 < 0) { err3 += dy3; x2 += dir3; } \
-        }                                                 \
-        DrawHorizontalLine(y, X1, X2, pixel);             \
+                       x1 = p0.x; z1 = v0.z;
+        if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
+        else         { x2 = p1.x; z2 = v1.z; }
+
+        #define DRAW(X1, X2, Z1, Z2)                       \
+        for (int i = 0; i < dy2; i++)                      \
+        {                                                  \
+            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
+            y++;                                           \
+            z1 += offset1;                                 \
+            z2 += offset2;                                 \
+            err1 -= dx1abs;                                \
+            err2 -= dx2abs;                                \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
+        }                                                  \
+        for (int i = 0; i < dy3; i++)                      \
+        {                                                  \
+            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
+            y++;                                           \
+            z1 += offset1;                                 \
+            z2 += offset3;                                 \
+            err1 -= dx1abs;                                \
+            err3 -= dx3abs;                                \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
+        }                                                  \
+        DrawHorizontalLine(y, X1, X2, pixel);              \
 
         if (cross < 0)
         {
-            DRAW(x1, x2)
+            DRAW(x1, x2, z1, z2)
         }
         else
         {
-            DRAW(x2, x1)
+            DRAW(x2, x1, z2, z1)
         }
 
         #undef DRAW
@@ -328,6 +341,19 @@ public:
         int count = xRight - xLeft + 1;
         for (int i = 0; i < count; i++)
             SetPixel(xLeft + i, y, pixel);
+    }
+    inline void DrawHorizontalLine2(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
+    {
+        int count = xRight - xLeft;
+        float diff = zRight - zLeft;
+        float offset = diff / count;
+
+        for (int i = 0; i < count + 1; i++)
+        {
+            auto x = xLeft + i;
+            SetPixel2(x, y, zLeft, pixel);
+            zLeft += offset;
+        }
     }
 
     void DrawCube1(Matrix modelView)
