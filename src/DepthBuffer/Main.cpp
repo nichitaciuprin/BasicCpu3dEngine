@@ -60,26 +60,28 @@ void main2()
         //     }
         // }
 
+
         // 3 TRIANGLES
         {
-            float zFar = 20;
-            float zClose = 1;
+            auto time = (float)clock() / 4000;
+            float zFar = 1;
+            float zClose = 0;
             {
-                Vector3 p0 = { -0.1f,  0.3f,  zFar };
-                Vector3 p1 = {  0.0f,  0.3f,  zFar };
-                Vector3 p2 = {  0.2f, -0.3f,  zClose };
+                Vector3 p0 = { -0.2f,  0.6f,  zFar };
+                Vector3 p1 = {  0.0f,  0.6f,  zFar };
+                Vector3 p2 = {  0.4f, -0.6f,  zClose };
                 bitmap->DrawTriangle2(p0, p1, p2, RED);
             }
             {
-                Vector3 p0 = {  0.3f, -0.1f,  zFar };
-                Vector3 p1 = {  0.3f, -0.2f,  zFar };
-                Vector3 p2 = { -0.3f, -0.1f,  zClose };
+                Vector3 p0 = {  0.6f, -0.2f,  zFar };
+                Vector3 p1 = {  0.6f, -0.4f,  zFar };
+                Vector3 p2 = { -0.8f, -0.2f,  zClose };
                 bitmap->DrawTriangle2(p0, p1, p2, GREEN);
             }
             {
-                Vector3 p0 = { -0.2f, -0.2f,  zFar };
-                Vector3 p1 = { -0.3f, -0.2f,  zFar };
-                Vector3 p2 = {  0.1f,  0.3f,  zClose };
+                Vector3 p0 = { -0.4f, -0.4f,  zFar };
+                Vector3 p1 = { -0.6f, -0.4f,  zFar };
+                Vector3 p2 = {  0.2f,  0.6f,  zClose };
                 bitmap->DrawTriangle2(p0, p1, p2, BLUE);
             }
         }
