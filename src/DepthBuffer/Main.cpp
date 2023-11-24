@@ -73,14 +73,14 @@ void main2()
             //     bitmap->DrawTriangle2(p0, p1, p2, RED);
             // }
             {
-                Vector3 p0 = {  0.6f, -0.2f,  zFar };
-                Vector3 p1 = {  0.6f, -0.4f,  zFar };
-                Vector3 p2 = { -0.8f, -0.2f,  -time };
+                Vector3 p0 = {  0.6f, -0.2f,  0 };
+                Vector3 p1 = {  0.6f, -0.4f,  0 };
+                Vector3 p2 = { -0.8f, -0.2f,  1000 };
                 bitmap->DrawTriangle2(p0, p1, p2, GREEN);
             }
             {
-                Vector3 p0 = { -0.4f, -0.4f,  zFar };
-                Vector3 p1 = { -0.6f, -0.4f,  zFar };
+                Vector3 p0 = { -0.4f, -0.4f,  0 };
+                Vector3 p1 = { -0.6f, -0.4f,  0 };
                 Vector3 p2 = {  0.2f,  0.6f,  0 };
                 bitmap->DrawTriangle2(p0, p1, p2, BLUE);
             }
