@@ -130,7 +130,7 @@ public:
         if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
         if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
         {
-            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+            // if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
             DrawTriangle2(v1, v3, v5, pixel);
             // DrawLine2(v1, v2, WHITE);
             // DrawLine2(v3, v4, WHITE);
@@ -307,6 +307,12 @@ public:
         }
 
         #undef DRAW
+    }
+
+    void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
+    {
+        DrawTriangle1(p0, p1, p2, pixel);
+        DrawTriangle1(p2, p3, p0, pixel);
     }
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)
@@ -522,6 +528,53 @@ public:
 
             DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], pixel);
         }
+    }
+    void DrawCube4(Matrix modelView)
+    {
+        float h = 0.5f;
+
+        Vector3 vertexData[] =
+        {
+            Vector3{-h,-h,-h},
+            Vector3{-h,-h, h},
+            Vector3{-h, h,-h},
+            Vector3{-h, h, h},
+            Vector3{ h,-h,-h},
+            Vector3{ h,-h, h},
+            Vector3{ h, h,-h},
+            Vector3{ h, h, h}
+        };
+
+        int indexData[6][4] =
+        {
+            2, 6, 4, 0,
+            6, 7, 5, 4,
+            7, 3, 1, 5,
+            3, 2, 0, 1,
+            1, 0, 4, 5,
+            3, 7, 6, 2,
+        };
+
+        for (int i = 0; i < 8; i++)
+            vertexData[i] *= modelView;
+
+        #define DRAW(INDEX, COLOR)                     \
+        {                                              \
+            auto p0 = vertexData[indexData[INDEX][0]]; \
+            auto p1 = vertexData[indexData[INDEX][1]]; \
+            auto p2 = vertexData[indexData[INDEX][2]]; \
+            auto p3 = vertexData[indexData[INDEX][3]]; \
+            DrawPoligon(p0, p1, p2, p3, COLOR);        \
+        }                                              \
+
+        DRAW(0, RED)
+        DRAW(1, GREEN)
+        // DRAW(2, BLUE)
+        // DRAW(3, YELLOW)
+        DRAW(4, MAGENTA)
+        DRAW(5, CYAN)
+
+        #undef DRAW
     }
 
     void ToScreenSpace(Vector3& point)

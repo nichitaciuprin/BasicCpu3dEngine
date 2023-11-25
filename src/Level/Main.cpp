@@ -14,15 +14,23 @@ void main2()
         CheckFPS();
         bitmap->Fill(BLACK);
 
-        auto time = (float)clock() / 40;
-        // auto time = 0;
         Camera camera = { 0, 0, 0 };
         auto view = MatrixView(&camera);
-        Vector3 position = { 0, 0, 2 };
-        Vector3 rotation = { 0, time, 0 };
-        Vector3 scale = { 1, 1, 1 };
-        auto world = MatrixWorld(position, rotation, scale);
-        bitmap->DrawCube4(world * view);
+
+        {
+            Vector3 position = { 0, 0, 2 };
+            Vector3 rotation = { 0, time, 0 };
+            Vector3 scale = { 1, 1, 1 };
+            auto world = MatrixWorld(position, rotation, scale);
+            bitmap->DrawCube3(world * view);
+        }
+        {
+            Vector3 position = { 0.5f, 0.5f, 2 };
+            Vector3 rotation = { 0, 0, 0 };
+            Vector3 scale = { 1, 1, 1 };
+            auto world = MatrixWorld(position, rotation, scale);
+            bitmap->DrawCube3(world * view);
+        }
 
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);
