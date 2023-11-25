@@ -57,7 +57,7 @@ public:
         fill(zbuffer.begin(), zbuffer.end(), 100000000.0f);
         fill(pixels.begin(), pixels.end(), pixel);
     }
-    
+
     void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         int outCode; ProjectLine(v0, v1, outCode);
@@ -158,11 +158,11 @@ public:
         ToScreenSpace(p1);
         ToScreenSpace(p2);
 
+        DrawTriangle3(p0, p1, p2, pixel);
+
         // DrawLine3(p0, p1, WHITE);
         // DrawLine3(p1, p2, WHITE);
         // DrawLine3(p2, p0, WHITE);
-
-        DrawTriangle3(p0, p1, p2, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
@@ -172,7 +172,6 @@ public:
         if (v0.y > v1.y) swap(v0, v1);
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
-
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
@@ -193,30 +192,21 @@ public:
         int dx3abs = abs(dx3);
         int cross = dx1 * dy2 - dy1 * dx2;
 
-        float offset1 = dy1 == 0 ? 0 : (v2.z - v0.z) / dy1;
-        float offset2 = dy2 == 0 ? 0 : (v1.z - v0.z) / dy2;
-        float offset3 = dy3 == 0 ? 0 : (v2.z - v1.z) / dy3;
-
-        if (pixel == GREEN)
-        {
-            // cout << "========" << endl;
-            // cout << offset1 << endl;
-            // cout << offset2 << endl;
-            // cout << offset3 << endl;
-        }
+        // TODO maybe check for null
+        // float offset1 = dy1 == 0 ? 0 : (v2.z - v0.z) / dy1;
+        // float offset2 = dy2 == 0 ? 0 : (v1.z - v0.z) / dy2;
+        // float offset3 = dy3 == 0 ? 0 : (v2.z - v1.z) / dy3;
+        float offset1 = (v2.z - v0.z) / dy1;
+        float offset2 = (v1.z - v0.z) / dy2;
+        float offset3 = (v2.z - v1.z) / dy3;
 
         int y = p0.y;
-        int x1, x2;
-        float z1, z2;
 
-        if (pixel == GREEN)
-        {
-            // cout << v0.z << endl;
-            // cout << v0.z << endl;
-            // cout << v0.z << endl;
-        }
+        int x1 = p0.x;
+        float z1 = v0.z;
 
-                       x1 = p0.x; z1 = v0.z;
+        int x2;
+        float z2;
         if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
         else         { x2 = p1.x; z2 = v1.z; }
 
@@ -234,9 +224,6 @@ public:
         }                                                  \
         for (int i = 0; i < dy3; i++)                      \
         {                                                  \
-            if (pixel == GREEN)                            \
-            {                                              \
-            }                                              \
             DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
             y++;                                           \
             z1 += offset1;                                 \
@@ -331,8 +318,6 @@ public:
         if (outCode == 0) return;
         v0.z += nearZ;
         v1.z += nearZ;
-        // if (v0.z != 0) v0 /= v0.z;
-        // if (v1.z != 0) v1 /= v1.z;
         if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
         if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
     }
@@ -370,17 +355,15 @@ public:
         // TODO remove guard
         // if (x > width - 1) return;
         // if (y > height - 1) return;
+
         auto i = x + y * width;
-        if (zbuffer[i] > z)
+
+        // TODO maybe drop equal
+        if (zbuffer[i] >= z)
         {
             zbuffer[i] = z;
             pixels[i] = pixel;
         }
-        // else
-        // {
-        //     if (pixel != BLUE) return;
-        //     cout << z << endl;
-        // }
     }
 
     void DrawCube1(Matrix modelView)

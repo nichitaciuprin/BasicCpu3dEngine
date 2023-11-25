@@ -14,26 +14,41 @@ void main2()
         CheckFPS();
         bitmap->Fill(BLACK);
 
-        // // LINES
-        // {
-        //     float zFar = 10;
-        //     float zClose = 9;
-        //     {
-        //         Vector3 p0 = { -1,  3,  zFar };    p0 /= 10;
-        //         Vector3 p1 = {  2, -3,  zClose };  p1 /= 10;
-        //         bitmap->DrawLine1(p0, p1, RED);
-        //     }
-        //     {
-        //         Vector3 p0 = {  3, -1,  zFar };    p0 /= 10;
-        //         Vector3 p1 = { -3, -1,  zClose };  p1 /= 10;
-        //         bitmap->DrawLine1(p0, p1, GREEN);
-        //     }
-        //     {
-        //         Vector3 p0 = { -2, -2,  zFar };    p0 /= 10;
-        //         Vector3 p1 = {  1,  3,  zClose };  p1 /= 10;
-        //         bitmap->DrawLine1(p0, p1, BLUE);
-        //     }
-        // }
+        // LINES
+        {
+            float zFar = 0;
+            float zClose = -10;
+            {
+                Vector3 p0 = { 100, 350, zFar };
+                Vector3 p1 = { 250,  50, zClose };
+                for (size_t i = 0; i < 7; i++)
+                {
+                    p0.y += 1;
+                    p1.y += 1;
+                    bitmap->DrawLine3(p0, p1, RED);
+                }
+            }
+            {
+                Vector3 p0 = { 150,  50, zFar };
+                Vector3 p1 = { 300, 350, zClose };
+                for (size_t i = 0; i < 7; i++)
+                {
+                    p0.y += 1;
+                    p1.y += 1;
+                    bitmap->DrawLine3(p0, p1, GREEN);
+                }
+            }
+            {
+                Vector3 p0 = { 350, 250, zFar };
+                Vector3 p1 = {  50, 250, zClose };
+                for (size_t i = 0; i < 7; i++)
+                {
+                    p0.y += 1;
+                    p1.y += 1;
+                    bitmap->DrawLine3(p0, p1, BLUE);
+                }
+            }
+        }
 
         // // 2 TRIANGLES
         // // RED must overlap
@@ -60,34 +75,30 @@ void main2()
         //     }
         // }
 
-
-        // 3 TRIANGLES
-        {
-            auto time = ((float)clock() / 4000) - 1;
-            float zFar = 0;
-            float zClose = -1;
-            {
-                Vector3 p0 = { -0.2f,  0.6f,  zFar };
-                Vector3 p1 = {  0.0f,  0.6f,  zFar };
-                Vector3 p2 = {  0.4f, -0.6f,  zClose };
-                bitmap->DrawTriangle2(p0, p1, p2, RED);
-            }
-            {
-                Vector3 p0 = {  0.6f, -0.2f,  zFar };
-                Vector3 p1 = {  0.6f, -0.4f,  zFar };
-                Vector3 p2 = { -0.8f, -0.2f,  zClose };
-                // cout << "-------" << endl;
-                bitmap->DrawTriangle2(p0, p1, p2, GREEN);
-            }
-            {
-                Vector3 p0 = { -0.4f, -0.4f,  zFar };
-                Vector3 p1 = { -0.6f, -0.4f,  zFar };
-                Vector3 p2 = {  0.2f,  0.6f,  zClose };
-                bitmap->DrawTriangle2(p0, p1, p2, BLUE);
-                // cout << "---------" << endl;
-            }
-        }
-
+        // // 3 TRIANGLES
+        // {
+        //     auto time = ((float)clock() / 4000) - 1;
+        //     float zFar = 0;
+        //     float zClose = -1;
+        //     {
+        //         Vector3 p0 = { -0.2f,  0.6f,  zFar };
+        //         Vector3 p1 = {  0.0f,  0.6f,  zFar };
+        //         Vector3 p2 = {  0.4f, -0.6f,  zClose };
+        //         bitmap->DrawTriangle2(p0, p1, p2, RED);
+        //     }
+        //     {
+        //         Vector3 p0 = {  0.6f, -0.2f,  zFar };
+        //         Vector3 p1 = {  0.6f, -0.4f,  zFar };
+        //         Vector3 p2 = { -0.8f, -0.2f,  zClose };
+        //         bitmap->DrawTriangle2(p0, p1, p2, GREEN);
+        //     }
+        //     {
+        //         Vector3 p0 = { -0.4f, -0.4f,  zFar };
+        //         Vector3 p1 = { -0.6f, -0.4f,  zFar };
+        //         Vector3 p2 = {  0.2f,  0.6f,  zClose };
+        //         bitmap->DrawTriangle2(p0, p1, p2, BLUE);
+        //     }
+        // }
 
         bitmap->DrawBorder(GREEN);
         BitmapWindow1::SetPixels(bitmap);
