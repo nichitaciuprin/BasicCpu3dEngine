@@ -15,7 +15,6 @@ void main2()
         bitmap->Fill(BLACK);
 
         {
-            auto time = ((float)clock() / 4000) - 1;
             float zFar = 0;
             float zClose = -1;
             {
