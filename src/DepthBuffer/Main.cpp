@@ -14,6 +14,42 @@ void main2()
         CheckFPS();
         bitmap->Fill(BLACK);
 
+        // // LINES
+        // {
+        //     float zFar = 0;
+        //     float zClose = -10;
+        //     {
+        //         Vector3 p0 = { 100, 350, zFar };
+        //         Vector3 p1 = { 250,  50, zClose };
+        //         for (size_t i = 0; i < 7; i++)
+        //         {
+        //             p0.y += 1;
+        //             p1.y += 1;
+        //             bitmap->DrawLine3(p0, p1, RED);
+        //         }
+        //     }
+        //     {
+        //         Vector3 p0 = { 150,  50, zFar };
+        //         Vector3 p1 = { 300, 350, zClose };
+        //         for (size_t i = 0; i < 7; i++)
+        //         {
+        //             p0.y += 1;
+        //             p1.y += 1;
+        //             bitmap->DrawLine3(p0, p1, GREEN);
+        //         }
+        //     }
+        //     {
+        //         Vector3 p0 = { 350, 250, zFar };
+        //         Vector3 p1 = {  50, 250, zClose };
+        //         for (size_t i = 0; i < 7; i++)
+        //         {
+        //             p0.y += 1;
+        //             p1.y += 1;
+        //             bitmap->DrawLine3(p0, p1, BLUE);
+        //         }
+        //     }
+        // }
+
         // LINES
         {
             float zFar = 0;

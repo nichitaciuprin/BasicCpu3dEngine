@@ -80,6 +80,24 @@ public:
             _pixels[x + y2 * _width] = pixel;
         }
     }
+    void SetPixels2(const unique_ptr<Bitmap>& bitmap, int scale)
+    {
+        if (!Exists()) return;
+
+        auto width = bitmap->Width();
+        auto height = bitmap->Height();
+
+        for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
+        {
+            auto pixel = bitmap->pixels[x + y * width];
+            auto x2 = x * scale;
+            auto y2 = y * scale;
+            for (int i = 0; i < scale; i++)
+            for (int j = 0; j < scale; j++)
+                SetPixel(x2+i, y2+j, pixel);
+        }
+    }
     int GetClientWidth() const
     {
         return _width;
@@ -87,6 +105,12 @@ public:
     int GetClientHeight() const
     {
         return _height;
+    }
+    void SetPixel(int x, int y, Pixel pixel)
+    {
+        // window bitmap is bottom-up
+        y = _height - 1 - y;
+        _pixels[x + y * _width] = pixel;
     }
 
 private:

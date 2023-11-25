@@ -554,7 +554,7 @@ public:
     void DrawSquare(Pixel pixel)
     {
         // TODO
-        int size = 20;
+        int size = 4;
         for (int x = 0; x < MathClamp(size, 0, width - 1); x++)
         for (int y = 0; y < MathClamp(size, 0, height - 1); y++)
             SetPixel(x,y,pixel);
