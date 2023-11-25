@@ -158,20 +158,24 @@ public:
         ToScreenSpace(p1);
         ToScreenSpace(p2);
 
+        // DrawLine3(p0, p1, WHITE);
+        // DrawLine3(p1, p2, WHITE);
+        // DrawLine3(p2, p0, WHITE);
+
         DrawTriangle3(p0, p1, p2, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
-        Vector2Int p2 = { (int)v2.x, (int)v2.y };
-
         // p0 is top
         // p1 is middle
         // p2 is bottom
-        if (p0.y > p1.y) swap(p0, p1);
-        if (p1.y > p2.y) swap(p1, p2);
-        if (p0.y > p1.y) swap(p0, p1);
+        if (v0.y > v1.y) swap(v0, v1);
+        if (v1.y > v2.y) swap(v1, v2);
+        if (v0.y > v1.y) swap(v0, v1);
+
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
+        Vector2Int p2 = { (int)v2.x, (int)v2.y };
         int dx1 = p2.x - p0.x;
         int dx2 = p1.x - p0.x;
         int dx3 = p2.x - p1.x;
@@ -205,6 +209,13 @@ public:
         int x1, x2;
         float z1, z2;
 
+        if (pixel == GREEN)
+        {
+            // cout << v0.z << endl;
+            // cout << v0.z << endl;
+            // cout << v0.z << endl;
+        }
+
                        x1 = p0.x; z1 = v0.z;
         if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
         else         { x2 = p1.x; z2 = v1.z; }
@@ -223,6 +234,9 @@ public:
         }                                                  \
         for (int i = 0; i < dy3; i++)                      \
         {                                                  \
+            if (pixel == GREEN)                            \
+            {                                              \
+            }                                              \
             DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
             y++;                                           \
             z1 += offset1;                                 \
