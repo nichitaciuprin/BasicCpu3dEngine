@@ -57,27 +57,7 @@ public:
         fill(zbuffer.begin(), zbuffer.end(), 100000000.0f);
         fill(pixels.begin(), pixels.end(), pixel);
     }
-    void SetPixel(int x, int y, Pixel pixel)
-    {
-        // TODO remove guard
-        // if (x > width - 1) return;
-        // if (y > height - 1) return;
-        auto i = x + y * width;
-        pixels[i] = pixel;
-    }
-    void SetPixel2(int x, int y, float z, Pixel pixel)
-    {
-        // TODO remove guard
-        // if (x > width - 1) return;
-        // if (y > height - 1) return;
-        auto i = x + y * width;
-        if (zbuffer[i] > z)
-        {
-            zbuffer[i] = z;
-            pixels[i] = pixel;
-        }
-    }
-
+    
     void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         int outCode; ProjectLine(v0, v1, outCode);
@@ -177,6 +157,7 @@ public:
         ToScreenSpace(p0);
         ToScreenSpace(p1);
         ToScreenSpace(p2);
+
         DrawTriangle3(p0, p1, p2, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
@@ -208,9 +189,17 @@ public:
         int dx3abs = abs(dx3);
         int cross = dx1 * dy2 - dy1 * dx2;
 
-        float offset1 = (v2.z - v0.z) / dy1;
-        float offset2 = (v1.z - v0.z) / dy2;
-        float offset3 = (v2.z - v1.z) / dy3;
+        float offset1 = dy1 == 0 ? 0 : (v2.z - v0.z) / dy1;
+        float offset2 = dy2 == 0 ? 0 : (v1.z - v0.z) / dy2;
+        float offset3 = dy3 == 0 ? 0 : (v2.z - v1.z) / dy3;
+
+        if (pixel == GREEN)
+        {
+            // cout << "========" << endl;
+            // cout << offset1 << endl;
+            // cout << offset2 << endl;
+            // cout << offset3 << endl;
+        }
 
         int y = p0.y;
         int x1, x2;
@@ -243,7 +232,7 @@ public:
             while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
         }                                                  \
-        DrawHorizontalLine(y, X1, X2, pixel);              \
+        DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel);     \
 
         if (cross < 0)
         {
@@ -352,6 +341,32 @@ public:
             SetPixel2(x, y, zLeft, pixel);
             zLeft += offset;
         }
+    }
+
+    void SetPixel(int x, int y, Pixel pixel)
+    {
+        // TODO remove guard
+        // if (x > width - 1) return;
+        // if (y > height - 1) return;
+        auto i = x + y * width;
+        pixels[i] = pixel;
+    }
+    void SetPixel2(int x, int y, float z, Pixel pixel)
+    {
+        // TODO remove guard
+        // if (x > width - 1) return;
+        // if (y > height - 1) return;
+        auto i = x + y * width;
+        if (zbuffer[i] > z)
+        {
+            zbuffer[i] = z;
+            pixels[i] = pixel;
+        }
+        // else
+        // {
+        //     if (pixel != BLUE) return;
+        //     cout << z << endl;
+        // }
     }
 
     void DrawCube1(Matrix modelView)

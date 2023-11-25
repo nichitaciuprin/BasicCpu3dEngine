@@ -83,6 +83,7 @@ void main2()
                 Vector3 p1 = { -0.6f, -0.4f,  0 };
                 Vector3 p2 = {  0.2f,  0.6f,  0 };
                 bitmap->DrawTriangle2(p0, p1, p2, BLUE);
+                // cout << "---------" << endl;
             }
         }
 
