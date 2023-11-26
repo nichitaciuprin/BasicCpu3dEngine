@@ -2,10 +2,10 @@
 
 void main2()
 {
-    auto width = 600;
-    auto height = 600;
+    auto width = 40;
+    auto height = 40;
 
-    auto scale2 = 1;
+    auto scale2 = 10;
 
     auto bitmap = make_unique<Bitmap>(width, height);
 
@@ -16,17 +16,14 @@ void main2()
         CheckFPS();
         bitmap->Fill(BLACK);
 
-        auto time = (float)clock() / 100;
-        // auto time = 0;
-        Camera camera = { 0, 0, 0 };
-        auto view = MatrixView(&camera);
-        Vector3 position = { 0, 0, 2 };
-        Vector3 rotation = { 0, time, 0 };
-        Vector3 scale = { 1, 1, 1 };
-        auto world = MatrixWorld(position, rotation, scale);
-        bitmap->DrawCube3(world * view);
+        Vector3 p0 = { -0.8f, -0.8f, 0 };
+        Vector3 p2 = {  0.0f,  0.8f, 0 };
+        Vector3 p3 = {  0.7f, -0.1f, 0 };
 
-        // bitmap->DrawBorder(GREEN);
+        bitmap->DrawTriangle2(p2, p3, p0, GREEN);
+
+        // abort();
+
         BitmapWindow1::SetPixels2(bitmap, scale2);
         BitmapWindow1::Update();
     }

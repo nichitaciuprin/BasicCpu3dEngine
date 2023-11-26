@@ -86,7 +86,7 @@ public:
         float z = v0.z;                                   \
         for (int i = 0; i < MAX + 1; i++)                 \
         {                                                 \
-            SetPixel2(p0.x, p0.y, z, pixel);              \
+            SetPixel(p0.x, p0.y, pixel);              \
             z += offset;                                  \
             if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
                            { err -= MIN; AXIS2 += VAL2; } \
@@ -130,7 +130,7 @@ public:
         if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
         if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
         {
-            // if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
+            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
             DrawTriangle2(v1, v3, v5, pixel);
             // DrawLine2(v1, v2, WHITE);
             // DrawLine2(v3, v4, WHITE);
@@ -158,14 +158,18 @@ public:
         ToScreenSpace(p1);
         ToScreenSpace(p2);
 
-        DrawTriangle3(p0, p1, p2, pixel);
-
         // DrawLine3(p0, p1, WHITE);
         // DrawLine3(p1, p2, WHITE);
         // DrawLine3(p2, p0, WHITE);
+
+        DrawTriangle3(p0, p1, p2, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
+        // DrawLine3(v0, v2, WHITE);
+        // DrawLine3(v0, v1, WHITE);
+        DrawLine3(v1, v2, WHITE);
+
         // p0 is top
         // p1 is middle
         // p2 is bottom
@@ -209,6 +213,11 @@ public:
         float z2;
         if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
         else         { x2 = p1.x; z2 = v1.z; }
+
+        // cout << "-------" << endl;
+        // cout << dy1 << endl;
+        // cout << err3 << endl;
+        // cout << (dx3 / 2) << endl;
 
         #define DRAW(X1, X2, Z1, Z2)                       \
         for (int i = 0; i < dy2; i++)                      \
@@ -314,6 +323,11 @@ public:
         DrawTriangle1(p0, p1, p2, pixel);
         DrawTriangle1(p2, p3, p0, pixel);
     }
+    void DrawPoligon2(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
+    {
+        DrawTriangle2(p0, p1, p2, pixel);
+        DrawTriangle2(p2, p3, p0, pixel);
+    }
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)
     {
@@ -343,7 +357,8 @@ public:
         for (int i = 0; i < count + 1; i++)
         {
             auto x = xLeft + i;
-            SetPixel2(x, y, zLeft, pixel);
+            // SetPixel2(x, y, zLeft, pixel);
+            SetPixel(x, y, pixel);
             zLeft += offset;
         }
     }
@@ -567,12 +582,19 @@ public:
             DrawPoligon(p0, p1, p2, p3, COLOR);        \
         }                                              \
 
-        DRAW(0, RED)
-        DRAW(1, GREEN)
-        // DRAW(2, BLUE)
-        // DRAW(3, YELLOW)
-        DRAW(4, MAGENTA)
-        DRAW(5, CYAN)
+        DRAW(0, GREEN)
+        DRAW(1, RED)
+        DRAW(2, GREEN)
+        DRAW(3, RED)
+        DRAW(4, GREEN)
+        DRAW(5, GREEN)
+
+        // DRAW(0, CYAN)
+        // DRAW(1, GREEN)
+        // // DRAW(2, BLUE)
+        // // DRAW(3, YELLOW)
+        // DRAW(4, MAGENTA)
+        // // DRAW(5, RED)
 
         #undef DRAW
     }
