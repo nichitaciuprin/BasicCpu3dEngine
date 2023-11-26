@@ -170,9 +170,9 @@ public:
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
 
-        DrawLine3(v0, v2, WHITE);
-        DrawLine3(v0, v1, WHITE);
-        DrawLine3(v1, v2, WHITE);
+        // DrawLine3(v0, v2, WHITE);
+        // DrawLine3(v0, v1, WHITE);
+        // DrawLine3(v1, v2, WHITE);
 
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
@@ -253,6 +253,10 @@ public:
         }
 
         #undef DRAW
+
+        DrawLine3(v0, v2, WHITE);
+        DrawLine3(v0, v1, WHITE);
+        DrawLine3(v1, v2, WHITE);
     }
     void DrawTriangle4(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
@@ -356,7 +360,8 @@ public:
         for (int i = 0; i < count + 1; i++)
         {
             auto x = xLeft + i;
-            SetPixel2(x, y, zLeft, pixel);
+            // SetPixel2(x, y, zLeft, pixel);
+            SetPixel(x, y, pixel);
             zLeft += offset;
         }
     }
@@ -580,19 +585,19 @@ public:
             DrawPoligon(p0, p1, p2, p3, COLOR);        \
         }                                              \
 
-        DRAW(0, GREEN)
-        DRAW(1, RED)
-        DRAW(2, GREEN)
-        DRAW(3, RED)
-        DRAW(4, GREEN)
-        DRAW(5, GREEN)
+        // DRAW(0, GREEN)
+        // DRAW(1, RED)
+        // DRAW(2, GREEN)
+        // DRAW(3, RED)
+        // DRAW(4, GREEN)
+        // DRAW(5, GREEN)
 
-        // DRAW(0, CYAN)
-        // DRAW(1, GREEN)
-        // // DRAW(2, BLUE)
-        // // DRAW(3, YELLOW)
-        // DRAW(4, MAGENTA)
-        // // DRAW(5, RED)
+        DRAW(0, CYAN)
+        DRAW(1, GREEN)
+        DRAW(2, BLUE)
+        DRAW(3, YELLOW)
+        DRAW(4, MAGENTA)
+        DRAW(5, RED)
 
         #undef DRAW
     }
