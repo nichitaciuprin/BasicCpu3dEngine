@@ -254,9 +254,9 @@ public:
 
         #undef DRAW
 
-        DrawLine3(v0, v2, WHITE);
+        // DrawLine3(v0, v2, WHITE);
         DrawLine3(v0, v1, WHITE);
-        DrawLine3(v1, v2, WHITE);
+        // DrawLine3(v1, v2, WHITE);
     }
     void DrawTriangle4(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
