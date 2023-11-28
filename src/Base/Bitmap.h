@@ -221,25 +221,25 @@ public:
         #define DRAW(X1, X2, Z1, Z2)                       \
         for (int i = 0; i < dy2; i++)                      \
         {                                                  \
-            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
-            y++;                                           \
-            z1 += offset1;                                 \
-            z2 += offset2;                                 \
             while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
             while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
+            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
+            y++;                                           \
             err1 -= dx1abs;                                \
             err2 -= dx2abs;                                \
+            z1 += offset1;                                 \
+            z2 += offset2;                                 \
         }                                                  \
         for (int i = 0; i < dy3; i++)                      \
         {                                                  \
-            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
-            y++;                                           \
-            z1 += offset1;                                 \
-            z2 += offset3;                                 \
             while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
             while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
+            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
+            y++;                                           \
             err1 -= dx1abs;                                \
             err3 -= dx3abs;                                \
+            z1 += offset1;                                 \
+            z2 += offset3;                                 \
         }                                                  \
         DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel);     \
 
