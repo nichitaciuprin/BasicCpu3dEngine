@@ -76,27 +76,30 @@ public:
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
 
-        int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
-        int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
+        int sx, dx;
+        if (p0.x < p1.x) { sx =  1; dx = p1.x - p0.x; }
+        else             { sx = -1; dx = p0.x - p1.x; }
 
-        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
-        int err = MAX / 2 - MIN;                         \
-        float diff = v1.z - v0.z;                        \
-        float offset = diff / MAX;                       \
-        float z = v0.z;                                  \
-        for (int i = 0; i < MAX; i++)                    \
-        {                                                \
-            SetPixel2(p0.x, p0.y, z, pixel);             \
-            z += offset;                                 \
-            if (err < 0) { err += MAX; AXIS1 += VAL1; }  \
-                         { err -= MIN; AXIS2 += VAL2; }  \
-        }                                                \
-        SetPixel(p0.x, p0.y, pixel);                     \
+        int sy, dy;
+        if (p0.y < p1.y) { sy =  1; dy = p1.y - p0.y; }
+        else             { sy = -1; dy = p0.y - p1.y; }
 
-        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
-        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
+        int MAX, MIN, AXIS1, AXIS2, VAL1, VAL2;
+        if (dx > dy) { MAX = dx; MIN = dy; AXIS1 = p0.y; AXIS2 = p0.x; VAL1 = sy; VAL2 = sx; }
+        else         { MAX = dy; MIN = dx; AXIS1 = p0.x; AXIS2 = p0.y; VAL1 = sx; VAL2 = sy; }
 
-        #undef DRAW
+        int err = MAX / 2 - MIN;
+        float diff = v1.z - v0.z;
+        float offset = diff / MAX;
+        float z = v0.z;
+        for (int i = 0; i < MAX; i++)
+        {
+            SetPixel2(p0.x, p0.y, z, pixel);
+            if (err < 0) { err += MAX; AXIS1 += VAL1; }
+                         { err -= MIN; AXIS2 += VAL2; }
+            z += offset;
+        }
+        SetPixel(p0.x, p0.y, pixel);
     }
     void DrawLine4(Vector2Int p0, Vector2Int p1, Pixel pixel)
     {
@@ -170,9 +173,15 @@ public:
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
 
-        DrawLine3(v0, v2, WHITE);
-        DrawLine3(v0, v1, WHITE);
-        DrawLine3(v1, v2, WHITE);
+        DrawLine3(v0, v2, RED);
+        DrawLine3(v0, v1, RED);
+        DrawLine3(v1, v2, RED);
+
+        DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, WHITE);
+        DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, WHITE);
+        DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, WHITE);
+
+        return;
 
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
