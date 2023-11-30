@@ -115,7 +115,7 @@ public:
             if (err < 0) { err += MAX; AXIS1 += VAL1; }  \
                          { err -= MIN; AXIS2 += VAL2; }  \
         }                                                \
-        SetPixel(p0.x, p0.y, pixel);                     \
+        SetPixel2(p0.x, p0.y, z, pixel);                 \
 
         if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
         else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
@@ -194,15 +194,15 @@ public:
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
 
-        DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, RED);
-        DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, RED);
-        DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, RED);
+        // DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, RED);
+        // DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, RED);
+        // DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, RED);
 
-        DrawLine3(v0, v2, WHITE);
-        DrawLine3(v0, v1, WHITE);
-        DrawLine3(v1, v2, WHITE);
+        // DrawLine3(v0, v2, WHITE);
+        // DrawLine3(v0, v1, WHITE);
+        // DrawLine3(v1, v2, WHITE);
 
-        return;
+        // return;
 
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
@@ -284,9 +284,9 @@ public:
 
         #undef DRAW
 
-        // DrawLine3(v0, v2, WHITE);
-        // DrawLine3(v0, v1, WHITE);
-        // DrawLine3(v1, v2, WHITE);
+        DrawLine3(v0, v2, WHITE);
+        DrawLine3(v0, v1, WHITE);
+        DrawLine3(v1, v2, WHITE);
     }
     void DrawTriangle4(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
     {
@@ -416,7 +416,8 @@ public:
         if (zbuffer[i] >= z)
         {
             zbuffer[i] = z;
-            pixels[i] = pixel;
+            // pixels[i] = pixel;
+            pixels[i] = (pixels[i] + pixel) / 2;
         }
     }
 
