@@ -194,19 +194,10 @@ public:
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
 
-        // DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, RED);
-        // DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, RED);
-        // DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, RED);
-
-        // DrawLine3(v0, v2, WHITE);
-        // DrawLine3(v0, v1, WHITE);
-        // DrawLine3(v1, v2, WHITE);
-
-        // return;
-
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
+
         int dx1 = p2.x - p0.x;
         int dx2 = p1.x - p0.x;
         int dx3 = p2.x - p1.x;
@@ -225,9 +216,9 @@ public:
         // int min1 = MathMin(dy1, dx1abs);
         // int min2 = MathMin(dy2, dx2abs);
         // int min3 = MathMin(dy3, dx3abs);
-        int err1 = dy1 / 2 - dx1abs;
-        int err2 = dy2 / 2 - dx2abs;
-        int err3 = dy3 / 2 - dx3abs;
+        int err1 = dy1 - dx1abs;
+        int err2 = dy2 - dx2abs;
+        int err3 = dy3 - dx3abs;
         int cross = dx1 * dy2 - dy1 * dx2;
 
         // TODO maybe check for null
