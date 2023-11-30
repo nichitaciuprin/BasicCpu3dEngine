@@ -381,6 +381,10 @@ public:
         if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
         else         { x2 = p1.x; z2 = v1.z; }
 
+        while (true)
+        {
+        }
+
         #define DRAW(X1, X2, Z1, Z2)                       \
         for (int i = 0; i < dy2; i++)                      \
         {                                                  \
