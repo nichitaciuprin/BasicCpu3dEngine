@@ -89,6 +89,7 @@ public:
         else         { max = dy; min = dx; axis1 = p0.x; axis2 = p0.y; val1 = sx; val2 = sy; }
 
         int err = max / 2 - min;
+
         float diff = v1.z - v0.z;
         float offset = diff / max;
         float z = v0.z;
