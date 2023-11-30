@@ -94,7 +94,7 @@ public:
         // float offset = diff / max;
         // float z = v0.z;
 
-        // for (int i = 0; i < max; i++)
+        // for (int i = 0; i < max / 2; i++)
         // {
         //     SetPixel2(axis2, axis1, z, pixel);
         //     if (err < 0) { err += max; axis1 += val1; }
@@ -102,7 +102,7 @@ public:
         //     z += offset;
         // }
 
-        // SetPixel(p0.x, p0.y, pixel);
+        // SetPixel(axis2, axis1, pixel);
 
         #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
         int err = MAX / 2 - MIN;                         \
@@ -196,8 +196,8 @@ public:
         if (v0.y > v1.y) swap(v0, v1);
 
         DrawLine3(v0, v2, RED);
-        DrawLine3(v0, v1, RED);
-        DrawLine3(v1, v2, RED);
+        // DrawLine3(v0, v1, RED);
+        // DrawLine3(v1, v2, RED);
 
         // DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, WHITE);
         // DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, WHITE);
