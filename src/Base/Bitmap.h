@@ -84,46 +84,45 @@ public:
         if (p0.y < p1.y) { dy = p1.y - p0.y; sy =  1; }
         else             { dy = p0.y - p1.y; sy = -1; }
 
-        int max, min, axis1, axis2, val1, val2;
-        if (dx > dy) { max = dx; min = dy; axis1 = p0.y; axis2 = p0.x; val1 = sy; val2 = sx; }
-        else         { max = dy; min = dx; axis1 = p0.x; axis2 = p0.y; val1 = sx; val2 = sy; }
+        // int max, min, val1, val2;
+        // int* axis1;
+        // int* axis2;
+        // if (dx > dy) { max = dx; min = dy; axis1 = &p0.y; axis2 = &p0.x; val1 = sy; val2 = sx; }
+        // else         { max = dy; min = dx; axis1 = &p0.x; axis2 = &p0.y; val1 = sx; val2 = sy; }
 
-        int err = max / 2 - min;
+        // int err = max / 2 - min;
 
-        float diff = v1.z - v0.z;
-        float offset = diff / max;
-        float z = v0.z;
+        // float diff = v1.z - v0.z;
+        // float offset = diff / max;
+        // float z = v0.z;
 
-        for (int i = 0; i < max; i++)
-        {
-            SetPixel2(axis1, axis2, z, pixel);
-            // cout << axis1 << endl;
-            // cout << p0.y << endl;
-            if (err < 0) { err += max; axis1 += val1; }
-                         { err -= min; axis2 += val2; }
-            z += offset;
-        }
-        SetPixel(axis1, axis2, pixel);
-        // cout << "------" << endl;
+        // for (int i = 0; i < max; i++)
+        // {
+        //     SetPixel2(p0.x, p0.y, z, pixel);
+        //     if (err < 0) { err += max; (*axis1) += val1; }
+        //                  { err -= min; (*axis2) += val2; }
+        //     z += offset;
+        // }
+        // SetPixel2(p0.x, p0.y, z, pixel);
 
-        // #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
-        // int err = MAX / 2 - MIN;                         \
-        // float diff = v1.z - v0.z;                        \
-        // float offset = diff / MAX;                       \
-        // float z = v0.z;                                  \
-        // for (int i = 0; i < MAX; i++)                    \
-        // {                                                \
-        //     SetPixel2(p0.x, p0.y, z, pixel);             \
-        //     z += offset;                                 \
-        //     if (err < 0) { err += MAX; AXIS1 += VAL1; }  \
-        //                  { err -= MIN; AXIS2 += VAL2; }  \
-        // }                                                \
-        // SetPixel(p0.x, p0.y, pixel);                     \
+        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
+        int err = MAX / 2 - MIN;                         \
+        float diff = v1.z - v0.z;                        \
+        float offset = diff / MAX;                       \
+        float z = v0.z;                                  \
+        for (int i = 0; i < MAX; i++)                    \
+        {                                                \
+            SetPixel2(p0.x, p0.y, z, pixel);             \
+            z += offset;                                 \
+            if (err < 0) { err += MAX; AXIS1 += VAL1; }  \
+                         { err -= MIN; AXIS2 += VAL2; }  \
+        }                                                \
+        SetPixel(p0.x, p0.y, pixel);                     \
 
-        // if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
-        // else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
+        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
+        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
 
-        // #undef DRAW
+        #undef DRAW
     }
     void DrawLine4(Vector2Int p0, Vector2Int p1, Pixel pixel)
     {
@@ -201,9 +200,9 @@ public:
         DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, WHITE);
         DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, WHITE);
 
-        // DrawLine3(v0, v2, RED);
+        DrawLine3(v0, v2, RED);
         DrawLine3(v0, v1, RED);
-        // DrawLine3(v1, v2, RED);
+        DrawLine3(v1, v2, RED);
 
         return;
 
