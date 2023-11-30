@@ -76,13 +76,13 @@ public:
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
 
-        // int dx, sx;
-        // if (p0.x < p1.x) { dx = p1.x - p0.x; sx =  1; }
-        // else             { dx = p0.x - p1.x; sx = -1; }
+        int dx, sx;
+        if (p0.x < p1.x) { dx = p1.x - p0.x; sx =  1; }
+        else             { dx = p0.x - p1.x; sx = -1; }
 
-        // int dy, sy;
-        // if (p0.y < p1.y) { dy = p1.y - p0.y; sy =  1; }
-        // else             { dy = p0.y - p1.y; sy = -1; }
+        int dy, sy;
+        if (p0.y < p1.y) { dy = p1.y - p0.y; sy =  1; }
+        else             { dy = p0.y - p1.y; sy = -1; }
 
         // int max, min, axis1, axis2, val1, val2;
         // if (dx > dy) { max = dx; min = dy; axis1 = p0.y; axis2 = p0.x; val1 = sy; val2 = sx; }
@@ -103,14 +103,6 @@ public:
         // }
 
         // SetPixel(p0.x, p0.y, pixel);
-
-        int dx, sx;
-        if (p0.x < p1.x) { sx =  1; dx = p1.x - p0.x; }
-        else             { sx = -1; dx = p0.x - p1.x; }
-
-        int dy, sy;
-        if (p0.y < p1.y) { sy =  1; dy = p1.y - p0.y; }
-        else             { sy = -1; dy = p0.y - p1.y; }
 
         #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
         int err = MAX / 2 - MIN;                         \
