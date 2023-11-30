@@ -92,8 +92,7 @@ public:
 
         // int err = max / 2 - min;
 
-        // float diff = v1.z - v0.z;
-        // float offset = diff / max;
+        // float offset = (v1.z - v0.z) / max;
         // float z = v0.z;
 
         // for (int i = 0; i < max; i++)
@@ -107,8 +106,7 @@ public:
 
         #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
         int err = MAX / 2 - MIN;                         \
-        float diff = v1.z - v0.z;                        \
-        float offset = diff / MAX;                       \
+        float offset = (v1.z - v0.z) / MAX;              \
         float z = v0.z;                                  \
         for (int i = 0; i < MAX; i++)                    \
         {                                                \
@@ -196,13 +194,13 @@ public:
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
 
-        DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, WHITE);
-        DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, WHITE);
-        DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, WHITE);
+        DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, RED);
+        DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, RED);
+        DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, RED);
 
-        DrawLine3(v0, v2, RED);
-        DrawLine3(v0, v1, RED);
-        DrawLine3(v1, v2, RED);
+        DrawLine3(v0, v2, WHITE);
+        DrawLine3(v0, v1, WHITE);
+        DrawLine3(v1, v2, WHITE);
 
         return;
 
