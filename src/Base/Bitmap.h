@@ -145,7 +145,6 @@ public:
 
         #undef DRAW
     }
-    
 
     // void DrawLine5(Vector3 v0, Vector3 v1, Pixel pixel)
     // {
@@ -247,6 +246,16 @@ public:
         if (v0.y > v1.y) swap(v0, v1);
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
+
+        DrawLine3(v0, v2, WHITE);
+        DrawLine3(v0, v1, WHITE);
+        DrawLine3(v1, v2, WHITE);
+
+        DrawLineShort((int)v0.x, (int)v0.y, (int)v2.x, (int)v2.y, RED);
+        DrawLineShort((int)v0.x, (int)v0.y, (int)v1.x, (int)v1.y, RED);
+        DrawLineShort((int)v1.x, (int)v1.y, (int)v2.x, (int)v2.y, RED);
+
+        return;
 
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
