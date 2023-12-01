@@ -411,24 +411,40 @@ public:
     }
     void DrawTriangle5(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
+        if (v0.y < v1.y) swap(v0, v1);
+        if (v1.y < v2.y) swap(v1, v2);
+        if (v0.y < v1.y) swap(v0, v1);
+
+        if (v0.x > v1.x) swap(v0, v1);
+        if (v1.x > v2.x) swap(v1, v2);
+        if (v0.x > v1.x) swap(v0, v1);
+
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
-
-        // int minX, maxX;
-        // int minY, maxY;
 
         int minX = MathMin(MathMin(p0.x, p1.x), p2.x);
         int maxX = MathMax(MathMax(p0.x, p1.x), p2.x);
         int minY = MathMin(MathMin(p0.y, p1.y), p2.y);
         int maxY = MathMax(MathMax(p0.y, p1.y), p2.y);
 
-        int xc = maxX - minX;
-        int yc = maxY - minY;
+        int xc = maxX - minX + 1;
+        int yc = maxY - minY + 1;
 
-        for (int x = minX; x < xc; x++)
-        for (int y = minY; y < yc; y++)
+        int dx0 = p1.x - p0.x;
+        int dx1 = p2.x - p1.x;
+        int dx2 = p0.x - p2.x;
+
+        int dy0 = p1.y - p0.y;
+        int dy1 = p2.y - p1.y;
+        int dy2 = p0.y - p2.y;
+
+        for (int x = minX; x < minX + xc; x++)
+        for (int y = minY; y < minY + yc; y++)
         {
+            int cross0 = dx0 * (y - p0.y) - dy0 * (x - p0.x); if (cross0 < 0) continue;
+            int cross1 = dx1 * (y - p1.y) - dy1 * (x - p1.x); if (cross1 < 0) continue;
+            int cross2 = dx2 * (y - p2.y) - dy2 * (x - p2.x); if (cross2 < 0) continue;
             SetPixel(x, y, pixel);
         }
 
@@ -436,6 +452,18 @@ public:
         DrawLine3(v0, v1, WHITE);
         DrawLine3(v1, v2, WHITE);
     }
+
+    // float GetZ(Vector3 v0, Vector3 v1, Vector3 v2, float x, float y)
+    // {
+    //     float zDiff = v1.z - v0.z;
+
+    //     float xOffset = zDiff / (v1.x - v0.x);
+
+    //     float duno2 = v1.x - v0.x;
+    //     float duno3 = v1.y - v0.y;
+
+    //     return v0.z + (v1.z - v0.z)
+    // }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
     {
