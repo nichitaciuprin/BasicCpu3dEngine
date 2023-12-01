@@ -29,7 +29,7 @@ void main2()
         Vector3 p0 = {  35,  5, 0 };
         Vector3 p1 = {   5, 20, 0 };
         Vector3 p2 = {   5, 35, 0 };
-        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+        bitmap->DrawTriangle5(p0, p1, p2, GREEN);
 
         BitmapWindow1::SetPixels2(bitmap, scale2);
         BitmapWindow1::Update();

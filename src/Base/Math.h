@@ -64,11 +64,11 @@ inline int MathSign(int value)
 }
 inline int MathMin(int v1, int v2)
 {
-    return min(v1,v2);
+    return min(v1, v2);
 }
 inline int MathMax(int v1, int v2)
 {
-    return max(v1,v2);
+    return max(v1, v2);
 }
 inline int MathClamp(int value, int min, int max)
 {
@@ -78,11 +78,11 @@ inline int MathClamp(int value, int min, int max)
 }
 inline float MathMin(float value1, float value2)
 {
-    return fminf(value1,value2);
+    return fminf(value1, value2);
 }
 inline float MathMax(float value1, float value2)
 {
-    return fmaxf(value1,value2);
+    return fmaxf(value1, value2);
 }
 inline float MathAbs(float value)
 {
@@ -117,8 +117,8 @@ inline float MathMod(float value, float div)
 inline float MathPingPong(float value, float length)
 {
     value = MathAbs(value);
-    int whole = (int)(value/length);
-    float rem = fmodf(value,length);
+    int whole = (int)(value / length);
+    float rem = fmodf(value, length);
     return whole % 2 == 0 ? rem : length-rem;
 }
 inline float MathToRadians(float degs)
@@ -165,19 +165,19 @@ inline Vector3 Vector3Backward()
 }
 inline float Vector3Length(Vector3 v)
 {
-    return MathSqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+    return MathSqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 inline float Vector3LengthSquared(Vector3 v)
 {
-    return v.x*v.x + v.y*v.y + v.z*v.z;
+    return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 inline float Vector3Dot(Vector3 a, Vector3 b)
 {
-    return a.x*b.x + a.y*b.y + a.z*b.z;
+    return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 inline float Vector4Dot(Vector4 a, Vector4 b)
 {
-    return a.x*b.x + a.y*b.y + a.z*b.z + a.w*b.w;
+    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 inline bool operator == (Vector3 left, Vector3 right)
 {
@@ -620,9 +620,9 @@ void ClipLineByZ2(Vector3* points, int* indices, int lineCount)
 {
     for (size_t i = 0; i < lineCount; i++)
     {
-        auto start = i*2;
+        auto start = i * 2;
         int& p0 = indices[start];
-        int& p1 = indices[start+1];
+        int& p1 = indices[start + 1];
 
         Vector3& v0 = points[p0];
         Vector3& v1 = points[p1];

@@ -22,6 +22,29 @@ const Pixel GREENCOLD  = 0x0000FF80;
 const Pixel VIOLET     = 0x008000FF;
 const Pixel LIGHTBLUE  = 0x000080FF;
 
+struct LineState
+{
+    int count;
+    float offset;
+    float z;
+
+    int x0; int y0;
+    int x1; int y1;
+
+    int axis1;
+    int axis2;
+
+    int err;
+    int err1;
+    int err2;
+
+    int val1;
+    int val2;
+
+    int max;
+    int min;
+};
+
 class Bitmap
 {
 public:
@@ -141,6 +164,55 @@ public:
 
         #undef DRAW
     }
+
+    // void DrawLine5(Vector3 v0, Vector3 v1, Pixel pixel)
+    // {
+    // }
+    // void GetLineState(int x0, int y0, int x1, int y1, int z0, int z1, LineState& out)
+    // {
+    //     int dx, dy;
+    //     int sx, sy;
+
+    //     if (x0 < x1) { dx = x1 - x0; sx =  1; }
+    //     else         { dx = x0 - x1; sx = -1; }
+
+    //     if (y0 < y1) { dy = y1 - y0; sy =  1; }
+    //     else         { dy = y0 - y1; sy = -1; }
+
+    //     int max, min;
+
+    //     if (dx > dy) { max = dx; min = dy; out.axis1 = p0.y; out.axis2 = p0.x; out.val1 = sy; out.val2 = sx; }
+    //     else         { max = dy; min = dx; out.axis1 = p0.x; out.axis2 = p0.y; out.val1 = sx; out.val2 = sy; }
+
+    //     out.err = max / 2 - min;
+    //     out.err1 = out.max;
+    //     out.err2 = out.min;
+    //     out.count = 
+
+    //     out.offset = (v1.z - v0.z) / max;
+    //     out.z = v0.z;
+    // }
+    // void DrawStep
+    // (
+    //     int& err,
+
+    //     int& errVal1,
+    //     int& errVal2,
+
+    //     int& axis1,
+    //     int& axis2,
+
+    //     int& val1,
+    //     int& val2,
+
+    //     float& z,
+    //     float& offset
+    // )
+    // {
+    //     if (err < 0) { err += errVal1; axis1 += val1; }
+    //                  { err -= errVal2; axis2 += val2; }
+    //     z += offset;
+    // }
 
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
@@ -339,87 +411,26 @@ public:
     }
     void DrawTriangle5(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
-        // p0 is top
-        // p1 is middle
-        // p2 is bottom
-        if (v0.y > v1.y) swap(v0, v1);
-        if (v1.y > v2.y) swap(v1, v2);
-        if (v0.y > v1.y) swap(v0, v1);
-
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
 
-        int dx1 = p2.x - p0.x;
-        int dx2 = p1.x - p0.x;
-        int dx3 = p2.x - p1.x;
-        int dy1 = p2.y - p0.y;
-        int dy2 = p1.y - p0.y;
-        int dy3 = p2.y - p1.y;
-        int dir1 = MathSign(dx1);
-        int dir2 = MathSign(dx2);
-        int dir3 = MathSign(dx3);
-        int dx1abs = abs(dx1);
-        int dx2abs = abs(dx2);
-        int dx3abs = abs(dx3);
-        int err1 = dy1 - dx1abs;
-        int err2 = dy2 - dx2abs;
-        int err3 = dy3 - dx3abs;
-        int cross = dx1 * dy2 - dy1 * dx2;
+        // int minX, maxX;
+        // int minY, maxY;
 
-        float offset1 = (v2.z - v0.z) / dy1; // check for 0 division?
-        float offset2 = (v1.z - v0.z) / dy2; // check for 0 division?
-        float offset3 = (v2.z - v1.z) / dy3; // check for 0 division?
+        int minX = MathMin(MathMin(p0.x, p1.x), p2.x);
+        int maxX = MathMax(MathMax(p0.x, p1.x), p2.x);
+        int minY = MathMin(MathMin(p0.y, p1.y), p2.y);
+        int maxY = MathMax(MathMax(p0.y, p1.y), p2.y);
 
-        int y = p0.y;
+        int xc = maxX - minX;
+        int yc = maxY - minY;
 
-        int x1 = p0.x;
-        float z1 = v0.z;
-
-        int x2;
-        float z2;
-        if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
-        else         { x2 = p1.x; z2 = v1.z; }
-
-        while (true)
+        for (int x = minX; x < xc; x++)
+        for (int y = minY; y < yc; y++)
         {
+            SetPixel(x, y, pixel);
         }
-
-        #define DRAW(X1, X2, Z1, Z2)                       \
-        for (int i = 0; i < dy2; i++)                      \
-        {                                                  \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
-            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
-            y++;                                           \
-            err1 -= dx1abs;                                \
-            err2 -= dx2abs;                                \
-            z1 += offset1;                                 \
-            z2 += offset2;                                 \
-        }                                                  \
-        for (int i = 0; i < dy3; i++)                      \
-        {                                                  \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
-            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
-            y++;                                           \
-            err1 -= dx1abs;                                \
-            err3 -= dx3abs;                                \
-            z1 += offset1;                                 \
-            z2 += offset3;                                 \
-        }                                                  \
-        DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel);     \
-
-        if (cross < 0)
-        {
-            DRAW(x1, x2, z1, z2)
-        }
-        else
-        {
-            DRAW(x2, x1, z2, z1)
-        }
-
-        #undef DRAW
 
         DrawLine3(v0, v2, WHITE);
         DrawLine3(v0, v1, WHITE);
