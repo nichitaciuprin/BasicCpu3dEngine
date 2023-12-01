@@ -145,25 +145,7 @@ public:
 
         #undef DRAW
     }
-    void DrawLine4(Vector2Int p0, Vector2Int p1, Pixel pixel)
-    {
-        int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
-        int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
-
-        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
-        int err = MAX / 2;                                \
-        for (int i = 0; i < MAX + 1; i++)                 \
-        {                                                 \
-            SetPixel(p0.x, p0.y, pixel);                  \
-            if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
-                           { err -= MIN; AXIS2 += VAL2; } \
-        }                                                 \
-
-        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
-        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
-
-        #undef DRAW
-    }
+    
 
     // void DrawLine5(Vector3 v0, Vector3 v1, Pixel pixel)
     // {
@@ -347,123 +329,6 @@ public:
         DrawLine3(v0, v1, WHITE);
         DrawLine3(v1, v2, WHITE);
     }
-    void DrawTriangle4(Vector2Int p0, Vector2Int p1, Vector2Int p2, Pixel pixel)
-    {
-        // p0 is top
-        // p1 is middle
-        // p2 is bottom
-        if (p0.y > p1.y) swap(p0, p1);
-        if (p1.y > p2.y) swap(p1, p2);
-        if (p0.y > p1.y) swap(p0, p1);
-        int dx1 = p2.x - p0.x;
-        int dx2 = p1.x - p0.x;
-        int dx3 = p2.x - p1.x;
-        int dy1 = p2.y - p0.y;
-        int dy2 = p1.y - p0.y;
-        int dy3 = p2.y - p1.y;
-        int err1 = dy1 / 2;
-        int err2 = dy2 / 2;
-        int err3 = dy3 / 2;
-        int dir1 = MathSign(dx1);
-        int dir2 = MathSign(dx2);
-        int dir3 = MathSign(dx3);
-        int dx1abs = abs(dx1);
-        int dx2abs = abs(dx2);
-        int dx3abs = abs(dx3);
-        int cross = dx1 * dy2 - dy1 * dx2;
-
-        int y = p0.y;
-        int x1, x2;
-        if (dy2 > 0) { x1 = p0.x; x2 = p0.x; }
-        else         { x1 = p0.x; x2 = p1.x; }
-
-        #define DRAW(X1, X2)                              \
-        for (int i = 0; i < dy2; i++)                     \
-        {                                                 \
-            DrawHorizontalLine(y, X1, X2, pixel);         \
-            y++;                                          \
-            err1 -= dx1abs;                               \
-            err2 -= dx2abs;                               \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
-            while (err2 < 0) { err2 += dy2; x2 += dir2; } \
-        }                                                 \
-        for (int i = 0; i < dy3; i++)                     \
-        {                                                 \
-            DrawHorizontalLine(y, X1, X2, pixel);         \
-            y++;                                          \
-            err1 -= dx1abs;                               \
-            err3 -= dx3abs;                               \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; } \
-            while (err3 < 0) { err3 += dy3; x2 += dir3; } \
-        }                                                 \
-        DrawHorizontalLine(y, X1, X2, pixel);             \
-
-        if (cross < 0)
-        {
-            DRAW(x1, x2)
-        }
-        else
-        {
-            DRAW(x2, x1)
-        }
-
-        #undef DRAW
-    }
-    void DrawTriangle5(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
-    {
-        if (v0.y < v1.y) swap(v0, v1);
-        if (v1.y < v2.y) swap(v1, v2);
-        if (v0.y < v1.y) swap(v0, v1);
-
-        if (v0.x > v1.x) swap(v0, v1);
-        if (v1.x > v2.x) swap(v1, v2);
-        if (v0.x > v1.x) swap(v0, v1);
-
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
-        Vector2Int p2 = { (int)v2.x, (int)v2.y };
-
-        int minX = MathMin(MathMin(p0.x, p1.x), p2.x);
-        int maxX = MathMax(MathMax(p0.x, p1.x), p2.x);
-        int minY = MathMin(MathMin(p0.y, p1.y), p2.y);
-        int maxY = MathMax(MathMax(p0.y, p1.y), p2.y);
-
-        int xc = maxX - minX + 1;
-        int yc = maxY - minY + 1;
-
-        int dx0 = p1.x - p0.x;
-        int dx1 = p2.x - p1.x;
-        int dx2 = p0.x - p2.x;
-
-        int dy0 = p1.y - p0.y;
-        int dy1 = p2.y - p1.y;
-        int dy2 = p0.y - p2.y;
-
-        for (int x = minX; x < minX + xc; x++)
-        for (int y = minY; y < minY + yc; y++)
-        {
-            int cross0 = dx0 * (y - p0.y) - dy0 * (x - p0.x); if (cross0 < 0) continue;
-            int cross1 = dx1 * (y - p1.y) - dy1 * (x - p1.x); if (cross1 < 0) continue;
-            int cross2 = dx2 * (y - p2.y) - dy2 * (x - p2.x); if (cross2 < 0) continue;
-            SetPixel(x, y, pixel);
-        }
-
-        DrawLine3(v0, v2, WHITE);
-        DrawLine3(v0, v1, WHITE);
-        DrawLine3(v1, v2, WHITE);
-    }
-
-    // float GetZ(Vector3 v0, Vector3 v1, Vector3 v2, float x, float y)
-    // {
-    //     float zDiff = v1.z - v0.z;
-
-    //     float xOffset = zDiff / (v1.x - v0.x);
-
-    //     float duno2 = v1.x - v0.x;
-    //     float duno3 = v1.y - v0.y;
-
-    //     return v0.z + (v1.z - v0.z)
-    // }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
     {
@@ -811,6 +676,67 @@ public:
             if (err2 > -dx) { err -= dy; x0 += sx; }
             if (err2 <  dy) { err += dx; y0 += sy; }
         }
+    }
+    void DrawTriangleSideCross(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
+    {
+        if (v0.y > v1.y) swap(v0, v1);
+        if (v1.y > v2.y) swap(v1, v2);
+        if (v0.y > v1.y) swap(v0, v1);
+        float cross = (v2.x - v0.x) * (v1.y - v0.y) - (v2.y - v0.y) * (v1.x - v0.x);
+        if (cross > 0) swap(v1, v2);
+
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
+        Vector2Int p2 = { (int)v2.x, (int)v2.y };
+
+        int minX = MathMin(MathMin(p0.x, p1.x), p2.x);
+        int maxX = MathMax(MathMax(p0.x, p1.x), p2.x);
+        int minY = MathMin(MathMin(p0.y, p1.y), p2.y);
+        int maxY = MathMax(MathMax(p0.y, p1.y), p2.y);
+
+        int xc = maxX - minX + 1;
+        int yc = maxY - minY + 1;
+
+        int dx0 = p1.x - p0.x;
+        int dx1 = p2.x - p1.x;
+        int dx2 = p0.x - p2.x;
+
+        int dy0 = p1.y - p0.y;
+        int dy1 = p2.y - p1.y;
+        int dy2 = p0.y - p2.y;
+
+        for (int x = minX; x < minX + xc; x++)
+        for (int y = minY; y < minY + yc; y++)
+        {
+            int cross0 = dx0 * (y - p0.y) - dy0 * (x - p0.x); if (cross0 < 0) continue;
+            int cross1 = dx1 * (y - p1.y) - dy1 * (x - p1.x); if (cross1 < 0) continue;
+            int cross2 = dx2 * (y - p2.y) - dy2 * (x - p2.x); if (cross2 < 0) continue;
+
+            SetPixel(x, y, pixel);
+        }
+
+        DrawLine3(v0, v2, WHITE);
+        DrawLine3(v0, v1, WHITE);
+        DrawLine3(v1, v2, WHITE);
+    }
+    void DrawLine4123242124(Vector2Int p0, Vector2Int p1, Pixel pixel)
+    {
+        int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
+        int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
+
+        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2)  \
+        int err = MAX / 2;                                \
+        for (int i = 0; i < MAX + 1; i++)                 \
+        {                                                 \
+            SetPixel(p0.x, p0.y, pixel);                  \
+            if (err < MIN) { err += MAX; AXIS1 += VAL1; } \
+                           { err -= MIN; AXIS2 += VAL2; } \
+        }                                                 \
+
+        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
+        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
+
+        #undef DRAW
     }
 
 private:
