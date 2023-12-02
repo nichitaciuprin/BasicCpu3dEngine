@@ -6,11 +6,15 @@ struct StateTriangle
     StateLine lt1;
     StateLine lt2;
 
+    int y;
     int xl;
     int xr;
-    int y;
     float zl;
     float zr;
+
+    int dy;
+
+    void (*step)(StateTriangle* lt);
 
     StateTriangle(Vector3 v0, Vector3 v1, Vector3 v2)
     {
@@ -28,41 +32,66 @@ struct StateTriangle
         float z1 = v1.z;
         float z2 = v2.z;
 
-        xl = x0;
-        xr = x0;
-        zl = z0;
-        zr = z0;
+        dy = y2 - y0;
 
-        if (lt1.dy == 0)
+        y = y0;
+
+        if (y0 == y1)
         {
+            step = &Update2;
+            lt0 = StateLine(x0, y0, x2, y2, z0, z2);
+            lt2 = StateLine(x1, y1, x2, y2, z1, z2);
+            xl = x0;
             xr = x1;
+            zl = z0;
             zr = z1;
+        }
+        else
+        {
+            step = &Update1;
+            lt0 = StateLine(x0, y0, x2, y2, z0, z2);
+            lt1 = StateLine(x0, y0, x1, y1, z0, z1);
+            lt2 = StateLine(x1, y1, x2, y2, z1, z2);
+            xl = x0;
+            xr = x0;
+            zl = z0;
+            zr = z0;
         }
 
         // int cross = lt0.dx * lt1.dy - lt0.dy * lt1.dx;
         // if (cross < 0)
         // {
         // }
-
-        lt0 = StateLine(x0, y0, x2, y2, z0, z2);
-        lt1 = StateLine(x0, y0, x1, y1, z0, z1);
-        lt2 = StateLine(x1, y1, x2, y2, z1, z2);
-
-        xl = lt0.x0;
-        xr = lt0.x0;
-        y = lt0.y0;
     }
-    void Update1()
+    void Update()
     {
-        do { lt0.Update(); } while (y == lt0.y0); xl = lt0.x0;
-        do { lt1.Update(); } while (y == lt1.y0); xr = lt1.x0;
-        y++;
+        step(this);
     }
-    void Update2()
+    static void Update1(StateTriangle* obj)
     {
-        do { lt0.Update(); } while (y == lt0.y0); xl = lt0.x0;
-        do { lt2.Update(); } while (y == lt2.y0); xr = lt2.x0;
-        y++;
+        do { obj->lt0.Update(); } while (obj->y == obj->lt0.y0); obj->xl = obj->lt0.x0;
+        do { obj->lt1.Update(); } while (obj->y == obj->lt1.y0); obj->xr = obj->lt1.x0;
+        obj->y++;
+        if (obj->y == obj->lt1.y1)
+            obj->step = &Update2;
     }
+    static void Update2(StateTriangle* obj)
+    {
+        do { obj->lt0.Update(); } while (obj->y == obj->lt0.y0); obj->xl = obj->lt0.x0;
+        do { obj->lt2.Update(); } while (obj->y == obj->lt2.y0); obj->xr = obj->lt2.x0;
+        obj->y++;
+    }
+    // void Update1()
+    // {
+    //     do { lt0.Update(); } while (y == lt0.y0); xl = lt0.x0;
+    //     do { lt1.Update(); } while (y == lt1.y0); xr = lt1.x0;
+    //     y++;
+    // }
+    // void Update2()
+    // {
+    //     do { lt0.Update(); } while (y == lt0.y0); xl = lt0.x0;
+    //     do { lt2.Update(); } while (y == lt2.y0); xr = lt2.x0;
+    //     y++;
+    // }
 };
 

@@ -226,9 +226,13 @@ public:
     void DrawTriangle4(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
         auto st = StateTriangle(v0, v1, v2);
-        for (int i = 0; i < st.lt1.dy; i++) { DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN); st.Update1(); }
-        for (int i = 0; i < st.lt2.dy; i++) { DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN); st.Update2(); }
-                                            { DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN); }
+
+        for (size_t i = 0; i < st.dy; i++)
+        {
+            DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN);
+            st.Update();
+        }
+        DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN);
     }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)

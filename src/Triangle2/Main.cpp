@@ -55,10 +55,10 @@ void main2()
         // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);
 
-        p0 = {   5,  5, 0 };
-        p1 = {  35,  5, 0 };
-        p2 = {  20, 35, 0 };
-        bitmap->DrawTriangle4(p0, p1, p2, GREEN);
+        // p0 = {   5,  5, 0 };
+        // p1 = {  35,  5, 0 };
+        // p2 = {  20, 35, 0 };
+        // bitmap->DrawTriangle4(p0, p1, p2, GREEN);
 
         if (draw)
         {
