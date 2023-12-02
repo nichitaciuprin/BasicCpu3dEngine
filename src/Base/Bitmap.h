@@ -127,47 +127,7 @@ public:
         }
         SetPixel2(p0.x, p0.y, z, pixel);
     }
-    void DrawLine4(Vector3 v0, Vector3 v1, Pixel pixel)
-    {
-        if (v0.y > v1.y) swap(v0, v1);
-
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
-
-        int dy = p1.y - p0.y;
-
-        int dx, sx;
-        if (p0.x < p1.x) { dx = p1.x - p0.x; sx =  1; }
-        else             { dx = p0.x - p1.x; sx = -1; }
-
-        // int max, min;
-        // if (dx > dy) { max = dx; min = dy; }
-        // else         { max = dy; min = dx; }
-        // int err = max / 2 - min;
-
-        float z = v0.z;
-        float offset;
-        int err;
-
-        if (dx > dy) { err =  dx / 2; offset = (v1.z - v0.z) / dx; }
-        else         { err = -dy / 2; offset = (v1.z - v0.z) / dy; }
-
-        for (int i = 0; i < dy + 1; i++)
-        {
-            // if (p0.x != p1.x && p0.y != p1.y)
-            SetPixel(p0.x, p0.y, pixel);
-            while (err > -dy)
-            {
-                err -= dy;
-                p0.x += sx;
-                // if (p0.x != p1.x && p0.y != p1.y)
-                SetPixel(p0.x, p0.y, pixel);
-            }
-            p0.y++;
-            err += dx;
-            z += offset;
-        }
-    }
+    
 
     void DrawTriangleBorder(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
@@ -703,45 +663,58 @@ public:
             if (err2 <  dy) { err += dx; y0 += sy; }
         }
     }
-    void DrawTriangleSideCross(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
+    void DrawTriangleSideCross1(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
         if (v0.y > v1.y) swap(v0, v1);
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
-        float cross = (v2.x - v0.x) * (v1.y - v0.y) - (v2.y - v0.y) * (v1.x - v0.x);
+
+        auto d1 = v2 - v0;
+        auto d2 = v1 - v0;
+
+        float cross = d1.x * d2.y - d1.y * d2.x;
+
         if (cross > 0) swap(v1, v2);
 
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
-        Vector2Int p2 = { (int)v2.x, (int)v2.y };
+        DrawTriangleSideCross2(v0, v1, v2, pixel);
+    }
+    void DrawTriangleSideCross2(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
+    {
+        int x0 = (int)v0.x;
+        int x1 = (int)v1.x;
+        int x2 = (int)v2.x;
 
-        int minX = MathMin(MathMin(p0.x, p1.x), p2.x);
-        int maxX = MathMax(MathMax(p0.x, p1.x), p2.x);
-        int minY = MathMin(MathMin(p0.y, p1.y), p2.y);
-        int maxY = MathMax(MathMax(p0.y, p1.y), p2.y);
+        int y0 = (int)v0.y;
+        int y1 = (int)v1.y;
+        int y2 = (int)v2.y;
+
+        int minX = MathMin(MathMin(x0, x1), x2);
+        int maxX = MathMax(MathMax(x0, x1), x2);
+        int minY = MathMin(MathMin(y0, y1), y2);
+        int maxY = MathMax(MathMax(y0, y1), y2);
 
         int xc = maxX - minX + 1;
         int yc = maxY - minY + 1;
 
-        int dx0 = p1.x - p0.x;
-        int dx1 = p2.x - p1.x;
-        int dx2 = p0.x - p2.x;
+        int dx0 = x1 - x0;
+        int dx1 = x2 - x1;
+        int dx2 = x0 - x2;
 
-        int dy0 = p1.y - p0.y;
-        int dy1 = p2.y - p1.y;
-        int dy2 = p0.y - p2.y;
+        int dy0 = y1 - y0;
+        int dy1 = y2 - y1;
+        int dy2 = y0 - y2;
 
         for (int x = minX; x < minX + xc; x++)
         for (int y = minY; y < minY + yc; y++)
         {
-            int cross0 = dx0 * (y - p0.y) - dy0 * (x - p0.x); if (cross0 < 0) continue;
-            int cross1 = dx1 * (y - p1.y) - dy1 * (x - p1.x); if (cross1 < 0) continue;
-            int cross2 = dx2 * (y - p2.y) - dy2 * (x - p2.x); if (cross2 < 0) continue;
+            int cross0 = dx0 * (y - y0) - dy0 * (x - x0); if (cross0 < 0) continue;
+            int cross1 = dx1 * (y - y1) - dy1 * (x - x1); if (cross1 < 0) continue;
+            int cross2 = dx2 * (y - y2) - dy2 * (x - x2); if (cross2 < 0) continue;
 
             SetPixel(x, y, pixel);
         }
     }
-    void DrawLine4123242124(Vector2Int p0, Vector2Int p1, Pixel pixel)
+    void DrawLineTest1(Vector2Int p0, Vector2Int p1, Pixel pixel)
     {
         int sx, dx; if (p0.x < p1.x) { sx = 1; dx = p1.x - p0.x; } else { sx = -1; dx = p0.x - p1.x; }
         int sy, dy; if (p0.y < p1.y) { sy = 1; dy = p1.y - p0.y; } else { sy = -1; dy = p0.y - p1.y; }
@@ -759,6 +732,39 @@ public:
         else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
 
         #undef DRAW
+    }
+    void DrawLineTest2(Vector3 v0, Vector3 v1, Pixel pixel)
+    {
+        if (v0.y > v1.y) swap(v0, v1);
+
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
+
+        int dy = p1.y - p0.y;
+
+        int dx, sx;
+        if (p0.x < p1.x) { dx = p1.x - p0.x; sx =  1; }
+        else             { dx = p0.x - p1.x; sx = -1; }
+
+        int max, min;
+        float offset;
+        int err;
+
+        if (dx > dy) { err =  dx / 2; max = dx; min = dy; }
+        else         { err = -dy / 2; max = dy; min = dx; }
+
+        for (int i = 0; i < dy + 1; i++)
+        {
+            while (err > max)
+            {
+                err -= dy;
+                p0.x += sx;
+                SetPixel(p0.x, p0.y, pixel);
+            }
+            SetPixel(p0.x, p0.y, pixel);
+            p0.y++;
+            err += dx;
+        }
     }
 
 private:
