@@ -44,27 +44,27 @@ void main2()
         // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);
 
-        // p0 = {  20,  5, 0 };
-        // p1 = {  35, 20, 0 };
-        // p2 = {   5, 35, 0 };
+        p0 = {  20,  5, 0 };
+        p1 = {  35, 20, 0 };
+        p2 = {   5, 35, 0 };
         // bitmap->DrawTriangleSideCross2(p0, p1, p2, GREEN);
-        // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
+        bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);
 
         if (draw)
         {
-            bitmap->SetPixel((int)p0.x, (int)p0.y, RED);
-            bitmap->SetPixel((int)p1.x, (int)p1.y, RED);
-            bitmap->SetPixel((int)p2.x, (int)p2.y, RED);
-            // bitmap->DrawLine3(p0, p2, RED);
-            // bitmap->DrawLine3(p0, p1, RED);
-            // bitmap->DrawLine3(p1, p2, RED);
+            // bitmap->SetPixel((int)p0.x, (int)p0.y, RED);
+            // bitmap->SetPixel((int)p1.x, (int)p1.y, RED);
+            // bitmap->SetPixel((int)p2.x, (int)p2.y, RED);
+            bitmap->DrawLine3(p0, p2, RED);
+            bitmap->DrawLine3(p0, p1, RED);
+            bitmap->DrawLine3(p1, p2, RED);
             // bitmap->DrawLineShort((int)p0.x, (int)p0.y, (int)p2.x, (int)p2.y, RED);
             // bitmap->DrawLineShort((int)p0.x, (int)p0.y, (int)p1.x, (int)p1.y, RED);
             // bitmap->DrawLineShort((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y, RED);
         }
 
-        BitmapWindow1::SetPixels2(bitmap, scale2);
+        BitmapWindow1::SetPixels2(bitmap, scale);
         BitmapWindow1::Update();
     }
 }

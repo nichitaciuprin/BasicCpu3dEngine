@@ -96,22 +96,24 @@ public:
     }
     void DrawLine3(Vector3 v0, Vector3 v1, Pixel pixel)
     {
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
+        int x0 = (int)v0.x;
+        int y0 = (int)v0.y;
+
+        int x1 = (int)v1.x;
+        int y1 = (int)v1.y;
 
         int dx, sx;
-        if (p0.x < p1.x) { dx = p1.x - p0.x; sx =  1; }
-        else             { dx = p0.x - p1.x; sx = -1; }
+        if (x0 < x1) { dx = x1 - x0; sx =  1; }
+        else         { dx = x0 - x1; sx = -1; }
 
         int dy, sy;
-        if (p0.y < p1.y) { dy = p1.y - p0.y; sy =  1; }
-        else             { dy = p0.y - p1.y; sy = -1; }
+        if (y0 < y1) { dy = y1 - y0; sy =  1; }
+        else         { dy = y0 - y1; sy = -1; }
 
-        int max, min, val1, val2;
-        int* axis1;
-        int* axis2;
-        if (dx > dy) { max = dx; min = dy; axis1 = &p0.y; axis2 = &p0.x; val1 = sy; val2 = sx; }
-        else         { max = dy; min = dx; axis1 = &p0.x; axis2 = &p0.y; val1 = sx; val2 = sy; }
+        int max; int* axis1; int val1;
+        int min; int* axis2; int val2;
+        if (dx > dy) { max = dx; axis1 = &y0; val1 = sy; min = dy; axis2 = &x0; val2 = sx; }
+        else         { max = dy; axis1 = &x0; val1 = sx; min = dx; axis2 = &y0; val2 = sy; }
 
         int err = max / 2 - min;
 
@@ -120,14 +122,13 @@ public:
 
         for (int i = 0; i < max; i++)
         {
-            SetPixel2(p0.x, p0.y, z, pixel);
+            SetPixel2(x0, y0, z, pixel);
             if (err < 0) { err += max; (*axis1) += val1; }
                          { err -= min; (*axis2) += val2; }
             z += offset;
         }
-        SetPixel2(p0.x, p0.y, z, pixel);
+        SetPixel2(x0, y0, z, pixel);
     }
-    
 
     void DrawTriangleBorder(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
@@ -747,7 +748,6 @@ public:
         else             { dx = p0.x - p1.x; sx = -1; }
 
         int max, min;
-        float offset;
         int err;
 
         if (dx > dy) { err =  dx / 2; max = dx; min = dy; }
