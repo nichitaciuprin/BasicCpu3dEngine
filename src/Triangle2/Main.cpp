@@ -30,10 +30,10 @@ void main2()
         Vector3 p1;
         Vector3 p2;
 
-        // p0 = {  1,  38, 0 };
-        // p1 = {  20,  1, 0 };
-        // p2 = {  38, 20, 0 };
-        // bitmap->DrawTriangle4(p0, p1, p2, GREEN);
+        p0 = {  1,  38, 0 };
+        p1 = {  20,  1, 0 };
+        p2 = {  38, 20, 0 };
+        bitmap->DrawTriangle4(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);
