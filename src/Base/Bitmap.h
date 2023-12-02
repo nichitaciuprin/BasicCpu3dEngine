@@ -107,59 +107,6 @@ public:
         if (p0.y < p1.y) { dy = p1.y - p0.y; sy =  1; }
         else             { dy = p0.y - p1.y; sy = -1; }
 
-        // int max, min, val1, val2;
-        // int* axis1;
-        // int* axis2;
-        // if (dx > dy) { max = dx; min = dy; axis1 = &p0.y; axis2 = &p0.x; val1 = sy; val2 = sx; }
-        // else         { max = dy; min = dx; axis1 = &p0.x; axis2 = &p0.y; val1 = sx; val2 = sy; }
-
-        // int err = max / 2 - min;
-
-        // float offset = (v1.z - v0.z) / max;
-        // float z = v0.z;
-
-        // for (int i = 0; i < max; i++)
-        // {
-        //     SetPixel2(p0.x, p0.y, z, pixel);
-        //     if (err < 0) { err += max; (*axis1) += val1; }
-        //                  { err -= min; (*axis2) += val2; }
-        //     z += offset;
-        // }
-        // SetPixel2(p0.x, p0.y, z, pixel);
-
-        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
-        int err = MAX / 2 - MIN;                         \
-        float offset = (v1.z - v0.z) / MAX;              \
-        float z = v0.z;                                  \
-        for (int i = 0; i < MAX; i++)                    \
-        {                                                \
-            SetPixel2(p0.x, p0.y, z, pixel);             \
-            z += offset;                                 \
-            if (err < 0) { err += MAX; AXIS1 += VAL1; }  \
-                         { err -= MIN; AXIS2 += VAL2; }  \
-        }                                                \
-        SetPixel2(p0.x, p0.y, z, pixel);                 \
-
-        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
-        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
-
-        #undef DRAW
-    }
-    void DrawLine4(Vector3 v0, Vector3 v1, Pixel pixel)
-    {
-        if (v0.y > v1.y) swap(v0, v1);
-
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
-
-        int dx, sx;
-        if (p0.x < p1.x) { dx = p1.x - p0.x; sx =  1; }
-        else             { dx = p0.x - p1.x; sx = -1; }
-
-        int dy, sy;
-        if (p0.y < p1.y) { dy = p1.y - p0.y; sy =  1; }
-        else             { dy = p0.y - p1.y; sy = -1; }
-
         int max, min, val1, val2;
         int* axis1;
         int* axis2;
@@ -171,7 +118,6 @@ public:
         float offset = (v1.z - v0.z) / max;
         float z = v0.z;
 
-        // auto count = max;
         for (int i = 0; i < max; i++)
         {
             SetPixel2(p0.x, p0.y, z, pixel);
@@ -181,61 +127,102 @@ public:
         }
         SetPixel2(p0.x, p0.y, z, pixel);
     }
+    void DrawLine4(Vector3 v0, Vector3 v1, Pixel pixel)
+    {
+        if (v0.y > v1.y) swap(v0, v1);
 
-    // void DrawTriangleBorder(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
-    // {
-    //     if (v0.y > v1.y) swap(v0, v1);
-    //     if (v1.y > v2.y) swap(v1, v2);
-    //     if (v0.y > v1.y) swap(v0, v1);
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
 
-    //     Vector2Int p0 = { (int)v0.x, (int)v0.y };
-    //     Vector2Int p1 = { (int)v1.x, (int)v1.y };
-    //     Vector2Int p2 = { (int)v2.x, (int)v2.y };
+        int dy = p1.y - p0.y;
 
-    //     auto lineState0 = GetLineState(p0.x, p0.y, p2.x, p2.y, v0.z, v2.z);
-    //     auto lineState1 = GetLineState(p0.x, p0.y, p1.x, p1.y, v0.z, v1.z);
-    //     auto lineState2 = GetLineState(p1.x, p1.y, p2.x, p2.y, v1.z, v2.z);
+        int dx, sx;
+        if (p0.x < p1.x) { dx = p1.x - p0.x; sx =  1; }
+        else             { dx = p0.x - p1.x; sx = -1; }
 
-    //     // while (true)
-    //     // {
-    //     //     DrawStep(lineState1);
-    //     // }
-    //     // DrawStep()
-    // }
-    // LineState GetLineState(int x0, int y0, int x1, int y1, float z0, float z1)
-    // {
-    //     LineState out;
+        // int max, min;
+        // if (dx > dy) { max = dx; min = dy; }
+        // else         { max = dy; min = dx; }
+        // int err = max / 2 - min;
 
-    //     int dx, dy;
-    //     int sx, sy;
+        float z = v0.z;
+        float offset;
+        int err;
 
-    //     if (x0 < x1) { dx = x1 - x0; sx =  1; }
-    //     else         { dx = x0 - x1; sx = -1; }
+        if (dx > dy) { err =  dx / 2; offset = (v1.z - v0.z) / dx; }
+        else         { err = -dy / 2; offset = (v1.z - v0.z) / dy; }
 
-    //     if (y0 < y1) { dy = y1 - y0; sy =  1; }
-    //     else         { dy = y0 - y1; sy = -1; }
+        for (int i = 0; i < dy + 1; i++)
+        {
+            // if (p0.x != p1.x && p0.y != p1.y)
+            SetPixel(p0.x, p0.y, pixel);
+            while (err > -dy)
+            {
+                err -= dy;
+                p0.x += sx;
+                // if (p0.x != p1.x && p0.y != p1.y)
+                SetPixel(p0.x, p0.y, pixel);
+            }
+            p0.y++;
+            err += dx;
+            z += offset;
+        }
+    }
 
-    //     int max, min;
+    void DrawTriangleBorder(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
+    {
+        if (v0.y > v1.y) swap(v0, v1);
+        if (v1.y > v2.y) swap(v1, v2);
+        if (v0.y > v1.y) swap(v0, v1);
 
-    //     if (dx > dy) { max = dx; min = dy; out.axis1 = y0; out.axis2 = x0; out.val1 = sy; out.val2 = sx; }
-    //     else         { max = dy; min = dx; out.axis1 = x0; out.axis2 = y0; out.val1 = sx; out.val2 = sy; }
+        Vector2Int p0 = { (int)v0.x, (int)v0.y };
+        Vector2Int p1 = { (int)v1.x, (int)v1.y };
+        Vector2Int p2 = { (int)v2.x, (int)v2.y };
 
-    //     out.err = max / 2 - min;
-    //     out.err1 = out.max;
-    //     out.err2 = out.min;
-    //     out.count = max;
+        auto lineState0 = GetLineState(p0.x, p0.y, p2.x, p2.y, v0.z, v2.z);
+        auto lineState1 = GetLineState(p0.x, p0.y, p1.x, p1.y, v0.z, v1.z);
+        auto lineState2 = GetLineState(p1.x, p1.y, p2.x, p2.y, v1.z, v2.z);
 
-    //     out.offset = (z1 - z0) / max;
-    //     out.z = z0;
+        // while (true)
+        // {
+        //     DrawStep(lineState1);
+        // }
+        // DrawStep()
+    }
+    LineState GetLineState(int x0, int y0, int x1, int y1, float z0, float z1)
+    {
+        LineState out;
 
-    //     return out;
-    // }
-    // bool DrawStep(LineState& lt)
-    // {
-    //     // if (err < 0) { err += errVal1; axis1 += val1; }
-    //     //              { err -= errVal2; axis2 += val2; }
-    //     // z += offset;
-    // }
+        int dx, dy;
+        int sx, sy;
+
+        if (x0 < x1) { dx = x1 - x0; sx =  1; }
+        else         { dx = x0 - x1; sx = -1; }
+
+        if (y0 < y1) { dy = y1 - y0; sy =  1; }
+        else         { dy = y0 - y1; sy = -1; }
+
+        int max, min;
+
+        if (dx > dy) { max = dx; min = dy; out.axis1 = y0; out.axis2 = x0; out.val1 = sy; out.val2 = sx; }
+        else         { max = dy; min = dx; out.axis1 = x0; out.axis2 = y0; out.val1 = sx; out.val2 = sy; }
+
+        out.err = max / 2 - min;
+        out.err1 = out.max;
+        out.err2 = out.min;
+        out.count = max;
+
+        out.offset = (z1 - z0) / max;
+        out.z = z0;
+
+        return out;
+    }
+    bool DrawStep(LineState& lt)
+    {
+        // if (err < 0) { err += errVal1; axis1 += val1; }
+        //              { err -= errVal2; axis2 += val2; }
+        // z += offset;
+    }
 
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
@@ -333,28 +320,27 @@ public:
         #define DRAW(X1, X2, Z1, Z2)                       \
         for (int i = 0; i < dy2; i++)                      \
         {                                                  \
-            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
+            DrawHorizontalLine(y, X1, X2, Z1, Z2, pixel);  \
             y++;                                           \
             err1 -= dx1abs;                                \
             err2 -= dx2abs;                                \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
             z1 += offset1;                                 \
             z2 += offset2;                                 \
         }                                                  \
-        x2 = p1.x; \
         for (int i = 0; i < dy3; i++)                      \
         {                                                  \
-            DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
+            DrawHorizontalLine(y, X1, X2, Z1, Z2, pixel);  \
             y++;                                           \
             err1 -= dx1abs;                                \
             err3 -= dx3abs;                                \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
             z1 += offset1;                                 \
             z2 += offset3;                                 \
         }                                                  \
-        DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel);     \
+        DrawHorizontalLine(y, X1, X2, Z1, Z2, pixel);      \
 
         if (cross < 0)
         {
@@ -392,13 +378,7 @@ public:
         if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
     }
 
-    inline void DrawHorizontalLine(int y, int xLeft, int xRight, Pixel pixel)
-    {
-        int count = xRight - xLeft + 1;
-        for (int i = 0; i < count; i++)
-            SetPixel(xLeft + i, y, pixel);
-    }
-    inline void DrawHorizontalLine2(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
+    inline void DrawHorizontalLine(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
     {
         int count = xRight - xLeft;
         float diff = zRight - zLeft;
@@ -407,8 +387,7 @@ public:
         for (int i = 0; i < count + 1; i++)
         {
             auto x = xLeft + i;
-            // SetPixel2(x, y, zLeft, pixel);
-            SetPixel(x, y, pixel);
+            SetPixel2(x, y, zLeft, pixel);
             zLeft += offset;
         }
     }
@@ -420,6 +399,10 @@ public:
         // if (y > height - 1) return;
         auto i = x + y * width;
         pixels[i] = pixel;
+        // if (pixels[i] == BLACK)
+        //     pixels[i] = pixel;
+        // else
+        //     pixels[i] = (pixels[i] + pixel) / 2;
     }
     void SetPixel2(int x, int y, float z, Pixel pixel)
     {
@@ -433,8 +416,13 @@ public:
         if (zbuffer[i] >= z)
         {
             zbuffer[i] = z;
-            // pixels[i] = pixel;
-            pixels[i] = (pixels[i] + pixel) / 2;
+
+            // if (pixels[i] == BLACK)
+            //     pixels[i] = pixel;
+            // else
+            //     pixels[i] = (pixels[i] + pixel) / 2;
+
+            pixels[i] = pixel;
         }
     }
 
@@ -752,10 +740,6 @@ public:
 
             SetPixel(x, y, pixel);
         }
-
-        DrawLine3(v0, v2, WHITE);
-        DrawLine3(v0, v1, WHITE);
-        DrawLine3(v1, v2, WHITE);
     }
     void DrawLine4123242124(Vector2Int p0, Vector2Int p1, Pixel pixel)
     {
