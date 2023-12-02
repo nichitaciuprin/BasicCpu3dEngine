@@ -186,9 +186,11 @@ public:
 
         int y = p0.y;
 
-        int x1 = p0.x; float z1 = v0.z;
+        int x1 = p0.x;
+        float z1 = v0.z;
 
-        int x2; float z2;
+        int x2;
+        float z2;
         if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
         else         { x2 = p1.x; z2 = v1.z; }
 
@@ -255,6 +257,13 @@ public:
 
     inline void DrawHorizontalLine(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
     {
+        // TODO remove
+        if (xLeft > xRight)
+        {
+            swap(xLeft, xRight);
+            swap(zLeft, zRight);
+        }
+
         int count = xRight - xLeft;
         float diff = zRight - zLeft;
         float offset = diff / count;

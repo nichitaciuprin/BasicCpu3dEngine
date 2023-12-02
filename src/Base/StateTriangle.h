@@ -9,6 +9,8 @@ struct StateTriangle
     int xl;
     int xr;
     int y;
+    float zl;
+    float zr;
 
     StateTriangle(Vector3 v0, Vector3 v1, Vector3 v2)
     {
@@ -26,15 +28,21 @@ struct StateTriangle
         float z1 = v1.z;
         float z2 = v2.z;
 
-        int cross = lt0.dx * lt1.dy - lt0.dy * lt1.dx;
+        xl = x0;
+        xr = x0;
+        zl = z0;
+        zr = z0;
 
-        // int x1 = p0.x;
-        // float z1 = v0.z;
+        if (lt1.dy == 0)
+        {
+            xr = x1;
+            zr = z1;
+        }
 
-        // int x2;
-        // float z2;
-        // if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
-        // else         { x2 = p1.x; z2 = v1.z; }
+        // int cross = lt0.dx * lt1.dy - lt0.dy * lt1.dx;
+        // if (cross < 0)
+        // {
+        // }
 
         lt0 = StateLine(x0, y0, x2, y2, z0, z2);
         lt1 = StateLine(x0, y0, x1, y1, z0, z1);

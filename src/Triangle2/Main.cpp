@@ -33,6 +33,7 @@ void main2()
         // p0 = {  1,  38, 0 };
         // p1 = {  20,  1, 0 };
         // p2 = {  38, 20, 0 };
+        // bitmap->DrawTriangle4(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);
@@ -45,14 +46,19 @@ void main2()
         // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);
 
-        p0 = {  20,  5, 0 };
-        p1 = {  35, 20, 0 };
-        p2 = {   5, 35, 0 };
-        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+        // p0 = {  20,  5, 0 };
+        // p1 = {  35, 20, 0 };
+        // p2 = {   5, 35, 0 };
+        // bitmap->DrawTriangle4(p0, p1, p2, GREEN);
         // bitmap->DrawTriangle3(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);
+
+        p0 = {   5,  5, 0 };
+        p1 = {  35,  5, 0 };
+        p2 = {  20, 35, 0 };
+        bitmap->DrawTriangle4(p0, p1, p2, GREEN);
 
         if (draw)
         {
