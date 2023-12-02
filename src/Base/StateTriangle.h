@@ -32,9 +32,19 @@ struct StateTriangle
 
         xl = lt0.x0;
         xr = lt0.x0;
+        y = lt0.y0;
     }
-    void Update()
+    void Update1()
     {
+        do { lt0.Update(); } while (y == lt0.y0); xl = lt0.x0;
+        do { lt1.Update(); } while (y == lt1.y0); xr = lt1.x0;
+        y++;
+    }
+    void Update2()
+    {
+        do { lt0.Update(); } while (y == lt0.y0); xl = lt0.x0;
+        do { lt2.Update(); } while (y == lt2.y0); xr = lt2.x0;
+        y++;
     }
 };
 
