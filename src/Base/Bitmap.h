@@ -178,57 +178,48 @@ public:
         int err1 = dy1 / 2 - dx1abs;
         int err2 = dy2 / 2 - dx2abs;
         int err3 = dy3 / 2 - dx3abs;
-        int cross = dx1 * dy2 - dy1 * dx2;
 
-        float offset1 = (v2.z - v0.z) / dy1; // check for 0 division?
-        float offset2 = (v1.z - v0.z) / dy2; // check for 0 division?
-        float offset3 = (v2.z - v1.z) / dy3; // check for 0 division?
+        // check for 0 division?
+        float offset1 = (v2.z - v0.z) / dy1;
+        float offset2 = (v1.z - v0.z) / dy2;
+        float offset3 = (v2.z - v1.z) / dy3;
 
         int y = p0.y;
 
-        int x1 = p0.x;
-        float z1 = v0.z;
+        int x1 = p0.x; float z1 = v0.z;
 
-        int x2;
-        float z2;
+        int x2; float z2;
         if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
         else         { x2 = p1.x; z2 = v1.z; }
 
-        #define DRAW(X1, X2, Z1, Z2)                       \
-        for (int i = 0; i < dy2; i++)                      \
-        {                                                  \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
-            DrawHorizontalLine(y, X1, X2, Z1, Z2, pixel);  \
-            y++;                                           \
-            err1 -= dx1abs;                                \
-            err2 -= dx2abs;                                \
-            z1 += offset1;                                 \
-            z2 += offset2;                                 \
-        }                                                  \
-        for (int i = 0; i < dy3; i++)                      \
-        {                                                  \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
-            DrawHorizontalLine(y, X1, X2, Z1, Z2, pixel);  \
-            y++;                                           \
-            err1 -= dx1abs;                                \
-            err3 -= dx3abs;                                \
-            z1 += offset1;                                 \
-            z2 += offset3;                                 \
-        }                                                  \
-        DrawHorizontalLine(y, X1, X2, Z1, Z2, pixel);      \
+        int* xl; int* xr; float* zl; float* zr;
+        int cross = dx1 * dy2 - dy1 * dx2;
+        if (cross < 0) { xl = &x1; xr = &x2; zl = &z1; zr = &z1; }
+        else           { xl = &x2; xr = &x1; zl = &z2; zr = &z1; }
 
-        if (cross < 0)
+        for (int i = 0; i < dy2; i++)
         {
-            DRAW(x1, x2, z1, z2)
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }
+            while (err2 < 0) { err2 += dy2; x2 += dir2; }
+            DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
+            y++;
+            err1 -= dx1abs;
+            err2 -= dx2abs;
+            z1 += offset1;
+            z2 += offset2;
         }
-        else
+        for (int i = 0; i < dy3; i++)
         {
-            DRAW(x2, x1, z2, z1)
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }
+            while (err3 < 0) { err3 += dy3; x2 += dir3; }
+            DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
+            y++;
+            err1 -= dx1abs;
+            err3 -= dx3abs;
+            z1 += offset1;
+            z2 += offset3;
         }
-
-        #undef DRAW
+        DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
     }
     void DrawTriangle4(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {

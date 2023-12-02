@@ -26,6 +26,16 @@ struct StateTriangle
         float z1 = v1.z;
         float z2 = v2.z;
 
+        int cross = lt0.dx * lt1.dy - lt0.dy * lt1.dx;
+
+        // int x1 = p0.x;
+        // float z1 = v0.z;
+
+        // int x2;
+        // float z2;
+        // if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
+        // else         { x2 = p1.x; z2 = v1.z; }
+
         lt0 = StateLine(x0, y0, x2, y2, z0, z2);
         lt1 = StateLine(x0, y0, x1, y1, z0, z1);
         lt2 = StateLine(x1, y1, x2, y2, z1, z2);
