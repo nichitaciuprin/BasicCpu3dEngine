@@ -4,11 +4,8 @@ void main2()
 {
     auto width = 40;
     auto height = 40;
-
     auto scale = 10;
-
     auto bitmap = make_unique<Bitmap>(width, height);
-
     BitmapWindow1::Create(700, 100, width * scale, height * scale);
 
     int counter = 0;
