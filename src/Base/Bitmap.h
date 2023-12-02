@@ -22,29 +22,6 @@ const Pixel GREENCOLD  = 0x0000FF80;
 const Pixel VIOLET     = 0x008000FF;
 const Pixel LIGHTBLUE  = 0x000080FF;
 
-struct LineState
-{
-    int count;
-    float offset;
-    float z;
-
-    int x0; int y0;
-    int x1; int y1;
-
-    int axis1;
-    int axis2;
-
-    int err;
-    int err1;
-    int err2;
-
-    int val1;
-    int val2;
-
-    int max;
-    int min;
-};
-
 class Bitmap
 {
 public:
@@ -140,49 +117,15 @@ public:
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
 
-        auto lineState0 = GetLineState(p0.x, p0.y, p2.x, p2.y, v0.z, v2.z);
-        auto lineState1 = GetLineState(p0.x, p0.y, p1.x, p1.y, v0.z, v1.z);
-        auto lineState2 = GetLineState(p1.x, p1.y, p2.x, p2.y, v1.z, v2.z);
+        auto lt0 = LineState(p0.x, p0.y, p2.x, p2.y, v0.z, v2.z);
+        auto lt1 = LineState(p0.x, p0.y, p1.x, p1.y, v0.z, v1.z);
+        auto lt2 = LineState(p1.x, p1.y, p2.x, p2.y, v1.z, v2.z);
 
-        // while (true)
-        // {
-        //     DrawStep(lineState1);
-        // }
-        // DrawStep()
-    }
-    LineState GetLineState(int x0, int y0, int x1, int y1, float z0, float z1)
-    {
-        LineState out;
-
-        int dx, dy;
-        int sx, sy;
-
-        if (x0 < x1) { dx = x1 - x0; sx =  1; }
-        else         { dx = x0 - x1; sx = -1; }
-
-        if (y0 < y1) { dy = y1 - y0; sy =  1; }
-        else         { dy = y0 - y1; sy = -1; }
-
-        int max, min;
-
-        if (dx > dy) { max = dx; min = dy; out.axis1 = y0; out.axis2 = x0; out.val1 = sy; out.val2 = sx; }
-        else         { max = dy; min = dx; out.axis1 = x0; out.axis2 = y0; out.val1 = sx; out.val2 = sy; }
-
-        out.err = max / 2 - min;
-        out.err1 = out.max;
-        out.err2 = out.min;
-        out.count = max;
-
-        out.offset = (z1 - z0) / max;
-        out.z = z0;
-
-        return out;
-    }
-    bool DrawStep(LineState& lt)
-    {
-        // if (err < 0) { err += errVal1; axis1 += val1; }
-        //              { err -= errVal2; axis2 += val2; }
-        // z += offset;
+        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
+        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
+        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
+        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
+        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
     }
 
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
@@ -253,15 +196,9 @@ public:
         int dx1abs = abs(dx1);
         int dx2abs = abs(dx2);
         int dx3abs = abs(dx3);
-        // int max1 = MathMax(dy1, dx1abs);
-        // int max2 = MathMax(dy2, dx2abs);
-        // int max3 = MathMax(dy3, dx3abs);
-        // int min1 = MathMin(dy1, dx1abs);
-        // int min2 = MathMin(dy2, dx2abs);
-        // int min3 = MathMin(dy3, dx3abs);
-        int err1 = dy1 - dx1abs;
-        int err2 = dy2 - dx2abs;
-        int err3 = dy3 - dx3abs;
+        int err1 = dy1 / 2 - dx1abs;
+        int err2 = dy2 / 2 - dx2abs;
+        int err3 = dy3 / 2 - dx3abs;
         int cross = dx1 * dy2 - dy1 * dx2;
 
         float offset1 = (v2.z - v0.z) / dy1; // check for 0 division?
