@@ -40,7 +40,7 @@ void main2()
         p0 = {   5, 35, 0 };
         p1 = {   5, 20, 0 };
         p2 = {  35,  5, 20 };
-        bitmap->DrawTriangleBorder(p0, p1, p2, GREEN);
+        bitmap->DrawTriangle4(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p0, p1, p2, GREEN);
         // bitmap->DrawTriangleSideCross2(p1, p2, p0, GREEN);
         // bitmap->DrawTriangleSideCross2(p2, p0, p1, GREEN);

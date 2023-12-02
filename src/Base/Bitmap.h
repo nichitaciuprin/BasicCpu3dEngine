@@ -107,27 +107,6 @@ public:
         SetPixel2(x0, y0, z, pixel);
     }
 
-    void DrawTriangleBorder(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
-    {
-        if (v0.y > v1.y) swap(v0, v1);
-        if (v1.y > v2.y) swap(v1, v2);
-        if (v0.y > v1.y) swap(v0, v1);
-
-        Vector2Int p0 = { (int)v0.x, (int)v0.y };
-        Vector2Int p1 = { (int)v1.x, (int)v1.y };
-        Vector2Int p2 = { (int)v2.x, (int)v2.y };
-
-        auto lt0 = LineState(p0.x, p0.y, p2.x, p2.y, v0.z, v2.z);
-        auto lt1 = LineState(p0.x, p0.y, p1.x, p1.y, v0.z, v1.z);
-        auto lt2 = LineState(p1.x, p1.y, p2.x, p2.y, v1.z, v2.z);
-
-        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
-        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
-        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
-        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
-        SetPixel(lt0.x0, lt0.y0, GREEN); lt0.Update();
-    }
-
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         Vector3 v1 = p0; Vector3 v2 = p1;
@@ -250,6 +229,10 @@ public:
         }
 
         #undef DRAW
+    }
+    void DrawTriangle4(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
+    {
+        auto stateTriangle = StateTriangle(v0, v1, v2);
     }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)

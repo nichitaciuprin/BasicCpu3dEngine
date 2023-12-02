@@ -1,6 +1,6 @@
 #pragma once
 
-struct LineState
+struct StateLine
 {
     float offset;
     float z;
@@ -13,9 +13,11 @@ struct LineState
 
     int err;
 
-    void (*step)(LineState* lt);
+    void (*step)(StateLine* lt);
 
-    LineState(int _x0, int _y0, int _x1, int _y1, float _z0, float _z1)
+    StateLine() {}
+
+    StateLine(int _x0, int _y0, int _x1, int _y1, float _z0, float _z1)
     {
         x0 = _x0;
         y0 = _y0;
@@ -45,17 +47,16 @@ struct LineState
     }
     void Update()
     {
-        // cout << x0 << endl;
         step(this);
         z += offset;
     }
-    static void DrawStepDX(LineState* lt)
+    static void DrawStepDX(StateLine* lt)
     {
         if (lt->err < 0)
         { lt->err += lt->dx; lt->y0 += lt->sy; }
         { lt->err -= lt->dy; lt->x0 += lt->sx; }
     }
-    static void DrawStepDY(LineState* lt)
+    static void DrawStepDY(StateLine* lt)
     {
         if (lt->err < 0)
         { lt->err += lt->dy; lt->x0 += lt->sx; }
