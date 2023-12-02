@@ -40,10 +40,10 @@ void main2()
         Vector3 p0 = {  20,  5, 0 };
         Vector3 p1 = {  35, 20, 0 };
         Vector3 p2 = {   5, 35, 0 };
-        // bitmap->DrawTriangle3(p0, p1, p2, GREEN);
-        bitmap->DrawLine3(p0, p2, RED);
-        bitmap->DrawLine3(p0, p1, RED);
-        bitmap->DrawLine3(p1, p2, RED);
+        bitmap->DrawTriangle3(p0, p1, p2, GREEN);
+        // bitmap->DrawLine3(p0, p2, RED);
+        // bitmap->DrawLine3(p0, p1, RED);
+        // bitmap->DrawLine3(p1, p2, RED);
         bitmap->DrawLine4(p0, p2, WHITE);
         bitmap->DrawLine4(p0, p1, WHITE);
         bitmap->DrawLine4(p1, p2, WHITE);

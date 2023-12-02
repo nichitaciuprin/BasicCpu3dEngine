@@ -147,6 +147,8 @@ public:
     }
     void DrawLine4(Vector3 v0, Vector3 v1, Pixel pixel)
     {
+        if (v0.y > v1.y) swap(v0, v1);
+
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
 
@@ -158,43 +160,26 @@ public:
         if (p0.y < p1.y) { dy = p1.y - p0.y; sy =  1; }
         else             { dy = p0.y - p1.y; sy = -1; }
 
-        // int max, min, val1, val2;
-        // int* axis1;
-        // int* axis2;
-        // if (dx > dy) { max = dx; min = dy; axis1 = &p0.y; axis2 = &p0.x; val1 = sy; val2 = sx; }
-        // else         { max = dy; min = dx; axis1 = &p0.x; axis2 = &p0.y; val1 = sx; val2 = sy; }
+        int max, min, val1, val2;
+        int* axis1;
+        int* axis2;
+        if (dx > dy) { max = dx; min = dy; axis1 = &p0.y; axis2 = &p0.x; val1 = sy; val2 = sx; }
+        else         { max = dy; min = dx; axis1 = &p0.x; axis2 = &p0.y; val1 = sx; val2 = sy; }
 
-        // int err = max / 2 - min;
+        int err = max / 2 - min;
 
-        // float offset = (v1.z - v0.z) / max;
-        // float z = v0.z;
+        float offset = (v1.z - v0.z) / max;
+        float z = v0.z;
 
-        // for (int i = 0; i < max; i++)
-        // {
-        //     SetPixel2(p0.x, p0.y, z, pixel);
-        //     if (err < 0) { err += max; (*axis1) += val1; }
-        //                  { err -= min; (*axis2) += val2; }
-        //     z += offset;
-        // }
-        // SetPixel2(p0.x, p0.y, z, pixel);
-
-        #define DRAW(MAX, MIN, AXIS1, AXIS2, VAL1, VAL2) \
-        int err = MAX / 2 - MIN;                         \
-        float offset = (v1.z - v0.z) / MAX;              \
-        float z = v0.z;                                  \
-        for (int i = 0; i < MAX; i++)                    \
-        {                                                \
-            SetPixel2(p0.x, p0.y, z, pixel);             \
-            z += offset;                                 \
-            if (err < 0) { err += MAX; AXIS1 += VAL1; }  \
-                         { err -= MIN; AXIS2 += VAL2; }  \
-        }                                                \
-        SetPixel2(p0.x, p0.y, z, pixel);                 \
-
-        if (dx > dy) { DRAW(dx, dy, p0.y, p0.x, sy, sx); }
-        else         { DRAW(dy, dx, p0.x, p0.y, sx, sy); }
-
-        #undef DRAW
+        // auto count = max;
+        for (int i = 0; i < max; i++)
+        {
+            SetPixel2(p0.x, p0.y, z, pixel);
+            if (err < 0) { err += max; (*axis1) += val1; }
+                         { err -= min; (*axis2) += val2; }
+            z += offset;
+        }
+        SetPixel2(p0.x, p0.y, z, pixel);
     }
 
     // void DrawTriangleBorder(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
@@ -348,23 +333,24 @@ public:
         #define DRAW(X1, X2, Z1, Z2)                       \
         for (int i = 0; i < dy2; i++)                      \
         {                                                  \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
             DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
             y++;                                           \
             err1 -= dx1abs;                                \
             err2 -= dx2abs;                                \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err2 < 0) { err2 += dy2; x2 += dir2; }  \
             z1 += offset1;                                 \
             z2 += offset2;                                 \
         }                                                  \
+        x2 = p1.x; \
         for (int i = 0; i < dy3; i++)                      \
         {                                                  \
-            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
-            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
             DrawHorizontalLine2(y, X1, X2, Z1, Z2, pixel); \
             y++;                                           \
             err1 -= dx1abs;                                \
             err3 -= dx3abs;                                \
+            while (err1 < 0) { err1 += dy1; x1 += dir1; }  \
+            while (err3 < 0) { err3 += dy3; x2 += dir3; }  \
             z1 += offset1;                                 \
             z2 += offset3;                                 \
         }                                                  \
