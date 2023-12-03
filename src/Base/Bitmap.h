@@ -4,17 +4,19 @@
 
 typedef uint32_t Pixel;
 
-const Pixel BLACK      = 0x00000000;
-const Pixel WHITE      = 0xFFFFFFFF;
+struct Color
+{
+    uint8_t a, r, g, b;
+};
 
+const Pixel BLACK      = 0x00000000;
+const Pixel WHITE      = 0x00FFFFFF;
 const Pixel RED        = 0x00FF0000;
 const Pixel GREEN      = 0x0000FF00;
 const Pixel BLUE       = 0x000000FF;
-
 const Pixel YELLOW     = 0x00FFFF00;
 const Pixel MAGENTA    = 0x00FF00FF;
 const Pixel CYAN       = 0x0000FFFF;
-
 const Pixel ORANGE     = 0x00FF8000;
 const Pixel PINK       = 0x00FF0080;
 const Pixel LIME       = 0x0080FF00;
@@ -569,6 +571,33 @@ public:
         for (int x = 0; x < MathClamp(size, 0, width - 1); x++)
         for (int y = 0; y < MathClamp(size, 0, height - 1); y++)
             SetPixel(x,y,pixel);
+    }
+
+    void ApplyColorDepth()
+    {
+        for (size_t i = 0; i < pixels.size(); i++)
+        {
+            // auto factor = 1.0f - MathClamp(zbuffer[i], 0.0f, 5.0f) / 5.0f;
+
+            // auto temp = (float)pixels[i];
+            // temp *= factor;
+            // pixels[i] = (uint32_t)temp;
+
+            // uint32_t temp = pixels[i];
+            // uint8_t a = (uint8_t)(factor * ((float)(uint8_t)(temp >> 24)));
+            // uint8_t r = (uint8_t)(factor * ((float)(uint8_t)(temp >> 16)));
+            // uint8_t g = (uint8_t)(factor * ((float)(uint8_t)(temp >>  8)));
+            // uint8_t b = (uint8_t)(factor * ((float)(uint8_t)(temp >>  0)));
+            // uint32_t temp2 = 0;
+            // temp2 += a; temp2 = temp2 << 8;
+            // temp2 += r; temp2 = temp2 << 8;
+            // temp2 += g; temp2 = temp2 << 8;
+            // temp2 += b;
+            // pixels[i] = temp2;
+
+            if (zbuffer[i] > 5)
+                pixels[i] = BLACK;
+        }
     }
 
     void ScanEffectRandom(size_t iteration)

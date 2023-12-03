@@ -2,6 +2,23 @@
 
 void main2()
 {
+    // uint32_t temp = 0x000000FF;
+    // uint8_t a = (uint8_t)(temp >> 24);
+    // uint8_t r = (uint8_t)(temp >> 16);
+    // uint8_t g = (uint8_t)(temp >>  8);
+    // uint8_t b = (uint8_t)(temp);
+    // cout <<
+    // a << "," <<
+    // r << "," <<
+    // g << "," <<
+    // b << endl;
+    // uint32_t temp2 = 0;
+    // temp2 += a; temp2 = temp2 << 8;
+    // temp2 += r; temp2 = temp2 << 8;
+    // temp2 += g; temp2 = temp2 << 8;
+    // temp2 += b;
+    // cout << temp2 << endl;
+
     auto width = 400;
     auto height = 400;
 
@@ -49,6 +66,7 @@ void main2()
         }
 
         // bitmap->DrawBorder(GREEN);
+        bitmap->ApplyColorDepth();
         window->SetPixels(bitmap);
         window->Update();
     }

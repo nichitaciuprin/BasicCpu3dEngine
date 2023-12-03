@@ -56,13 +56,13 @@ void main2()
         // p0 = {  20,  5, 0 };
         // p1 = {   5, 20, 0 };
         // p2 = {  35, 35, 0 };
-        // bitmap->DrawTriangle4(p0, p1, p2, GREEN);
+        // bitmap->DrawTriangle4(p0, p1, p2, 0x0000FF00);
 
         // FLAT TOP
         p0 = {   5,  5, 0 };
         p1 = {  35,  5, 0 };
         p2 = {  20, 35, 0 };
-        bitmap->DrawTriangle4(p0, p1, p2, GREEN);
+        bitmap->DrawTriangle4(p0, p1, p2, 0x000000FF);
 
         // FLAT BOTTOM
         // p0 = {  20,  5, 0 };
