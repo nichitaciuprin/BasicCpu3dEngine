@@ -3,6 +3,17 @@
 class BitmapWindow
 {
 public:
+    bool keydown_W = false;
+    bool keydown_A = false;
+    bool keydown_S = false;
+    bool keydown_D = false;
+    bool keydown_E = false;
+    bool keydown_Q = false;
+    bool keydown_VK_UP = false;
+    bool keydown_VK_LEFT = false;
+    bool keydown_VK_DOWN = false;
+    bool keydown_VK_RIGHT = false;
+
     BitmapWindow(int x, int y, int clientWidth, int clientHeight)
     {
         HINSTANCE hInstance = GetModuleHandle(nullptr);
@@ -212,10 +223,21 @@ private:
             case WM_KEYDOWN:
             case WM_KEYUP:
             {
+                bool isDown = (message == WM_KEYDOWN);
                 switch (wParam)
                 {
-                    case VK_ESCAPE : { DestroyWindow(hwnd); break; }
-                    default        : {                      break; }
+                    case VK_ESCAPE : { DestroyWindow(hwnd);                     break; }
+                    case 'W'       : { bitmapWindow->keydown_W        = isDown; break; }
+                    case 'A'       : { bitmapWindow->keydown_A        = isDown; break; }
+                    case 'S'       : { bitmapWindow->keydown_S        = isDown; break; }
+                    case 'D'       : { bitmapWindow->keydown_D        = isDown; break; }
+                    case 'E'       : { bitmapWindow->keydown_E        = isDown; break; }
+                    case 'Q'       : { bitmapWindow->keydown_Q        = isDown; break; }
+                    case VK_UP     : { bitmapWindow->keydown_VK_UP    = isDown; break; }
+                    case VK_LEFT   : { bitmapWindow->keydown_VK_LEFT  = isDown; break; }
+                    case VK_DOWN   : { bitmapWindow->keydown_VK_DOWN  = isDown; break; }
+                    case VK_RIGHT  : { bitmapWindow->keydown_VK_RIGHT = isDown; break; }
+                    default        : {                                          break; }
                 }
                 break;
             }

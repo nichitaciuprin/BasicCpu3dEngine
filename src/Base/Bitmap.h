@@ -230,10 +230,10 @@ public:
 
         for (size_t i = 0; i < st.dy; i++)
         {
-            DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, GREEN);
+            DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, pixel);
             st.Update();
         }
-        DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, GREEN);
+        DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, pixel);
     }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
