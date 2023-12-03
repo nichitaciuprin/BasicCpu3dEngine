@@ -229,8 +229,8 @@ public:
 
         for (size_t i = 0; i < st.dy; i++)
         {
-            st.Update();
             DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN);
+            st.Update();
         }
         DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN);
     }
