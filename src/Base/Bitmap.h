@@ -204,7 +204,7 @@ public:
         {
             while (err1 < 0) { err1 += dy1; x1 += dir1; }
             while (err2 < 0) { err2 += dy2; x2 += dir2; }
-            DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
+            DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
             y++;
             err1 -= dx1abs;
             err2 -= dx2abs;
@@ -215,14 +215,14 @@ public:
         {
             while (err1 < 0) { err1 += dy1; x1 += dir1; }
             while (err3 < 0) { err3 += dy3; x2 += dir3; }
-            DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
+            DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
             y++;
             err1 -= dx1abs;
             err3 -= dx3abs;
             z1 += offset1;
             z2 += offset3;
         }
-        DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
+        DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
     }
     void DrawTriangle4(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
@@ -230,10 +230,10 @@ public:
 
         for (size_t i = 0; i < st.dy; i++)
         {
-            DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN);
+            DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, GREEN);
             st.Update();
         }
-        DrawHorizontalLine(st.y, st.xl, st.xr, 0, 0, GREEN);
+        DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, GREEN);
     }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
@@ -260,7 +260,7 @@ public:
         if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
     }
 
-    inline void DrawHorizontalLine(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
+    inline void DrawHorizontalLine1(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
     {
         // TODO remove
         if (xLeft > xRight)
@@ -269,6 +269,19 @@ public:
             swap(zLeft, zRight);
         }
 
+        int count = xRight - xLeft;
+        float diff = zRight - zLeft;
+        float offset = diff / count;
+
+        for (int i = 0; i < count + 1; i++)
+        {
+            auto x = xLeft + i;
+            SetPixel2(x, y, zLeft, pixel);
+            zLeft += offset;
+        }
+    }
+    inline void DrawHorizontalLine2(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
+    {
         int count = xRight - xLeft;
         float diff = zRight - zLeft;
         float offset = diff / count;
