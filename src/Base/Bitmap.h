@@ -241,11 +241,6 @@ public:
         DrawTriangle1(p0, p1, p2, pixel);
         DrawTriangle1(p2, p3, p0, pixel);
     }
-    void DrawPoligon2(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
-    {
-        DrawTriangle2(p0, p1, p2, pixel);
-        DrawTriangle2(p2, p3, p0, pixel);
-    }
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)
     {
