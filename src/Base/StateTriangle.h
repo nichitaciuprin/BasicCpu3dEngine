@@ -39,8 +39,8 @@ struct StateTriangle
         if (y0 == y1)
         {
             step = &Update2;
-            lt0 = StateLine(x0, y0, x2, y2, z0, z2);
-            lt2 = StateLine(x1, y1, x2, y2, z1, z2);
+            lt0 = StateLine(v0, v2);
+            lt2 = StateLine(v1, v2);
             xl = x0;
             xr = x1;
             zl = z0;
@@ -49,9 +49,9 @@ struct StateTriangle
         else
         {
             step = &Update1;
-            lt0 = StateLine(x0, y0, x2, y2, z0, z2);
-            lt1 = StateLine(x0, y0, x1, y1, z0, z1);
-            lt2 = StateLine(x1, y1, x2, y2, z1, z2);
+            lt0 = StateLine(v0, v2);
+            lt1 = StateLine(v0, v1);
+            lt2 = StateLine(v1, v2);
             xl = x0;
             xr = x0;
             zl = z0;

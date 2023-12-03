@@ -17,12 +17,14 @@ struct StateLine
 
     StateLine() {}
 
-    StateLine(int _x0, int _y0, int _x1, int _y1, float _z0, float _z1)
+    StateLine(Vector3 p0, Vector3 p1)
     {
-        x0 = _x0;
-        y0 = _y0;
-        x1 = _x1;
-        y1 = _y1;
+        x0 = (int)p0.x;
+        x1 = (int)p1.x;
+        y0 = (int)p0.y;
+        y1 = (int)p1.y;
+        float z0 = p0.z;
+        float z1 = p1.z;
 
         if (x0 < x1) { dx = x1 - x0; sx =  1; }
         else         { dx = x0 - x1; sx = -1; }
@@ -34,16 +36,16 @@ struct StateLine
         {
             err = dx / 2 - dy;
             step = &DrawStepDX;
-            offset = (_z1 - _z0) / dx;
+            offset = (z1 - z0) / dx;
         }
         else
         {
             err = dy / 2 - dx;
             step = &DrawStepDY;
-            offset = (_z1 - _z0) / dy;
+            offset = (z1 - z0) / dy;
         }
 
-        z = _z0;
+        z = z0;
     }
     void Update()
     {
