@@ -194,9 +194,10 @@ public:
         if (dy2 > 0) { x2 = p0.x; z2 = v0.z; }
         else         { x2 = p1.x; z2 = v1.z; }
 
-        int* xl; int* xr; float* zl; float* zr;
         int cross = dx1 * dy2 - dy1 * dx2;
-        if (cross < 0) { xl = &x1; xr = &x2; zl = &z1; zr = &z1; }
+
+        int* xl; int* xr; float* zl; float* zr;
+        if (cross < 0) { xl = &x1; xr = &x2; zl = &z1; zr = &z2; }
         else           { xl = &x2; xr = &x1; zl = &z2; zr = &z1; }
 
         for (int i = 0; i < dy2; i++)
