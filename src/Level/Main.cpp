@@ -64,9 +64,21 @@ void main2()
             auto world = MatrixWorld(position, rotation, scale);
             bitmap->DrawCube4(world * view);
         }
+        {
+            // Vector3 p0 = { -1, 0, 0 };
+            // Vector3 p1 = { -1, 0, 5 };
+            // Vector3 p2 = {  1, 0, 5 };
+            // Vector3 p3 = {  1, 0, 0 };
+            // bitmap->DrawPoligon(p0, p1, p2, p3, RED);
+
+            Vector3 p0 = { -1, 0, 3 };
+            Vector3 p1 = { -1, 1, 3 };
+            Vector3 p2 = {  1, 1, 3 };
+            bitmap->DrawTriangle1(p0, p1, p2, MAGENTA);
+        }
 
         // bitmap->DrawBorder(GREEN);
-        bitmap->ApplyColorDepth();
+        // bitmap->ApplyColorDepth();
         window->SetPixels(bitmap);
         window->Update();
     }
