@@ -1,7 +1,19 @@
 #include "../Base/Base.h"
 
+// #include <iomanip>
+
 void main2()
 {
+    // auto byte = (int)(255.1f);
+    // uint32_t pixel = 0;
+    // pixel += byte; pixel = pixel << 8;
+    // pixel += byte; pixel = pixel << 8;
+    // pixel += byte; pixel = pixel << 8;
+    // pixel += byte;
+    // std::cout << std::setfill('0') << std::setw(8) << std::hex << pixel << '\n';
+
+    // return;
+
     auto width = 400;
     auto height = 400;
 
@@ -33,29 +45,35 @@ void main2()
         );
 
         {
-            auto time = (float)clock() / 40;
-            Vector3 position = { 0, 0, 2 };
-            Vector3 rotation = { 0, time, 0 };
-            Vector3 scale = { 1, 1, 1 };
-            auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube4(world * view);
+            // auto time = (float)clock() / 40;
+            // Vector3 position = { 0, 0, 2 };
+            // Vector3 rotation = { 0, time, 0 };
+            // Vector3 scale = { 1, 1, 1 };
+            // auto world = MatrixWorld(position, rotation, scale);
+            // bitmap->DrawCube4(world * view);
         }
         {
-            Vector3 position = { 0.5f, 0.5f, 2 };
-            Vector3 rotation = { 0, 0, 0 };
-            Vector3 scale = { 1, 1, 1 };
-            auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube4(world * view);
+            // Vector3 position = { 0.5f, 0.5f, 2 };
+            // Vector3 rotation = { 0, 0, 0 };
+            // Vector3 scale = { 1, 1, 1 };
+            // auto world = MatrixWorld(position, rotation, scale);
+            // bitmap->DrawCube4(world * view);
         }
         {
-            Vector3 p0 = { -1, 0, 6 };
-            Vector3 p1 = { -1, 1, 6 };
-            Vector3 p2 = {  1, 1, 6 };
-            bitmap->DrawTriangle0(p0, p1, p2, MAGENTA, view);
+            Vector3 p0 = { -1, -1,   1 }; p0 *= view;
+            Vector3 p1 = { -1, -1, 100 }; p1 *= view;
+            Vector3 p2 = {  1, -1, 100 }; p2 *= view;
+            Vector3 p3 = {  1, -1,   1 }; p3 *= view;
+            bitmap->DrawPoligon(p0, p1, p2, p3, WHITE);
+
+            // Vector3 p0 = { -1, 0, 3 };
+            // Vector3 p1 = { -1, 1, 3 };
+            // Vector3 p2 = {  1, 1, 3 };
+            // bitmap->DrawTriangle0(p0, p1, p2, MAGENTA,);
         }
 
         // bitmap->DrawBorder(GREEN);
-        // bitmap->ApplyColorDepth();
+        bitmap->ApplyBlackWhiteColorDepth();
         window->SetPixels(bitmap);
         window->Update();
     }

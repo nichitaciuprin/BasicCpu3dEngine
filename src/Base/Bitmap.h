@@ -581,30 +581,26 @@ public:
             SetPixel(x,y,pixel);
     }
 
-    void ApplyColorDepth()
+    void ApplyBlackWhiteColorDepth()
     {
         for (size_t i = 0; i < pixels.size(); i++)
         {
-            // auto factor = 1.0f - MathClamp(zbuffer[i], 0.0f, 5.0f) / 5.0f;
+            float depthLength = 100;
+            float factor = MathClamp(zbuffer[i], 0.0f, depthLength);
+            factor /= depthLength;
+            factor = 1 - factor;
+            auto byte = (int)(factor * 255);
 
-            // auto temp = (float)pixels[i];
-            // temp *= factor;
-            // pixels[i] = (uint32_t)temp;
+            uint32_t pixel = 0;
+            pixel += byte; pixel = pixel << 8;
+            pixel += byte; pixel = pixel << 8;
+            pixel += byte; pixel = pixel << 8;
+            pixel += byte;
 
-            // uint32_t temp = pixels[i];
-            // uint8_t a = (uint8_t)(factor * ((float)(uint8_t)(temp >> 24)));
-            // uint8_t r = (uint8_t)(factor * ((float)(uint8_t)(temp >> 16)));
-            // uint8_t g = (uint8_t)(factor * ((float)(uint8_t)(temp >>  8)));
-            // uint8_t b = (uint8_t)(factor * ((float)(uint8_t)(temp >>  0)));
-            // uint32_t temp2 = 0;
-            // temp2 += a; temp2 = temp2 << 8;
-            // temp2 += r; temp2 = temp2 << 8;
-            // temp2 += g; temp2 = temp2 << 8;
-            // temp2 += b;
-            // pixels[i] = temp2;
+            pixels[i] = pixel;
 
-            if (zbuffer[i] > 5)
-                pixels[i] = BLACK;
+            // if (zbuffer[i] > 5)
+            //     pixels[i] = BLACK;
         }
     }
 
