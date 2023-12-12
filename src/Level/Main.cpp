@@ -20,7 +20,7 @@ void main2()
     auto bitmap = make_unique<Bitmap>(width, height);
     auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
-    Camera camera = { 0, 0, 0 };
+    Camera camera = { 0, 3, -5 };
 
     while (window->Exists())
     {
@@ -39,7 +39,7 @@ void main2()
         );
         UpdateCameraPosition
         (
-            &camera, 0.0001f,
+            &camera, 0.0002f,
             window->keydown_W, window->keydown_A, window->keydown_S, window->keydown_D,
             window->keydown_E, window->keydown_Q
         );
@@ -65,15 +65,28 @@ void main2()
             Vector3 p2 = {  1, -1, 100 }; p2 *= view;
             Vector3 p3 = {  1, -1,   1 }; p3 *= view;
             bitmap->DrawPoligon(p0, p1, p2, p3, WHITE);
-
-            // Vector3 p0 = { -1, 0, 3 };
-            // Vector3 p1 = { -1, 1, 3 };
-            // Vector3 p2 = {  1, 1, 3 };
-            // bitmap->DrawTriangle0(p0, p1, p2, MAGENTA,);
+        }
+        {
+            float size = 5;
+            Vector3 p0 = { -size, 0, -size }; p0 *= view;
+            Vector3 p1 = { -size, 0,  size }; p1 *= view;
+            Vector3 p2 = {  size, 0,  size }; p2 *= view;
+            Vector3 p3 = {  size, 0, -size }; p3 *= view;
+            bitmap->DrawPoligon(p0, p1, p2, p3, WHITE);
         }
 
         // bitmap->DrawBorder(GREEN);
         bitmap->ApplyBlackWhiteColorDepth();
+
+        {
+            auto time = (float)clock() / 40;
+            Vector3 position = { 0, 0, 0 };
+            Vector3 rotation = { 0, time, 0 };
+            Vector3 scale = { 1, 1, 1 };
+            auto world = MatrixWorld(position, rotation, scale);
+            bitmap->DrawCube4(world * view);
+        }
+
         window->SetPixels(bitmap);
         window->Update();
     }
