@@ -153,6 +153,12 @@ public:
         if (abs(p1.y) > 1) return;
         if (abs(p2.x) > 1) return;
         if (abs(p2.y) > 1) return;
+        // if (abs(p0.x) > 1) { cout << p0.x << endl; return; }
+        // if (abs(p0.y) > 1) { cout << p0.y << endl; return; }
+        // if (abs(p1.x) > 1) { cout << p1.x << endl; return; }
+        // if (abs(p1.y) > 1) { cout << p1.y << endl; return; }
+        // if (abs(p2.x) > 1) { cout << p2.x << endl; return; }
+        // if (abs(p2.y) > 1) { cout << p2.y << endl; return; }
 
         ToScreenSpace(p0);
         ToScreenSpace(p1);

@@ -654,31 +654,6 @@ bool ClipLineByZ(Vector3& v0, Vector3& v1)
 }
 void ClipLineByZ4(Vector3& v0, Vector3& v1, int& outCode)
 {
-    // if (v0.z < 0)
-    // {
-    //     if (v1.z < 0)
-    //     {
-    //         return 0;
-    //     }
-    //     else
-    //     {
-    //         v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0;
-    //         return 1;
-    //     }
-    // }
-    // else
-    // {
-    //     if (v1.z < 0)
-    //     {
-    //         v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0;
-    //         return 1;
-    //     }
-    //     else
-    //     {
-    //         return 2;
-    //     }
-    // }
-
     if (v0.z < 0 && v1.z < 0)                                                   { outCode = 0; return; }
     if (v0.z < 0 && v1.z > 0) { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; outCode = 1; return; }
     if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 1; return; }
