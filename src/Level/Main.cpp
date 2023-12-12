@@ -71,10 +71,10 @@ void main2()
             // Vector3 p3 = {  1, 0, 0 };
             // bitmap->DrawPoligon(p0, p1, p2, p3, RED);
 
-            Vector3 p0 = { -1, 0, 3 };
-            Vector3 p1 = { -1, 1, 3 };
-            Vector3 p2 = {  1, 1, 3 };
-            bitmap->DrawTriangle1(p0, p1, p2, MAGENTA);
+            Vector3 p0 = { -1, 0, 6 };
+            Vector3 p1 = { -1, 1, 6 };
+            Vector3 p2 = {  1, 1, 6 };
+            bitmap->DrawTriangle0(p0, p1, p2, MAGENTA, view);
         }
 
         // bitmap->DrawBorder(GREEN);

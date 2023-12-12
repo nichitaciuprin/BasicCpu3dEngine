@@ -512,9 +512,9 @@ inline Matrix MatrixWorld(Vector3 position, Vector3 rotation, Vector3 scale)
 inline Matrix MatrixView(Vector3 eye, float yaw, float pitch)
 {
     return
-        MatrixTranslate(-eye) *
-        MatrixRotateY(-yaw) *
-        MatrixRotateX(-pitch);
+    MatrixTranslate(-eye) *
+    MatrixRotateY(-yaw) *
+    MatrixRotateX(-pitch);
 }
 inline Matrix MatrixView(Vector3 eye, Vector3 target, Vector3 up)
 {
@@ -540,7 +540,7 @@ inline Matrix MatrixView(Vector3 eye, Vector3 target, Vector3 up)
 }
 inline Matrix MatrixView(const Camera* camera)
 {
-    return MatrixView(camera->position,camera->yaw,camera->pitch);
+    return MatrixView(camera->position, camera->yaw, camera->pitch);
 }
 inline Matrix MatrixOrthographic(float width, float height, float zNear, float zFar)
 {

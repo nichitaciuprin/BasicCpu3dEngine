@@ -110,8 +110,12 @@ public:
         SetPixel2(x0, y0, z, pixel);
     }
 
-    void DrawTriangle0(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel, Camera& camera)
+    void DrawTriangle0(Vector3& p0, Vector3& p1, Vector3& p2, const Pixel& pixel, Matrix& view)
     {
+        p0 *= view;
+        p1 *= view;
+        p2 *= view;
+        DrawTriangle1(p0, p1, p2, pixel);
     }
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
