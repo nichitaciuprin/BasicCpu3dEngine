@@ -1,19 +1,7 @@
 #include "../Base/Base.h"
 
-// #include <iomanip>
-
 void main2()
 {
-    // auto byte = (int)(255.1f);
-    // uint32_t pixel = 0;
-    // pixel += byte; pixel = pixel << 8;
-    // pixel += byte; pixel = pixel << 8;
-    // pixel += byte; pixel = pixel << 8;
-    // pixel += byte;
-    // std::cout << std::setfill('0') << std::setw(8) << std::hex << pixel << '\n';
-
-    // return;
-
     auto width = 400;
     auto height = 400;
 
