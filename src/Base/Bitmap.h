@@ -201,14 +201,17 @@ public:
 
         switch (state)
         {
-            /* 000 */ case 0: {                            goto T0; };
+            /* 000 */ case 0: { goto T0; };
+            /* 111 */ case 7: { return; };
+
             /* 001 */ case 1: { v0 = p2; v1 = p0; v2 = p1; goto T1; };
             /* 010 */ case 2: { v0 = p1; v1 = p2; v2 = p0; goto T1; };
             /* 100 */ case 4: { v0 = p0; v1 = p1; v2 = p2; goto T1; };
+
             /* 011 */ case 3: { v0 = p0; v1 = p1; v2 = p2; goto T2; };
             /* 101 */ case 5: { v0 = p1; v1 = p0; v2 = p2; goto T2; };
             /* 110 */ case 6: { v0 = p2; v1 = p0; v2 = p1; goto T2; };
-            /* 111 */ case 7: { return; };
+
             default: abort();
         }
 
