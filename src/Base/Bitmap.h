@@ -154,56 +154,55 @@ public:
         if (abs(p1.x) > 1 || abs(p1.y) > 1) state += 2;
         if (abs(p0.x) > 1 || abs(p0.y) > 1) state += 4;
 
+        Vector3 v0, v1, v2;
+
         switch (state)
         {
-            /* 000 */ case 0: { ToScreenSpace(p0); ToScreenSpace(p1); ToScreenSpace(p2); DrawTriangle3(p0, p1, p2, pixel); return; };
-            /* 001 */ case 1:
-            {
-                Vector3 duno1 = p2;
-                Vector3 duno2 = p2;
-                int outCode1; ClipLine(duno1, p0, outCode1);
-                int outCode2; ClipLine(duno2, p1, outCode2);
-                ToScreenSpace(duno1);
-                ToScreenSpace(duno2);
-                ToScreenSpace(p0);
-                ToScreenSpace(p1);
-                DrawTriangle3(duno1, p0, duno2, pixel);
-                DrawTriangle3(duno2, p0, p1, pixel);
-                return;
-            };
-            /* 010 */ case 2:
-            {
-                Vector3 duno1 = p1;
-                Vector3 duno2 = p1;
-                int outCode1; ClipLine(duno1, p2, outCode1);
-                int outCode2; ClipLine(duno2, p0, outCode2);
-                ToScreenSpace(duno1);
-                ToScreenSpace(duno2);
-                ToScreenSpace(p0);
-                ToScreenSpace(p2);
-                DrawTriangle3(duno1, p2, duno2, pixel);
-                DrawTriangle3(duno2, p2, p0, pixel);
-                return;
-            };
-            /* 011 */ case 3: { return; };
-            /* 100 */ case 4:
-            {
-                Vector3 duno1 = p0;
-                Vector3 duno2 = p0;
-                int outCode1; ClipLine(duno1, p1, outCode1);
-                int outCode2; ClipLine(duno2, p2, outCode2);
-                ToScreenSpace(duno1);
-                ToScreenSpace(duno2);
-                ToScreenSpace(p1);
-                ToScreenSpace(p2);
-                DrawTriangle3(duno1, p1, duno2, pixel);
-                DrawTriangle3(duno2, p1, p2, pixel);
-                return;
-            };
-            /* 101 */ case 5: { return; };
-            /* 110 */ case 6: { return; };
+            /* 000 */ case 0: {                            goto T0; };
+            /* 001 */ case 1: { v0 = p2; v1 = p0; v2 = p1; goto T1; };
+            /* 010 */ case 2: { v0 = p1; v1 = p2; v2 = p0; goto T1; };
+            /* 100 */ case 4: { v0 = p0; v1 = p1; v2 = p2; goto T1; };
+            /* 011 */ case 3: { v0 = p0; v1 = p1; v2 = p2; goto T2; };
+            /* 101 */ case 5: { v0 = p1; v1 = p0; v2 = p2; goto T2; };
+            /* 110 */ case 6: { v0 = p2; v1 = p0; v2 = p1; goto T2; };
             /* 111 */ case 7: { return; };
             default: abort();
+        }
+
+        T0:
+        {
+            ToScreenSpace(p0);
+            ToScreenSpace(p1);
+            ToScreenSpace(p2);
+            DrawTriangle3(p0, p1, p2, pixel);
+            return;
+        }
+
+        T1:
+        {
+            Vector3 b1 = v0;
+            Vector3 b2 = v0;
+            int outCode1; ClipLine(b1, v1, outCode1);
+            int outCode2; ClipLine(b2, v2, outCode2);
+            ToScreenSpace(b1);
+            ToScreenSpace(b2);
+            ToScreenSpace(v1);
+            ToScreenSpace(v2);
+            DrawTriangle3(b1, v1, b2, pixel);
+            DrawTriangle3(b2, v1, v2, pixel);
+            return;
+        }
+
+        T2:
+        {
+            int outCode1; ClipLine(v0, v1, outCode1);
+            int outCode2; ClipLine(v0, v2, outCode2);
+            ToScreenSpace(v0);
+            ToScreenSpace(v1);
+            ToScreenSpace(v2);
+            DrawTriangle3(v0, v1, v2, pixel);
+            DrawTriangle3(v0, v1, v2, pixel);
+            return;
         }
 
         // Vector3 v1 = p0; Vector3 v2 = p1;
