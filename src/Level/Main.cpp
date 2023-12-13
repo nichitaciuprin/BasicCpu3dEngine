@@ -9,6 +9,7 @@ void main2()
     auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
     Camera camera = { 0, 3, -5 };
+    // Camera camera = { 0, 0, 0 };
 
     while (window->Exists())
     {
@@ -47,6 +48,7 @@ void main2()
             // auto world = MatrixWorld(position, rotation, scale);
             // bitmap->DrawCube4(world * view);
         }
+
         {
             Vector3 p0 = { -1, -1,   1 }; p0 *= view;
             Vector3 p1 = { -1, -1, 100 }; p1 *= view;
@@ -63,7 +65,6 @@ void main2()
             bitmap->DrawPoligon(p0, p1, p2, p3, WHITE);
         }
 
-        // bitmap->DrawBorder(GREEN);
         bitmap->ApplyBlackWhiteColorDepth();
 
         {
