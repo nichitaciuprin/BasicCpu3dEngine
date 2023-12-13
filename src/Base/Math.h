@@ -659,6 +659,11 @@ void ClipLineByZ4(Vector3& v0, Vector3& v1, int& outCode)
     if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 1; return; }
                                                                                 { outCode = 2; return; }
 }
+void ClipLineByZ5(Vector3& v0, Vector3& v1)
+{
+    v0 += (v0 - v1) * v0.z / (v1.z - v0.z);
+}
+
 
 void ClipLineByZ3(Vector3& v0, Vector3& v1, bool& include)
 {

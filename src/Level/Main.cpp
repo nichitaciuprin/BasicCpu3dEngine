@@ -8,8 +8,8 @@ void main2()
     auto bitmap = make_unique<Bitmap>(width, height);
     auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
-    Camera camera = { 0, 3, -5 };
-    // Camera camera = { 0, 0, 0 };
+    // Camera camera = { 0, 3, -5 };
+    Camera camera = { 0, 1, 0 };
 
     while (window->Exists())
     {
@@ -50,10 +50,10 @@ void main2()
         }
 
         {
-            Vector3 p0 = { -1, -1,   1 }; p0 *= view;
-            Vector3 p1 = { -1, -1, 100 }; p1 *= view;
-            Vector3 p2 = {  1, -1, 100 }; p2 *= view;
-            Vector3 p3 = {  1, -1,   1 }; p3 *= view;
+            Vector3 p0 = { -1, 0,   1 }; p0 *= view;
+            Vector3 p1 = { -1, 0, 100 }; p1 *= view;
+            Vector3 p2 = {  1, 0, 100 }; p2 *= view;
+            Vector3 p3 = {  1, 0,   1 }; p3 *= view;
             bitmap->DrawPoligon(p0, p1, p2, p3, WHITE);
         }
         {

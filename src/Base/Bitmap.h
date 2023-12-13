@@ -30,6 +30,7 @@ class Bitmap
 public:
     vector<uint32_t> pixels;
     vector<float> zbuffer;
+    float nearZ = 0.2f;
 
     Bitmap(int widthNew, int heightNew)
     {
@@ -121,33 +122,75 @@ public:
     }
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
-        Vector3 v1 = p0; Vector3 v2 = p1;
-        Vector3 v3 = p1; Vector3 v4 = p2;
-        Vector3 v5 = p2; Vector3 v0 = p0;
+        p0.z -= nearZ;
+        p1.z -= nearZ;
+        p2.z -= nearZ;
 
-        int outCode1; ProjectLine(v1, v2, outCode1);
-        int outCode2; ProjectLine(v3, v4, outCode2);
-        int outCode3; ProjectLine(v5, v0, outCode3);
+        int state = 0;
 
-        if (outCode1 == 0 && outCode2 == 0 && outCode3 == 0) return;
-        if (outCode1 == 2 && outCode2 == 2 && outCode3 == 2)
+        if (p2.z < 0) state += 1;
+        if (p1.z < 0) state += 2;
+        if (p0.z < 0) state += 4;
+
+        Vector3 v0, v1, v2;
+
+        switch (state)
         {
-            if (!Vector3TriangleIsClockwise(v1, v3, v5)) return;
-            DrawTriangle2(v1, v3, v5, pixel);
-            // DrawLine2(v1, v2, WHITE);
-            // DrawLine2(v3, v4, WHITE);
-            // DrawLine2(v5, v0, WHITE);
+            /* 000 */ case 0: {                            goto T0; };
+            /* 001 */ case 1: { v0 = p2; v1 = p0; v2 = p1; goto T1; };
+            /* 010 */ case 2: { v0 = p1; v1 = p2; v2 = p0; goto T1; };
+            /* 100 */ case 4: { v0 = p0; v1 = p1; v2 = p2; goto T1; };
+            /* 011 */ case 3: { v0 = p0; v1 = p1; v2 = p2; goto T2; };
+            /* 101 */ case 5: { v0 = p1; v1 = p0; v2 = p2; goto T2; };
+            /* 110 */ case 6: { v0 = p2; v1 = p0; v2 = p1; goto T2; };
+            /* 111 */ case 7: { return; };
+            default: abort();
         }
 
-        // all in back
-        // all in front
-        // 2 lines cliped
-        // 2 lines cliped + 1 line drop
+        T0:
+        {
+            p0.z += nearZ;
+            p1.z += nearZ;
+            p2.z += nearZ;
+            if (p0.z != 0) { p0.x /= p0.z; p0.y /= p0.z; };
+            if (p1.z != 0) { p1.x /= p1.z; p1.y /= p1.z; };
+            if (p2.z != 0) { p2.x /= p2.z; p2.y /= p2.z; };
+            DrawTriangle2(p0, p1, p2, pixel);
+            return;
+        }
 
-        // ClipLineByZ3()
+        T1:
+        {
+            Vector3 b1 = v0;
+            Vector3 b2 = v0;
+            b1 += (b1 - v1) * b1.z / (v1.z - b1.z);
+            b2 += (b2 - v2) * b2.z / (v2.z - b2.z);
+            v0.z += nearZ;
+            v1.z += nearZ;
+            v2.z += nearZ;
+            if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
+            if (v2.z != 0) { v2.x /= v2.z; v2.y /= v2.z; };
+            DrawTriangle2(b1, v1, b2, pixel);
+            DrawTriangle2(b2, v1, v2, pixel);
+            return;
+        }
+
+        T2:
+        {
+            v1 += (v1 - v0) * v1.z / (v0.z - v1.z);
+            v2 += (v2 - v0) * v2.z / (v0.z - v2.z);
+            v0.z += nearZ;
+            v1.z += nearZ;
+            v2.z += nearZ;
+            if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
+            DrawTriangle2(v0, v1, v2, pixel);
+            return;
+        }
     }
     void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
+        if (!Vector3TriangleIsClockwise(p0, p1, p2)) return;
+
         int state = 0;
 
         if (abs(p2.x) > 1 || abs(p2.y) > 1) state += 1;
@@ -201,29 +244,8 @@ public:
             ToScreenSpace(v1);
             ToScreenSpace(v2);
             DrawTriangle3(v0, v1, v2, pixel);
-            DrawTriangle3(v0, v1, v2, pixel);
             return;
         }
-
-        // Vector3 v1 = p0; Vector3 v2 = p1;
-        // Vector3 v3 = p1; Vector3 v4 = p2;
-        // Vector3 v5 = p2; Vector3 v0 = p0;
-
-        // int outCode1; ClipLine(v1, v2, outCode1);
-        // int outCode2; ClipLine(v3, v4, outCode2);
-        // int outCode3; ClipLine(v5, v0, outCode3);
-
-        // int outCode1; ClipLine(p0, p1, outCode1);
-        // int outCode2; ClipLine(p1, p2, outCode2);
-        // int outCode3; ClipLine(p2, p0, outCode3);
-
-        // TODO replace with proper triangle cliping
-        // if (abs(p0.x) > 1) { cout << p0.x << endl; return; }
-        // if (abs(p0.y) > 1) { cout << p0.y << endl; return; }
-        // if (abs(p1.x) > 1) { cout << p1.x << endl; return; }
-        // if (abs(p1.y) > 1) { cout << p1.y << endl; return; }
-        // if (abs(p2.x) > 1) { cout << p2.x << endl; return; }
-        // if (abs(p2.y) > 1) { cout << p2.y << endl; return; }
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
@@ -319,13 +341,18 @@ public:
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)
     {
-        float nearZ = 0.1f;
         v0.z -= nearZ;
         v1.z -= nearZ;
         ClipLineByZ4(v0, v1, outCode);
         if (outCode == 0) return;
         v0.z += nearZ;
         v1.z += nearZ;
+        if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
+        if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
+    }
+
+    void ProjectLine2(Vector3& v0, Vector3& v1)
+    {
         if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
         if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
     }
