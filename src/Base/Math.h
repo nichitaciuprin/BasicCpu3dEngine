@@ -693,7 +693,7 @@ int PointState(float x, float y)
 	else if (y > ymax) code |= TOP;
 	return code;
 }
-bool ClipLine(float& x0, float& y0, float& x1, float& y1)
+void ClipLine(float& x0, float& y0, float& x1, float& y1, int& outCode)
 {
     const int LEFT   = 1; // 0001
     const int RIGHT  = 2; // 0010
@@ -710,8 +710,8 @@ bool ClipLine(float& x0, float& y0, float& x1, float& y1)
 
 	while (true)
     {
-		if (!(code0 | code1)) return true;  // points inside
-        if (  code0 & code1 ) return false; // points in same outside zone
+		if (!(code0 | code1)) { outCode = 2; return; } // points inside
+        if (  code0 & code1 ) { outCode = 0; return; } // points in same outside zone
 
         int code =
             code0 > code1 ?
@@ -729,5 +729,5 @@ bool ClipLine(float& x0, float& y0, float& x1, float& y1)
         else               { x1 = x; y1 = y; code1 = PointState(x1, y1); }
 	}
 
-	return true;
+	outCode = 1;
 }
