@@ -45,6 +45,18 @@ void main2()
             // Vector3 p0 = {  1, -1,  1 }; p0 *= view;
             bitmap->DrawTriangle1(p0, p1, p2, WHITE);
         }
+        // {
+        //     Vector3 p0 = {  1,  0,  1 }; p0 *= view;
+        //     Vector3 p1 = { -1, -1,  1 }; p1 *= view;
+        //     Vector3 p2 = { -1,  1,  1 }; p2 *= view;
+        //     // Vector3 p2 = {  1,  0,  1 }; p2 *= view;
+        //     // Vector3 p0 = { -1, -1,  1 }; p0 *= view;
+        //     // Vector3 p1 = { -1,  1,  1 }; p1 *= view;
+        //     // Vector3 p1 = {  1,  0,  1 }; p1 *= view;
+        //     // Vector3 p2 = { -1, -1,  1 }; p2 *= view;
+        //     // Vector3 p0 = { -1,  1,  1 }; p0 *= view;
+        //     bitmap->DrawTriangle1(p0, p1, p2, WHITE);
+        // }
 
         window->SetPixels(bitmap);
         window->Update();
