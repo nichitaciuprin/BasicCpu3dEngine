@@ -665,11 +665,13 @@ void ClipLineByZ5(Vector3& v0, Vector3& v1)
 }
 void ClipTriangleRight(Vector3& p0, Vector3& p1, Vector3& p2, Vector3& p3, int& outCode)
 {
+    int offset = 1;
+
     int state = 0;
 
-    if (p2.x > 1) state += 1;
-    if (p1.x > 1) state += 2;
-    if (p0.x > 1) state += 4;
+    if (p2.x > offset) state += 1;
+    if (p1.x > offset) state += 2;
+    if (p0.x > offset) state += 4;
 
     switch (state)
     {
@@ -696,8 +698,8 @@ void ClipTriangleRight(Vector3& p0, Vector3& p1, Vector3& p2, Vector3& p3, int& 
     POINT_1:
     {
         outCode = 1;
-        p0 = { 1, v0.y + (v2.y - v0.y) * (1 - v0.x) / (v2.x - v0.x) };
-        p1 = { 1, v0.y + (v1.y - v0.y) * (1 - v0.x) / (v1.x - v0.x) };
+        p0 = { 1, v0.y + (v2.y - v0.y) * (offset - v0.x) / (v2.x - v0.x) };
+        p1 = { 1, v0.y + (v1.y - v0.y) * (offset - v0.x) / (v1.x - v0.x) };
         p2 = v1;
         p3 = v2;
         return;
@@ -707,8 +709,8 @@ void ClipTriangleRight(Vector3& p0, Vector3& p1, Vector3& p2, Vector3& p3, int& 
     {
         outCode = 2;
         p0 = v0;
-        p1 = { 1, v1.y + (v0.y - v1.y) * (1 - v1.x) / (v1.x - v0.x) };
-        p2 = { 1, v2.y + (v0.y - v2.y) * (1 - v2.x) / (v2.x - v0.x) };
+        p1 = { 1, v1.y + (v0.y - v1.y) * (offset - v1.x) / (v1.x - v0.x) };
+        p2 = { 1, v2.y + (v0.y - v2.y) * (offset - v2.x) / (v2.x - v0.x) };
         return;
     }
 }
