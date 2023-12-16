@@ -197,7 +197,8 @@ public:
         // Vector3Print(p2);
 
         Vector3 p3; int outCode;
-        ClipTriangleRight(p0, p1, p2, p3, outCode);
+        // ClipTriangleRight(p0, p1, p2, p3, outCode);
+        ClipTriangleLeft(p0, p1, p2, p3, outCode);
 
         // cout << "----1----" << endl;
         // Vector3Print(p0);
