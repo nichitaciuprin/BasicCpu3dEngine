@@ -196,12 +196,15 @@ public:
         if (!Vector3TriangleIsClockwise(p0, p1, p2)) return;
         auto in = vector<Vector3>();
         auto out = vector<Vector3>();
-        in.reserve(3);
+        in.reserve(6);
         in.push_back(p0);
         in.push_back(p1);
         in.push_back(p2);
         out.reserve(6);
         ClipPoligon(in, out);
+        // cout << "-------" << endl;
+        // for (auto& point : out)
+        //     Vector3Print(point);
         DrawPoligon2(out, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
@@ -300,8 +303,8 @@ public:
         if (points.size() < 3) return;
 
         // cout << "-------" << endl;
-        // for (size_t i = 0; i < points.size(); i++)
-        //     Vector3Print(points[i]);
+        // for (auto& point : points)
+        //     Vector3Print(point);
 
         for (auto& point : points)
             ToScreenSpace(point);
