@@ -2,57 +2,83 @@
 
 void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
 {
-    int pointsDone = 0;
     Vector3& p0 = input[input.size() - 1];
-    if (p0.x <= 1) { goto INCLUDE; }
-    else           { goto EXCLUDE; }
+    bool c0 = p0.x > 1;
 
-    INCLUDE:
+    for (size_t i = 0; i < input.size(); i++)
     {
-        do
-        {
-            output.push_back(p0);
-            Vector3& p1 = input[pointsDone];
-            pointsDone++;
-            if (p1.x > 1)
-            {
-                Vector3 newPoint = { 1, p0.y + (p1.y - p0.y) * (1 - p0.x) / (p1.x - p0.x) };
-                output.push_back(newPoint);
-                p0 = p1;
-                goto EXCLUDE;
-            }
-            else
-            {
-                p0 = p1;
-            }
-        }
-        while (pointsDone != input.size());
-        return;
-    }
+        Vector3& p1 = input[i];
+        bool c1 = p1.x > 1;
 
-    EXCLUDE:
-    {
-        cout << 2 << endl;
-        do
+        int state = 0;
+        if (c1) state += 1;
+        if (c0) state += 2;
+
+        switch (state)
         {
-            Vector3& p1 = input[pointsDone];
-            pointsDone++;
-            if (p1.x <= 1)
-            {
-                Vector3 newPoint = { 1, p1.y + (p0.y - p1.y) * (1 - p1.x) / (p0.x - p1.x) };
-                output.push_back(newPoint);
-                p0 = p1;
-                goto INCLUDE;
-            }
-            else
-            {
-                p0 = p1;
-            }
+            /* 00 */ case 0: {  output.push_back(p0); break; };
+            /* 01 */ case 1: {  output.push_back(p0); output.push_back({ 1, p0.y + (p1.y - p0.y) * (1 - p0.x) / (p1.x - p0.x) }); break; };
+            /* 10 */ case 2: {                        output.push_back({ 1, p1.y + (p0.y - p1.y) * (1 - p1.x) / (p0.x - p1.x) }); break; };
+            default: break;
         }
-        while (pointsDone != input.size());
-        return;
+
+        p0 = p1;
+        c0 = c1;
     }
 }
+
+// void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
+// {
+//     int pointsDone = 0;
+//     Vector3& p0 = input[input.size() - 1];
+//     if (p0.x <= 1) { goto INCLUDE; }
+//     else           { goto EXCLUDE; }
+
+//     INCLUDE:
+//     {
+//         do
+//         {
+//             output.push_back(p0);
+//             Vector3& p1 = input[pointsDone];
+//             pointsDone++;
+//             if (p1.x > 1)
+//             {
+//                 Vector3 newPoint = { 1, p0.y + (p1.y - p0.y) * (1 - p0.x) / (p1.x - p0.x) };
+//                 output.push_back(newPoint);
+//                 p0 = p1;
+//                 goto EXCLUDE;
+//             }
+//             else
+//             {
+//                 p0 = p1;
+//             }
+//         }
+//         while (pointsDone != input.size());
+//         return;
+//     }
+
+//     EXCLUDE:
+//     {
+//         do
+//         {
+//             Vector3& p1 = input[pointsDone];
+//             pointsDone++;
+//             if (p1.x <= 1)
+//             {
+//                 Vector3 newPoint = { 1, p1.y + (p0.y - p1.y) * (1 - p1.x) / (p0.x - p1.x) };
+//                 output.push_back(newPoint);
+//                 p0 = p1;
+//                 goto INCLUDE;
+//             }
+//             else
+//             {
+//                 p0 = p1;
+//             }
+//         }
+//         while (pointsDone != input.size());
+//         return;
+//     }
+// }
 void ClipPoligon(vector<Vector3>& in, vector<Vector3>& out)
 {
     //              ClipPoligonLeft   (in, out); swap(in, out);
