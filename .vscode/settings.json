@@ -85,7 +85,8 @@
         "bitset": "cpp",
         "hash_map": "cpp",
         "hash_set": "cpp",
-        "execution": "cpp"
+        "execution": "cpp",
+        "deque": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -122,6 +122,10 @@ public:
     }
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
+        // Vector3Print(p0);
+        // Vector3Print(p1);
+        // Vector3Print(p2);
+
         p0.z -= nearZ;
         p1.z -= nearZ;
         p2.z -= nearZ;
@@ -190,52 +194,15 @@ public:
     void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         if (!Vector3TriangleIsClockwise(p0, p1, p2)) return;
-
-        // cout << "----0----" << endl;
-        // Vector3Print(p0);
-        // Vector3Print(p1);
-        // Vector3Print(p2);
-
-        Vector3 p3; int outCode;
-        // ClipTriangleRight(p0, p1, p2, p3, outCode);
-        ClipTriangleLeft(p0, p1, p2, p3, outCode);
-
-        // cout << "----1----" << endl;
-        // Vector3Print(p0);
-        // Vector3Print(p1);
-        // Vector3Print(p2);
-        // Vector3Print(p3);
-
-        switch (outCode)
-        {
-            case 0:
-            {
-                ToScreenSpace(p0);
-                ToScreenSpace(p1);
-                ToScreenSpace(p2);
-                DrawTriangle3(p0, p1, p2, pixel);
-                return;
-            }
-            case 1:
-            {
-                ToScreenSpace(p0);
-                ToScreenSpace(p1);
-                ToScreenSpace(p2);
-                ToScreenSpace(p3);
-                DrawTriangle3(p0, p1, p2, pixel);
-                DrawTriangle3(p2, p3, p0, pixel);
-                return;
-            }
-            case 2:
-            {
-                ToScreenSpace(p0);
-                ToScreenSpace(p1);
-                ToScreenSpace(p2);
-                DrawTriangle3(p0, p1, p2, pixel);
-                return;
-            }
-            default: return;
-        }
+        auto in = vector<Vector3>();
+        auto out = vector<Vector3>();
+        in.reserve(3);
+        in.push_back(p0);
+        in.push_back(p1);
+        in.push_back(p2);
+        out.reserve(6);
+        ClipPoligon(in, out);
+        DrawPoligon2(out, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
@@ -327,6 +294,29 @@ public:
     {
         DrawTriangle1(p0, p1, p2, pixel);
         DrawTriangle1(p2, p3, p0, pixel);
+    }
+    void DrawPoligon2(vector<Vector3>& points, Pixel pixel)
+    {
+        if (points.size() < 3) return;
+
+        // cout << "-------" << endl;
+        // for (size_t i = 0; i < points.size(); i++)
+        //     Vector3Print(points[i]);
+
+        for (auto& point : points)
+            ToScreenSpace(point);
+
+        Vector3& p0 = points[0];
+        for (int i = 1; i < points.size() - 1; i++)
+        {
+            Vector3& p1 = points[i];
+            Vector3& p2 = points[i + 1];
+            // cout << "----" << endl;
+            // Vector3Print(p0);
+            // Vector3Print(p1);
+            // Vector3Print(p2);
+            DrawTriangle3(p0, p1, p2, pixel);
+        }
     }
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)

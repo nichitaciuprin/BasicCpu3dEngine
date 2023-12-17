@@ -129,6 +129,7 @@ inline void Vector3Print(Vector3 v)
 {
     // printf("<%f,%f,%f>",v.x,v.y,v.z);
     cout << "<" << v.x << "," << v.y << "," << v.z << ">" << endl;
+    // cout << "<" << (int)v.x << "," << (int)v.y << "," << (int)v.z << ">" << endl;
 }
 inline void Vector4Print(Vector4 v)
 {
