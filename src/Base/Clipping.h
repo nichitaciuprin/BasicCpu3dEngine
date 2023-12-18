@@ -3,113 +3,105 @@
 void ClipPoligonLeft(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = -1;
+    int state = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    bool c0 = p0.x < offset;
+    if (p0.x < offset) state += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        Vector3 p1 = input[i];
-        bool c1 = p1.x < offset;
+        state = state >> 1;
 
-        int state = 0;
-        if (c1) state += 1;
-        if (c0) state += 2;
+        Vector3 p1 = input[i];
+        if (p1.x < offset) state += 2;
 
         switch (state)
         {
             /* 00 */ case 0: {  output.push_back(p0); break; };
-            /* 01 */ case 1: {  output.push_back(p0); output.push_back({ offset, p1.y + (p1.y - p0.y) * (offset - p1.x) / (p1.x - p0.x) }); break; };
-            /* 10 */ case 2: {                        output.push_back({ offset, p0.y + (p0.y - p1.y) * (offset - p0.x) / (p0.x - p1.x) }); break; };
+            /* 10 */ case 2: {  output.push_back(p0); output.push_back({ offset, p1.y + (p1.y - p0.y) * (offset - p1.x) / (p1.x - p0.x) }); break; };
+            /* 01 */ case 1: {                        output.push_back({ offset, p0.y + (p0.y - p1.y) * (offset - p0.x) / (p0.x - p1.x) }); break; };
             default: break;
         }
 
         p0 = p1;
-        c0 = c1;
     }
 }
 void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = 1;
+    int state = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    bool c0 = p0.x > offset;
+    if (p0.x > offset) state += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        Vector3 p1 = input[i];
-        bool c1 = p1.x > offset;
+        state = state >> 1;
 
-        int state = 0;
-        if (c1) state += 1;
-        if (c0) state += 2;
+        Vector3 p1 = input[i];
+        if (p1.x > offset) state += 2;
 
         switch (state)
         {
             /* 00 */ case 0: { output.push_back(p0);                                                                                       break; };
-            /* 01 */ case 1: { output.push_back(p0); output.push_back({ offset, p0.y + (p1.y - p0.y) * (offset - p0.x) / (p1.x - p0.x) }); break; };
-            /* 10 */ case 2: {                       output.push_back({ offset, p1.y + (p0.y - p1.y) * (offset - p1.x) / (p0.x - p1.x) }); break; };
+            /* 10 */ case 2: { output.push_back(p0); output.push_back({ offset, p0.y + (p1.y - p0.y) * (offset - p0.x) / (p1.x - p0.x) }); break; };
+            /* 01 */ case 1: {                       output.push_back({ offset, p1.y + (p0.y - p1.y) * (offset - p1.x) / (p0.x - p1.x) }); break; };
             default: break;
         }
 
         p0 = p1;
-        c0 = c1;
     }
 }
 void ClipPoligonTop(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = 1;
+    int state = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    bool c0 = p0.y > offset;
+    if (p0.y > offset) state += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        Vector3 p1 = input[i];
-        bool c1 = p1.y > offset;
+        state = state >> 1;
 
-        int state = 0;
-        if (c1) state += 1;
-        if (c0) state += 2;
+        Vector3 p1 = input[i];
+        if (p1.y > offset) state += 2;
 
         switch (state)
         {
             /* 00 */ case 0: {  output.push_back(p0);                                                                                       break; };
-            /* 01 */ case 1: {  output.push_back(p0); output.push_back({ p1.x + (p1.x - p0.x) * (offset - p1.y) / (p1.y - p0.y), offset }); break; };
-            /* 10 */ case 2: {                        output.push_back({ p0.x + (p0.x - p1.x) * (offset - p0.y) / (p0.y - p1.y), offset }); break; };
+            /* 10 */ case 2: {  output.push_back(p0); output.push_back({ p1.x + (p1.x - p0.x) * (offset - p1.y) / (p1.y - p0.y), offset }); break; };
+            /* 01 */ case 1: {                        output.push_back({ p0.x + (p0.x - p1.x) * (offset - p0.y) / (p0.y - p1.y), offset }); break; };
             default: break;
         }
 
         p0 = p1;
-        c0 = c1;
     }
 }
 void ClipPoligonBottom(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = -1;
+    int state = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    bool c0 = p0.y < offset;
+    if (p0.y < offset) state += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        Vector3 p1 = input[i];
-        bool c1 = p1.y < offset;
+        state = state >> 1;
 
-        int state = 0;
-        if (c1) state += 1;
-        if (c0) state += 2;
+        Vector3 p1 = input[i];
+        if (p1.y < offset) state += 2;
 
         switch (state)
         {
             /* 00 */ case 0: {  output.push_back(p0);                                                                                       break; };
-            /* 01 */ case 1: {  output.push_back(p0); output.push_back({ p1.x + (p1.x - p0.x) * (offset - p1.y) / (p1.y - p0.y), offset }); break; };
-            /* 10 */ case 2: {                        output.push_back({ p0.x + (p0.x - p1.x) * (offset - p0.y) / (p0.y - p1.y), offset }); break; };
+            /* 10 */ case 2: {  output.push_back(p0); output.push_back({ p1.x + (p1.x - p0.x) * (offset - p1.y) / (p1.y - p0.y), offset }); break; };
+            /* 01 */ case 1: {                        output.push_back({ p0.x + (p0.x - p1.x) * (offset - p0.y) / (p0.y - p1.y), offset }); break; };
             default: break;
         }
 
         p0 = p1;
-        c0 = c1;
     }
 }
 void ClipPoligon(vector<Vector3>& input, vector<Vector3>& output)
