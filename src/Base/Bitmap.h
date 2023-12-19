@@ -113,6 +113,11 @@ public:
         SetPixel2(x0, y0, z, pixel);
     }
 
+    void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
+    {
+        DrawTriangle1(p0, p1, p2, pixel);
+        DrawTriangle1(p2, p3, p0, pixel);
+    }
     void DrawTriangle0(Vector3& p0, Vector3& p1, Vector3& p2, const Pixel& pixel, Matrix& view)
     {
         p0 *= view;
@@ -197,14 +202,11 @@ public:
         auto in = vector<Vector3>();
         auto out = vector<Vector3>();
         in.reserve(6);
+        out.reserve(6);
         in.push_back(p0);
         in.push_back(p1);
         in.push_back(p2);
-        out.reserve(6);
         ClipPoligon(in, out);
-        // cout << "-------" << endl;
-        // for (auto& point : out)
-        //     Vector3Print(point);
         DrawPoligon2(out, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
@@ -215,7 +217,6 @@ public:
         if (v0.y > v1.y) swap(v0, v1);
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
-
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
@@ -293,18 +294,9 @@ public:
         DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, pixel);
     }
 
-    void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
-    {
-        DrawTriangle1(p0, p1, p2, pixel);
-        DrawTriangle1(p2, p3, p0, pixel);
-    }
     void DrawPoligon2(vector<Vector3>& points, Pixel pixel)
     {
         if (points.size() < 3) return;
-
-        // cout << "-------" << endl;
-        // for (auto& point : points)
-        //     Vector3Print(point);
 
         for (auto& point : points)
             ToScreenSpace(point);
@@ -314,10 +306,6 @@ public:
         {
             Vector3& p1 = points[i];
             Vector3& p2 = points[i + 1];
-            // cout << "----" << endl;
-            // Vector3Print(p0);
-            // Vector3Print(p1);
-            // Vector3Print(p2);
             DrawTriangle3(p0, p1, p2, pixel);
         }
     }
@@ -400,6 +388,8 @@ public:
 
             pixels[i] = pixel;
         }
+
+        // pixels[i] = pixel;
     }
 
     void DrawCube1(Matrix modelView)
@@ -597,13 +587,6 @@ public:
             DrawPoligon(p0, p1, p2, p3, COLOR);        \
         }                                              \
 
-        // DRAW(0, GREEN)
-        // DRAW(1, RED)
-        // DRAW(2, GREEN)
-        // DRAW(3, RED)
-        // DRAW(4, GREEN)
-        // DRAW(5, GREEN)
-
         DRAW(0, CYAN)
         DRAW(1, GREEN)
         DRAW(2, BLUE)
@@ -667,9 +650,6 @@ public:
             pixel += byte;
 
             pixels[i] = pixel;
-
-            // if (zbuffer[i] > 5)
-            //     pixels[i] = BLACK;
         }
     }
 
