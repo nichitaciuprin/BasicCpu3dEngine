@@ -5,11 +5,6 @@
 
 typedef uint32_t Pixel;
 
-struct Color
-{
-    uint8_t a, r, g, b;
-};
-
 const Pixel BLACK      = 0x00000000;
 const Pixel WHITE      = 0x00FFFFFF;
 const Pixel RED        = 0x00FF0000;
@@ -127,10 +122,6 @@ public:
     }
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
-        // Vector3Print(p0);
-        // Vector3Print(p1);
-        // Vector3Print(p2);
-
         p0.z -= nearZ;
         p1.z -= nearZ;
         p2.z -= nearZ;
