@@ -60,7 +60,7 @@ void main2()
             bitmap->DrawCube4(world * view);
         }
         {
-            auto time = (float)clock() / 80;
+            auto time = (float)clock() / 20;
             Vector3 position = { 0, 1.5f, 100 };
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
