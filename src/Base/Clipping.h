@@ -8,18 +8,26 @@ void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
     Vector3 p0 = input[input.size() - 1];
     if (p0.z < offset) state += 2;
 
-    for (size_t i = 0; i < input.size(); i++)
+    for (int i = 0; i < input.size(); i++)
     {
         state = state >> 1;
 
         Vector3 p1 = input[i];
         if (p1.z < offset) state += 2;
 
+        // switch (state)
+        // {
+        //     /* 00 */ case 0: {  output.push_back(p0); break; };
+        //     /* 10 */ case 2: {  output.push_back(p0); output.push_back({ offset, p1.y + (p1.y - p0.y) * (offset - p1.x) / (p1.x - p0.x) }); break; };
+        //     /* 01 */ case 1: {                        output.push_back({ offset, p0.y + (p0.y - p1.y) * (offset - p0.x) / (p0.x - p1.x) }); break; };
+        //     default: break;
+        // }
+
         switch (state)
         {
-            /* 00 */ case 0: {  output.push_back(p0); break; };
-            /* 10 */ case 2: {  output.push_back(p0); output.push_back({ offset, p1.y + (p1.y - p0.y) * (offset - p1.x) / (p1.x - p0.x) }); break; };
-            /* 01 */ case 1: {                        output.push_back({ offset, p0.y + (p0.y - p1.y) * (offset - p0.x) / (p0.x - p1.x) }); break; };
+            /* 00 */ case 0: { output.push_back(p0); break; };
+            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.z) / diff.z) ); break; };
+            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.z) / diff.z) ); break; };
             default: break;
         }
 
@@ -43,9 +51,9 @@ void ClipPoligonLeft(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: {  output.push_back(p0); break; };
-            /* 10 */ case 2: {  output.push_back(p0); output.push_back({ offset, p1.y + (p1.y - p0.y) * (offset - p1.x) / (p1.x - p0.x) }); break; };
-            /* 01 */ case 1: {                        output.push_back({ offset, p0.y + (p0.y - p1.y) * (offset - p0.x) / (p0.x - p1.x) }); break; };
+            /* 00 */ case 0: { output.push_back(p0); break; };
+            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
+            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
             default: break;
         }
 
@@ -69,9 +77,9 @@ void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: { output.push_back(p0);                                                                                       break; };
-            /* 10 */ case 2: { output.push_back(p0); output.push_back({ offset, p0.y + (p1.y - p0.y) * (offset - p0.x) / (p1.x - p0.x) }); break; };
-            /* 01 */ case 1: {                       output.push_back({ offset, p1.y + (p0.y - p1.y) * (offset - p1.x) / (p0.x - p1.x) }); break; };
+            /* 00 */ case 0: { output.push_back(p0); break; };
+            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
+            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
             default: break;
         }
 
@@ -95,9 +103,9 @@ void ClipPoligonTop(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: {  output.push_back(p0);                                                                                       break; };
-            /* 10 */ case 2: {  output.push_back(p0); output.push_back({ p1.x + (p1.x - p0.x) * (offset - p1.y) / (p1.y - p0.y), offset }); break; };
-            /* 01 */ case 1: {                        output.push_back({ p0.x + (p0.x - p1.x) * (offset - p0.y) / (p0.y - p1.y), offset }); break; };
+            /* 00 */ case 0: { output.push_back(p0); break; };
+            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
+            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
             default: break;
         }
 
@@ -121,9 +129,9 @@ void ClipPoligonBottom(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: {  output.push_back(p0);                                                                                       break; };
-            /* 10 */ case 2: {  output.push_back(p0); output.push_back({ p1.x + (p1.x - p0.x) * (offset - p1.y) / (p1.y - p0.y), offset }); break; };
-            /* 01 */ case 1: {                        output.push_back({ p0.x + (p0.x - p1.x) * (offset - p0.y) / (p0.y - p1.y), offset }); break; };
+            /* 00 */ case 0: { output.push_back(p0); break; };
+            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
+            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
             default: break;
         }
 
