@@ -2,7 +2,7 @@
 
 void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
 {
-    float offset = 0;
+    float offset = 1;
     int state = 0;
 
     Vector3 p0 = input[input.size() - 1];

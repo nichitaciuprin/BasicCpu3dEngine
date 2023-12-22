@@ -6,97 +6,70 @@ void main2()
     auto height = 400;
 
     auto bitmap = make_unique<Bitmap>(width, height);
+    auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
-    BitmapWindow1::Create(700, 100, width, height);
+    Camera camera = { 0, 1, 0 };
 
-    while (BitmapWindow1::Exists())
+    while (window->Exists())
     {
         CheckFPS();
         bitmap->Fill(BLACK);
 
-        // // LINES
-        // {
-        //     float zFar = 10;
-        //     float zClose = 9;
-        //     {
-        //         Vector3 p0 = { -1,  3,  zFar };    p0 /= 10;
-        //         Vector3 p1 = {  2, -3,  zClose };  p1 /= 10;
-        //         bitmap->DrawLine1(p0, p1, RED);
-        //     }
-        //     {
-        //         Vector3 p0 = {  3, -1,  zFar };    p0 /= 10;
-        //         Vector3 p1 = { -3, -1,  zClose };  p1 /= 10;
-        //         bitmap->DrawLine1(p0, p1, GREEN);
-        //     }
-        //     {
-        //         Vector3 p0 = { -2, -2,  zFar };    p0 /= 10;
-        //         Vector3 p1 = {  1,  3,  zClose };  p1 /= 10;
-        //         bitmap->DrawLine1(p0, p1, BLUE);
-        //     }
-        // }
+        auto view = MatrixView(&camera);
 
-        // // 2 TRIANGLES
-        // // RED must overlap
-        // {
-        //     float zFar = 10;
-        //     float zClose = 5;
-        //     {
-        //         Vector3 p0 = { -1,  3,  zFar };
-        //         Vector3 p1 = {  1,  3,  zFar };
-        //         Vector3 p2 = {  0, -3,  zFar };
-        //         p0 /= 10;
-        //         p1 /= 10;
-        //         p2 /= 10;
-        //         bitmap->DrawTriangle1(p0, p1, p2, RED);
-        //     }
-        //     {
-        //         Vector3 p0 = { -3, -1,  zFar + 1 };
-        //         Vector3 p1 = { -3,  1,  zFar + 1 };
-        //         Vector3 p2 = {  3,  0,  zFar + 1 };
-        //         p0 /= 10;
-        //         p1 /= 10;
-        //         p2 /= 10;
-        //         bitmap->DrawTriangle1(p0, p1, p2, GREEN);
-        //     }
-        // }
+        UpdateCameraRotation
+        (
+            &camera, 0.003f,
+            window->keydown_VK_LEFT,
+            window->keydown_VK_UP,
+            window->keydown_VK_DOWN,
+            window->keydown_VK_RIGHT
+        );
 
-        // 3 TRIANGLES
+        UpdateCameraPosition
+        (
+            &camera, 0.002f,
+            window->keydown_W, window->keydown_A, window->keydown_S, window->keydown_D,
+            window->keydown_E, window->keydown_Q
+        );
+
         {
-            float zFar = 10;
-            float zClose = 1;
-            {
-                Vector3 p0 = { -1,  3,  zFar };
-                Vector3 p1 = { 0,  3,  zFar };
-                Vector3 p2 = { 2, -3,  zClose };
-                p0 /= 10;
-                p1 /= 10;
-                p2 /= 10;
-                bitmap->DrawTriangle1(p0, p1, p2, RED);
-            }
-            {
-                Vector3 p0 = { 3, -1,  zFar };
-                Vector3 p1 = { 3, -2,  zFar };
-                Vector3 p2 = { -3, -1,  zClose };
-                p0 /= 10;
-                p1 /= 10;
-                p2 /= 10;
-                bitmap->DrawTriangle1(p0, p1, p2, GREEN);
-            }
-            {
-                Vector3 p0 = { -2, -2,  zFar };
-                Vector3 p1 = { -3, -2,  zFar };
-                Vector3 p2 = { 1,  3,  zClose };
-                p0 /= 10;
-                p1 /= 10;
-                p2 /= 10;
-                bitmap->DrawTriangle1(p0, p1, p2, BLUE);
-            }
+            Vector3 p0 = { -1, 0,  2 }; p0 *= view;
+            Vector3 p1 = { -1, 0, 95 }; p1 *= view;
+            Vector3 p2 = {  1, 0, 95 }; p2 *= view;
+            Vector3 p3 = {  1, 0,  2 }; p3 *= view;
+            bitmap->DrawPoligon(p0, p1, p2, p3, WHITE);
+        }
+        {
+            float size = 5;
+            Vector3 p0 = { -size, 0, -size + 100 }; p0 *= view;
+            Vector3 p1 = { -size, 0,  size + 100 }; p1 *= view;
+            Vector3 p2 = {  size, 0,  size + 100 }; p2 *= view;
+            Vector3 p3 = {  size, 0, -size + 100 }; p3 *= view;
+            bitmap->DrawPoligon(p0, p1, p2, p3, WHITE);
         }
 
+        bitmap->ApplyBlackWhiteColorDepth();
 
-        bitmap->DrawBorder(GREEN);
-        BitmapWindow1::SetPixels(bitmap);
-        BitmapWindow1::Update();
+        {
+            auto time = (float)clock() / 40;
+            Vector3 position = { 0, 0.5f, 100 };
+            Vector3 rotation = { 0, time, 0 };
+            Vector3 scale = { 1, 1, 1 };
+            auto world = MatrixWorld(position, rotation, scale);
+            bitmap->DrawCube4(world * view);
+        }
+        {
+            auto time = (float)clock() / 20;
+            Vector3 position = { 0, 1.5f, 100 };
+            Vector3 rotation = { 0, time, 0 };
+            Vector3 scale = { 1, 1, 1 };
+            auto world = MatrixWorld(position, rotation, scale);
+            bitmap->DrawCube4(world * view);
+        }
+
+        window->SetPixels(bitmap);
+        window->Update();
     }
 }
 

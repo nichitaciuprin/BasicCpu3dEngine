@@ -120,7 +120,7 @@ public:
         p2 *= view;
         DrawTriangle1(p0, p1, p2, pixel);
     }
-    void DrawTriangle0(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         // p0.z -= nearZ;
         // p1.z -= nearZ;
@@ -147,18 +147,35 @@ public:
 
         if (!Vector3TriangleIsClockwise(v1[0], v1[1], v1[2])) return;
 
-        ClipPoligonLeft   (v1, v0); if (v1.size() < 3) return; v1.clear();
-        ClipPoligonRight  (v0, v1); if (v0.size() < 3) return; v0.clear();
-        ClipPoligonTop    (v1, v0); if (v1.size() < 3) return; v1.clear();
-        ClipPoligonBottom (v0, v1); if (v0.size() < 3) return;
+        ClipPoligonLeft   (v1, v0); if (v0.size() < 3) return; v1.clear();
+        ClipPoligonRight  (v0, v1); if (v1.size() < 3) return; v0.clear();
+        ClipPoligonTop    (v1, v0); if (v0.size() < 3) return; v1.clear();
+        ClipPoligonBottom (v0, v1); if (v1.size() < 3) return;
+
+        for (auto& p : v1)
+        {
+            // if (MathAbs(p.x) > 1.0f) { cout << 0 << "," << p.x << endl; abort(); }
+            // if (MathAbs(p.y) > 1.0f) { cout << 1 << "," << p.y << endl; abort(); }
+            // if (p.z < 0)             { cout << 2 << "," << p.z << endl; abort(); }
+
+            if (MathAbs(p.x) > 1.0f) { printf("%f",v.x,v.y,v.z); abort(); }
+            if (MathAbs(p.y) > 1.0f) { printf("%f",v.x,v.y,v.z); abort(); }
+            if (p.z < 0)             { printf("%f",v.x,v.y,v.z); abort(); }
+
+            // p.x = MathClamp(p.x, -1.0f, 1.0f);
+            // p.y = MathClamp(p.y, -1.0f, 1.0f);
+            // if (p.z < 0) p.z = 0;
+        }
 
         for (auto& x : v1)
             ToScreenSpace(x);
 
         for (int i = 1; i < v1.size() - 1; i++)
             DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
+
+        // cout << 6;
     }
-    void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    void DrawTriangle0(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         p0.z -= nearZ;
         p1.z -= nearZ;
