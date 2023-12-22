@@ -120,6 +120,44 @@ public:
         p2 *= view;
         DrawTriangle1(p0, p1, p2, pixel);
     }
+    void DrawTriangle0(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    {
+        // p0.z -= nearZ;
+        // p1.z -= nearZ;
+        // p2.z -= nearZ;
+
+        auto v0 = vector<Vector3>();
+        auto v1 = vector<Vector3>();
+
+        v0.reserve(6);
+        v1.reserve(6);
+
+        v0.push_back(p0);
+        v0.push_back(p1);
+        v0.push_back(p2);
+
+        ClipPoligonBack(v0, v1); if (v1.size() < 3) return; v0.clear();
+
+        for (auto& x : v1)
+        {
+            if (x.z == 0) continue;
+            x.x /= x.z;
+            x.y /= x.z;
+        }
+
+        if (!Vector3TriangleIsClockwise(v1[0], v1[1], v1[2])) return;
+
+        ClipPoligonLeft   (v1, v0); if (v1.size() < 3) return; v1.clear();
+        ClipPoligonRight  (v0, v1); if (v0.size() < 3) return; v0.clear();
+        ClipPoligonTop    (v1, v0); if (v1.size() < 3) return; v1.clear();
+        ClipPoligonBottom (v0, v1); if (v0.size() < 3) return;
+
+        for (auto& x : v1)
+            ToScreenSpace(x);
+
+        for (int i = 1; i < v1.size() - 1; i++)
+            DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
+    }
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         p0.z -= nearZ;

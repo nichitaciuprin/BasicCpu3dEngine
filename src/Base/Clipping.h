@@ -15,14 +15,6 @@ void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
         Vector3 p1 = input[i];
         if (p1.z < offset) state += 2;
 
-        // switch (state)
-        // {
-        //     /* 00 */ case 0: {  output.push_back(p0); break; };
-        //     /* 10 */ case 2: {  output.push_back(p0); output.push_back({ offset, p1.y + (p1.y - p0.y) * (offset - p1.x) / (p1.x - p0.x) }); break; };
-        //     /* 01 */ case 1: {                        output.push_back({ offset, p0.y + (p0.y - p1.y) * (offset - p0.x) / (p0.x - p1.x) }); break; };
-        //     default: break;
-        // }
-
         switch (state)
         {
             /* 00 */ case 0: { output.push_back(p0); break; };
