@@ -2,7 +2,7 @@
 
 void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
 {
-    float offset = 1;
+    float offset = 0.1f;
     int state = 0;
 
     Vector3 p0 = input[input.size() - 1];
@@ -17,9 +17,28 @@ void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: { output.push_back(p0); break; };
-            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.z) / diff.z) ); break; };
-            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.z) / diff.z) ); break; };
+            /* 00 */ case 0:
+            {
+                output.push_back(p0);
+                break;
+            };
+            /* 10 */ case 2:
+            {
+                output.push_back(p0);
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.z) / diff.z);
+                newPoint.z = offset;
+                output.push_back(newPoint);
+                break;
+            };
+            /* 01 */ case 1:
+            {
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.z) / diff.z);
+                newPoint.z = offset;
+                output.push_back(newPoint);
+                break;
+            };
             default: break;
         }
 
@@ -43,9 +62,28 @@ void ClipPoligonLeft(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: { output.push_back(p0); break; };
-            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
-            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
+            /* 00 */ case 0:
+            {
+                output.push_back(p0);
+                break;
+            };
+            /* 10 */ case 2:
+            {
+                output.push_back(p0);
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                newPoint.x = offset;
+                output.push_back(newPoint);
+                break;
+            };
+            /* 01 */ case 1:
+            {
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                newPoint.x = offset;
+                output.push_back(newPoint);
+                break;
+            };
             default: break;
         }
 
@@ -69,9 +107,28 @@ void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: { output.push_back(p0); break; };
-            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
-            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.x) / diff.x) ); break; };
+            /* 00 */ case 0:
+            {
+                output.push_back(p0);
+                break;
+            };
+            /* 10 */ case 2:
+            {
+                output.push_back(p0);
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                newPoint.x = offset;
+                output.push_back(newPoint);
+                break;
+            };
+            /* 01 */ case 1:
+            {
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                newPoint.x = offset;
+                output.push_back(newPoint);
+                break;
+            };
             default: break;
         }
 
@@ -95,9 +152,28 @@ void ClipPoligonTop(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: { output.push_back(p0); break; };
-            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
-            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
+            /* 00 */ case 0:
+            {
+                output.push_back(p0);
+                break;
+            };
+            /* 10 */ case 2:
+            {
+                output.push_back(p0);
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                newPoint.y = offset;
+                output.push_back(newPoint);
+                break;
+            };
+            /* 01 */ case 1:
+            {
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                newPoint.y = offset;
+                output.push_back(newPoint);
+                break;
+            };
             default: break;
         }
 
@@ -121,22 +197,31 @@ void ClipPoligonBottom(vector<Vector3>& input, vector<Vector3>& output)
 
         switch (state)
         {
-            /* 00 */ case 0: { output.push_back(p0); break; };
-            /* 10 */ case 2: { output.push_back(p0); auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
-            /* 01 */ case 1: {                       auto diff = p1 - p0; output.push_back( (p0 + diff * (offset - p0.y) / diff.y) ); break; };
+            /* 00 */ case 0:
+            {
+                output.push_back(p0);
+                break;
+            };
+            /* 10 */ case 2:
+            {
+                output.push_back(p0);
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                newPoint.y = offset;
+                output.push_back(newPoint);
+                break;
+            };
+            /* 01 */ case 1:
+            {
+                auto diff = p1 - p0;
+                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                newPoint.y = offset;
+                output.push_back(newPoint);
+                break;
+            };
             default: break;
         }
 
         p0 = p1;
     }
-}
-void ClipPoligon(vector<Vector3>& input, vector<Vector3>& output)
-{
-    ClipPoligonLeft   (input, output); input.clear();
-    ClipPoligonRight  (output, input); output.clear();
-    ClipPoligonTop    (input, output); input.clear();
-    ClipPoligonBottom (output, input); output.clear();
-
-    for (auto& point : input)
-        output.push_back(point);
 }

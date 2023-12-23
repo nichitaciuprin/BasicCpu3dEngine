@@ -122,10 +122,6 @@ public:
     }
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
-        // p0.z -= nearZ;
-        // p1.z -= nearZ;
-        // p2.z -= nearZ;
-
         auto v0 = vector<Vector3>();
         auto v1 = vector<Vector3>();
 
@@ -152,108 +148,11 @@ public:
         ClipPoligonTop    (v1, v0); if (v0.size() < 3) return; v1.clear();
         ClipPoligonBottom (v0, v1); if (v1.size() < 3) return;
 
-        for (auto& p : v1)
-        {
-            // if (MathAbs(p.x) > 1.0f) { cout << 0 << "," << p.x << endl; abort(); }
-            // if (MathAbs(p.y) > 1.0f) { cout << 1 << "," << p.y << endl; abort(); }
-            // if (p.z < 0)             { cout << 2 << "," << p.z << endl; abort(); }
-
-            if (MathAbs(p.x) > 1.0f) { printf("%f",v.x,v.y,v.z); abort(); }
-            if (MathAbs(p.y) > 1.0f) { printf("%f",v.x,v.y,v.z); abort(); }
-            if (p.z < 0)             { printf("%f",v.x,v.y,v.z); abort(); }
-
-            // p.x = MathClamp(p.x, -1.0f, 1.0f);
-            // p.y = MathClamp(p.y, -1.0f, 1.0f);
-            // if (p.z < 0) p.z = 0;
-        }
-
         for (auto& x : v1)
             ToScreenSpace(x);
 
         for (int i = 1; i < v1.size() - 1; i++)
             DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
-
-        // cout << 6;
-    }
-    void DrawTriangle0(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
-    {
-        p0.z -= nearZ;
-        p1.z -= nearZ;
-        p2.z -= nearZ;
-
-        int state = 0;
-
-        if (p2.z < 0) state += 1;
-        if (p1.z < 0) state += 2;
-        if (p0.z < 0) state += 4;
-
-        Vector3 v0, v1, v2;
-
-        switch (state)
-        {
-            /* 000 */ case 0: {                            goto T0; };
-            /* 001 */ case 1: { v0 = p2; v1 = p0; v2 = p1; goto T1; };
-            /* 010 */ case 2: { v0 = p1; v1 = p2; v2 = p0; goto T1; };
-            /* 100 */ case 4: { v0 = p0; v1 = p1; v2 = p2; goto T1; };
-            /* 011 */ case 3: { v0 = p0; v1 = p1; v2 = p2; goto T2; };
-            /* 101 */ case 5: { v0 = p1; v1 = p0; v2 = p2; goto T2; };
-            /* 110 */ case 6: { v0 = p2; v1 = p0; v2 = p1; goto T2; };
-            /* 111 */ case 7: { return; };
-            default: abort();
-        }
-
-        T0:
-        {
-            p0.z += nearZ;
-            p1.z += nearZ;
-            p2.z += nearZ;
-            if (p0.z != 0) { p0.x /= p0.z; p0.y /= p0.z; };
-            if (p1.z != 0) { p1.x /= p1.z; p1.y /= p1.z; };
-            if (p2.z != 0) { p2.x /= p2.z; p2.y /= p2.z; };
-            DrawTriangle2(p0, p1, p2, pixel);
-            return;
-        }
-
-        T1:
-        {
-            Vector3 b1 = v0;
-            Vector3 b2 = v0;
-            b1 += (b1 - v1) * b1.z / (v1.z - b1.z);
-            b2 += (b2 - v2) * b2.z / (v2.z - b2.z);
-            v0.z += nearZ;
-            v1.z += nearZ;
-            v2.z += nearZ;
-            if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
-            if (v2.z != 0) { v2.x /= v2.z; v2.y /= v2.z; };
-            DrawTriangle2(b1, v1, b2, pixel);
-            DrawTriangle2(b2, v1, v2, pixel);
-            return;
-        }
-
-        T2:
-        {
-            v1 += (v1 - v0) * v1.z / (v0.z - v1.z);
-            v2 += (v2 - v0) * v2.z / (v0.z - v2.z);
-            v0.z += nearZ;
-            v1.z += nearZ;
-            v2.z += nearZ;
-            if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
-            DrawTriangle2(v0, v1, v2, pixel);
-            return;
-        }
-    }
-    void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
-    {
-        if (!Vector3TriangleIsClockwise(p0, p1, p2)) return;
-        auto in = vector<Vector3>();
-        auto out = vector<Vector3>();
-        in.reserve(6);
-        out.reserve(6);
-        in.push_back(p0);
-        in.push_back(p1);
-        in.push_back(p2);
-        ClipPoligon(in, out);
-        DrawPoligon2(out, pixel);
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
@@ -327,17 +226,6 @@ public:
             z2 += offset3;
         }
         DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
-    }
-    void DrawTriangle4(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
-    {
-        auto st = StateTriangle(v0, v1, v2);
-
-        for (size_t i = 0; i < st.dy; i++)
-        {
-            DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, pixel);
-            st.Update();
-        }
-        DrawHorizontalLine1(st.y, st.xl, st.xr, 0, 0, pixel);
     }
 
     void DrawPoligon2(vector<Vector3>& points, Pixel pixel)
