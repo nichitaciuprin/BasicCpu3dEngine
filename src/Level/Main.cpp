@@ -9,6 +9,7 @@ void main2()
     auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
     Camera camera = { 0, 1, 0 };
+    // Camera camera = { 0, 1, 95 };
 
     while (window->Exists())
     {
@@ -19,7 +20,7 @@ void main2()
 
         UpdateCameraRotation
         (
-            &camera, 0.003f,
+            &camera, 0.00080f,
             window->keydown_VK_LEFT,
             window->keydown_VK_UP,
             window->keydown_VK_DOWN,
@@ -28,7 +29,7 @@ void main2()
 
         UpdateCameraPosition
         (
-            &camera, 0.002f,
+            &camera, 0.00040f,
             window->keydown_W, window->keydown_A, window->keydown_S, window->keydown_D,
             window->keydown_E, window->keydown_Q
         );

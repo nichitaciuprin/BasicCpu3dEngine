@@ -79,10 +79,11 @@ public:
     {
         if (!Exists()) return;
 
+        // copy from Top-Down bitmap to Bottom-Up bitmap
+
         auto width = MathMin(bitmap->Width(), _width);
         auto height = MathMin(bitmap->Height(), _height);
 
-        // copying from Top-Down bitmap to Bottom-Up bitmap
         for (int y = 0; y < height; y++)
         for (int x = 0; x < width; x++)
         {
@@ -90,6 +91,17 @@ public:
             auto y2 = _height - 1 - y;
             _pixels[x + y2 * _width] = pixel;
         }
+
+        // auto size = width * height;
+
+        // for (int i = 0; i < size; i++)
+        // {
+        //     auto pixel = bitmap->pixels[i];
+        //     auto y = i % _height;
+        //     auto x = i % y;
+        //     y = _height - y;
+        //     _pixels[x * y] = pixel;
+        // }
     }
     void SetPixels2(const unique_ptr<Bitmap>& bitmap, int scale)
     {

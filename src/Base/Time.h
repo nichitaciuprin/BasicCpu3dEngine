@@ -7,8 +7,12 @@ TICKS TicksPerMillisecondCache = 0;
 TICKS FixedTimeStepCache = 0;
 TICKS TimeOld = 0;
 TICKS TimeNew = 0;
+
+const TICKS PerfTimeTimerMax = 1000;
 TICKS PerfTimeStart = 0;
 TICKS PerfTimeEnd = 0;
+TICKS PerfTimeAvg = 0;
+TICKS PerfTimeTimer = PerfTimeTimerMax;
 
 int skipMessageCount = 0;
 
@@ -86,12 +90,17 @@ void CheckPerfStart()
 void CheckPerfEnd()
 {
     PerfTimeEnd = GetTime();
+    PerfTimeAvg += GetCalcTime(PerfTimeStart,PerfTimeEnd);
+    PerfTimeTimer--;
 
-    auto diff = GetCalcTime(PerfTimeStart,PerfTimeEnd);
-    auto milliseconds = ToMilliseconds(diff);
-    cout << milliseconds << "ms" << endl;
-    // cout << "ABORT CALLED" << endl;
-    // abort();
+    if (PerfTimeTimer == 0)
+    {
+        PerfTimeTimer = PerfTimeTimerMax;
+        PerfTimeAvg /= PerfTimeTimerMax;
+        // auto milliseconds = ToMilliseconds(PerfTimeAvg);
+        // cout << milliseconds << "ms" << endl;
+        cout << PerfTimeAvg << endl;
+    }
 }
 void WaitAfterRender()
 {

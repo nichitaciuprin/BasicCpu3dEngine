@@ -110,8 +110,38 @@ public:
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
     {
-        DrawTriangle1(p0, p1, p2, pixel);
-        DrawTriangle1(p2, p3, p0, pixel);
+        auto v0 = vector<Vector3>();
+        auto v1 = vector<Vector3>();
+
+        v0.reserve(6);
+        v1.reserve(6);
+
+        v0.push_back(p0);
+        v0.push_back(p1);
+        v0.push_back(p2);
+        v0.push_back(p3);
+
+        ClipPoligonBack(v0, v1); if (v1.size() < 3) return; v0.clear();
+
+        for (auto& x : v1)
+        {
+            if (x.z == 0) continue;
+            x.x /= x.z;
+            x.y /= x.z;
+        }
+
+        if (!Vector3TriangleIsClockwise(v1[0], v1[1], v1[2])) return;
+
+        ClipPoligonLeft   (v1, v0); if (v0.size() < 3) return; v1.clear();
+        ClipPoligonRight  (v0, v1); if (v1.size() < 3) return; v0.clear();
+        ClipPoligonTop    (v1, v0); if (v0.size() < 3) return; v1.clear();
+        ClipPoligonBottom (v0, v1); if (v1.size() < 3) return;
+
+        for (auto& x : v1)
+            ToScreenSpace(x);
+
+        for (int i = 1; i < v1.size() - 1; i++)
+            DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
     }
     void DrawTriangle0(Vector3& p0, Vector3& p1, Vector3& p2, const Pixel& pixel, Matrix& view)
     {
@@ -154,18 +184,42 @@ public:
         for (int i = 1; i < v1.size() - 1; i++)
             DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
     }
+    void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
+    {
+        auto v0 = vector<Vector3>();
+        auto v1 = vector<Vector3>();
+
+        v0.reserve(6);
+        v1.reserve(6);
+
+        v0.push_back(p0);
+        v0.push_back(p1);
+        v0.push_back(p2);
+
+        ClipPoligonBack(v0, v1); if (v1.size() < 3) return; v0.clear();
+
+        if (!Vector3TriangleIsClockwise(v1[0], v1[1], v1[2])) return;
+
+        for (auto& x : v1)
+            ToScreenSpace(x);
+
+        for (int i = 1; i < v1.size() - 1; i++)
+            DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
+    }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
+        // TODO not aqurate, improve
+
         // p0 is top
         // p1 is middle
         // p2 is bottom
         if (v0.y > v1.y) swap(v0, v1);
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
+
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
-
         int dx1 = p2.x - p0.x;
         int dx2 = p1.x - p0.x;
         int dx3 = p2.x - p1.x;
@@ -182,7 +236,7 @@ public:
         int err2 = dy2 / 2 - dx2abs;
         int err3 = dy3 / 2 - dx3abs;
 
-        // check for 0 division?
+        // TODO check for 0 division?
         float offset1 = (v2.z - v0.z) / dy1;
         float offset2 = (v1.z - v0.z) / dy2;
         float offset3 = (v2.z - v1.z) / dy3;
@@ -226,22 +280,6 @@ public:
             z2 += offset3;
         }
         DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
-    }
-
-    void DrawPoligon2(vector<Vector3>& points, Pixel pixel)
-    {
-        if (points.size() < 3) return;
-
-        for (auto& point : points)
-            ToScreenSpace(point);
-
-        Vector3& p0 = points[0];
-        for (int i = 1; i < points.size() - 1; i++)
-        {
-            Vector3& p1 = points[i];
-            Vector3& p2 = points[i + 1];
-            DrawTriangle3(p0, p1, p2, pixel);
-        }
     }
 
     void ProjectLine(Vector3& v0, Vector3& v1, int& outCode)

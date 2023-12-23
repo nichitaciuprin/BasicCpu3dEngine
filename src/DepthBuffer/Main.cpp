@@ -15,8 +15,8 @@ void main2()
         bitmap->Fill(BLACK);
 
         {
-            float zFar = 0;
-            float zClose = -1;
+            float zFar = 10;
+            float zClose = 9;
             {
                 Vector3 p0 = { -0.2f,  0.6f,  zFar };
                 Vector3 p1 = {  0.0f,  0.6f,  zFar };

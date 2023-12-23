@@ -38,7 +38,7 @@ set _enablesExtraWarning=/analyze
 set _options=^
 %_exceptionHandling% ^
 %_hidelogs% ^
-%_optimimisationDisable% ^
+%_optimimisationLevel2% ^
 %_enableWarningsLevel4% ^
 %_enablesExtraWarning%
 %_cl% %_input% %_output% %_options% %LINKER_FLAGS% %SYSTEM_LIBS%
