@@ -8,8 +8,8 @@ void main2()
     auto bitmap = make_unique<Bitmap>(width, height);
     auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
-    Camera camera = { 0, 1, 0 };
-    // Camera camera = { 0, 1, 95 };
+    // Camera camera = { 0, 1, 0 };
+    Camera camera = { 0, 1, 95 };
 
     while (window->Exists())
     {
@@ -29,7 +29,7 @@ void main2()
 
         UpdateCameraPosition
         (
-            &camera, 0.00040f,
+            &camera, 0.00020f,
             window->keydown_W, window->keydown_A, window->keydown_S, window->keydown_D,
             window->keydown_E, window->keydown_Q
         );
@@ -58,7 +58,7 @@ void main2()
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
             auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube4(world * view);
+            bitmap->DrawCube3(world * view);
         }
         {
             auto time = (float)clock() / 20;
@@ -66,7 +66,7 @@ void main2()
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
             auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube4(world * view);
+            bitmap->DrawCube3(world * view);
         }
 
         window->SetPixels(bitmap);

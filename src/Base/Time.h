@@ -105,20 +105,20 @@ void CheckPerfEnd()
 void WaitAfterRender()
 {
     TICKS waitTicks = 0;
+
     if (TimeOld == 0)
     {
-        waitTicks = FixedTimeStep()/TicksPerMillisecond();
+        waitTicks = FixedTimeStep() / TicksPerMillisecond();
     }
     else
     {
         TimeNew = GetTime();
-        auto calcTime = GetCalcTime(TimeOld, TimeNew);
-        auto duno = FixedTimeStep();
-        waitTicks = duno - calcTime;
+        waitTicks = FixedTimeStep() - GetCalcTime(TimeOld, TimeNew);
         if (waitTicks < 0)
             waitTicks = 0;
     }
-    auto milliseconds = (DWORD)(waitTicks/TicksPerMillisecond());
+
+    auto milliseconds = (DWORD)(waitTicks / TicksPerMillisecond());
     Sleep(milliseconds);
     TimeOld = GetTime();
 }

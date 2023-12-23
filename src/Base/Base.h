@@ -23,6 +23,7 @@ using namespace std;
 
 #include "Debug.h"
 #include "Math.h"
+#include "Models.h"
 #include "Clipping.h"
 #include "FileHelper.h"
 #include "Time.h"

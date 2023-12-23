@@ -101,11 +101,15 @@ public:
         for (int i = 0; i < max; i++)
         {
             SetPixel2(x0, y0, z, pixel);
+            // SetPixel2(x0, y0, -10000, pixel);
+            // SetPixel(x0, y0, pixel);
             if (err < 0) { err += max; (*axis1) += val1; }
                          { err -= min; (*axis2) += val2; }
             z += offset;
         }
         SetPixel2(x0, y0, z, pixel);
+        // SetPixel2(x0, y0, -10000, pixel);
+        // SetPixel(x0, y0, pixel);
     }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
@@ -142,6 +146,9 @@ public:
 
         for (int i = 1; i < v1.size() - 1; i++)
             DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
+
+        // for (int i = 0; i < v1.size() - 2; i++)
+        //     DrawLine3(v1[i], v1[i + 1], RED);
     }
     void DrawTriangle0(Vector3& p0, Vector3& p1, Vector3& p2, const Pixel& pixel, Matrix& view)
     {
@@ -366,19 +373,6 @@ public:
 
     void DrawCube1(Matrix modelView)
     {
-        float h = 0.5f;
-        Vector3 vertices[] =
-        {
-            Vector3{-h,-h,-h},
-            Vector3{-h,-h, h},
-            Vector3{-h, h,-h},
-            Vector3{-h, h, h},
-            Vector3{ h,-h,-h},
-            Vector3{ h,-h, h},
-            Vector3{ h, h,-h},
-            Vector3{ h, h, h}
-        };
-
         int indices[12][2] =
         {
             0,1,
@@ -395,32 +389,17 @@ public:
             4,6
         };
 
-        for (size_t i = 0; i < 8; i++)
-            vertices[i] *= modelView;
-
         for (size_t i = 0; i < 12; i++)
         {
             auto i0 = indices[i][0];
             auto i1 = indices[i][1];
-            DrawLine1(vertices[i0], vertices[i1], RED);
+            auto v0 = Models::Cube::vertices[i0] * modelView;
+            auto v1 = Models::Cube::vertices[i1] * modelView;
+            DrawLine1(v0, v1, RED);
         }
     }
     void DrawCube2(Matrix modelView)
     {
-        float h = 0.5f;
-
-        Vector3 vertexData[] =
-        {
-            Vector3{-h,-h,-h},
-            Vector3{-h,-h, h},
-            Vector3{-h, h,-h},
-            Vector3{-h, h, h},
-            Vector3{ h,-h,-h},
-            Vector3{ h,-h, h},
-            Vector3{ h, h,-h},
-            Vector3{ h, h, h}
-        };
-
         int indexData[12][3] =
         {
             0, 2, 6,
@@ -436,107 +415,46 @@ public:
             1, 0, 4,
             4, 5, 1,
         };
-
-        for (int i = 0; i < 8; i++)
-            vertexData[i] *= modelView;
-
-        for (int i = 0; i < 12; i++)
-        {
-            auto i0 = indexData[i][0];
-            auto i1 = indexData[i][1];
-            auto i2 = indexData[i][2];
-            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], RED);
-        }
 
         {
             auto i0 = indexData[0][0];
             auto i1 = indexData[0][1];
             auto i2 = indexData[0][2];
-            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
+            auto v0 = Models::Cube::vertices[i0] * modelView;
+            auto v1 = Models::Cube::vertices[i1] * modelView;
+            auto v2 = Models::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
         }
         {
             auto i0 = indexData[1][0];
             auto i1 = indexData[1][1];
             auto i2 = indexData[1][2];
-            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
+            auto v0 = Models::Cube::vertices[i0] * modelView;
+            auto v1 = Models::Cube::vertices[i1] * modelView;
+            auto v2 = Models::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
         }
         {
             auto i0 = indexData[3][0];
             auto i1 = indexData[3][1];
             auto i2 = indexData[3][2];
-            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], GREEN);
+            auto v0 = Models::Cube::vertices[i0] * modelView;
+            auto v1 = Models::Cube::vertices[i1] * modelView;
+            auto v2 = Models::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
         }
         {
             auto i0 = indexData[4][0];
             auto i1 = indexData[4][1];
             auto i2 = indexData[4][2];
-            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], BLUE);
+            auto v0 = Models::Cube::vertices[i0] * modelView;
+            auto v1 = Models::Cube::vertices[i1] * modelView;
+            auto v2 = Models::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
         }
     }
     void DrawCube3(Matrix modelView)
     {
-        float h = 0.5f;
-
-        Vector3 vertexData[] =
-        {
-            Vector3{-h,-h,-h},
-            Vector3{-h,-h, h},
-            Vector3{-h, h,-h},
-            Vector3{-h, h, h},
-            Vector3{ h,-h,-h},
-            Vector3{ h,-h, h},
-            Vector3{ h, h,-h},
-            Vector3{ h, h, h}
-        };
-
-        int indexData[12][3] =
-        {
-            0, 2, 6,
-            6, 4, 0,
-            4, 6, 7,
-            7, 5, 4,
-            5, 7, 3,
-            3, 1, 5,
-            1, 3, 2,
-            2, 0, 1,
-            2, 3, 7,
-            7, 6, 2,
-            1, 0, 4,
-            4, 5, 1,
-        };
-
-        for (int i = 0; i < 8; i++)
-            vertexData[i] *= modelView;
-
-        for (int i = 0; i < 12; i++)
-        {
-            auto i0 = indexData[i][0];
-            auto i1 = indexData[i][1];
-            auto i2 = indexData[i][2];
-
-            Pixel           pixel = RED;
-            if (i % 3 == 1) pixel = GREEN;
-            if (i % 3 == 2) pixel = BLUE;
-
-            DrawTriangle1(vertexData[i0], vertexData[i1], vertexData[i2], pixel);
-        }
-    }
-    void DrawCube4(Matrix modelView)
-    {
-        float h = 0.5f;
-
-        Vector3 vertexData[] =
-        {
-            Vector3{-h,-h,-h},
-            Vector3{-h,-h, h},
-            Vector3{-h, h,-h},
-            Vector3{-h, h, h},
-            Vector3{ h,-h,-h},
-            Vector3{ h,-h, h},
-            Vector3{ h, h,-h},
-            Vector3{ h, h, h}
-        };
-
         int indexData[6][4] =
         {
             2, 6, 4, 0,
@@ -547,17 +465,22 @@ public:
             3, 7, 6, 2,
         };
 
-        for (int i = 0; i < 8; i++)
-            vertexData[i] *= modelView;
-
-        #define DRAW(INDEX, COLOR)                     \
-        {                                              \
-            auto p0 = vertexData[indexData[INDEX][0]]; \
-            auto p1 = vertexData[indexData[INDEX][1]]; \
-            auto p2 = vertexData[indexData[INDEX][2]]; \
-            auto p3 = vertexData[indexData[INDEX][3]]; \
-            DrawPoligon(p0, p1, p2, p3, COLOR);        \
-        }                                              \
+        #define DRAW(INDEX, COLOR)                \
+        {                                         \
+            auto i0 = indexData[INDEX][0];        \
+            auto i1 = indexData[INDEX][1];        \
+            auto i2 = indexData[INDEX][2];        \
+            auto i3 = indexData[INDEX][3];        \
+            auto p0 = Models::Cube::vertices[i0]; \
+            auto p1 = Models::Cube::vertices[i1]; \
+            auto p2 = Models::Cube::vertices[i2]; \
+            auto p3 = Models::Cube::vertices[i3]; \
+            p0 *= modelView;                      \
+            p1 *= modelView;                      \
+            p2 *= modelView;                      \
+            p3 *= modelView;                      \
+            DrawPoligon(p0, p1, p2, p3, COLOR);   \
+        }                                         \
 
         DRAW(0, CYAN)
         DRAW(1, GREEN)
