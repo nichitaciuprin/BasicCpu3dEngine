@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Models
+namespace Model
 {
     namespace Cube
     {

@@ -393,8 +393,8 @@ public:
         {
             auto i0 = indices[i][0];
             auto i1 = indices[i][1];
-            auto v0 = Models::Cube::vertices[i0] * modelView;
-            auto v1 = Models::Cube::vertices[i1] * modelView;
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
             DrawLine1(v0, v1, RED);
         }
     }
@@ -420,36 +420,36 @@ public:
             auto i0 = indexData[0][0];
             auto i1 = indexData[0][1];
             auto i2 = indexData[0][2];
-            auto v0 = Models::Cube::vertices[i0] * modelView;
-            auto v1 = Models::Cube::vertices[i1] * modelView;
-            auto v2 = Models::Cube::vertices[i2] * modelView;
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
             DrawTriangle1(v0, v1, v2, RED);
         }
         {
             auto i0 = indexData[1][0];
             auto i1 = indexData[1][1];
             auto i2 = indexData[1][2];
-            auto v0 = Models::Cube::vertices[i0] * modelView;
-            auto v1 = Models::Cube::vertices[i1] * modelView;
-            auto v2 = Models::Cube::vertices[i2] * modelView;
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
             DrawTriangle1(v0, v1, v2, RED);
         }
         {
             auto i0 = indexData[3][0];
             auto i1 = indexData[3][1];
             auto i2 = indexData[3][2];
-            auto v0 = Models::Cube::vertices[i0] * modelView;
-            auto v1 = Models::Cube::vertices[i1] * modelView;
-            auto v2 = Models::Cube::vertices[i2] * modelView;
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
             DrawTriangle1(v0, v1, v2, RED);
         }
         {
             auto i0 = indexData[4][0];
             auto i1 = indexData[4][1];
             auto i2 = indexData[4][2];
-            auto v0 = Models::Cube::vertices[i0] * modelView;
-            auto v1 = Models::Cube::vertices[i1] * modelView;
-            auto v2 = Models::Cube::vertices[i2] * modelView;
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
             DrawTriangle1(v0, v1, v2, RED);
         }
     }
@@ -471,10 +471,10 @@ public:
             auto i1 = indexData[INDEX][1];        \
             auto i2 = indexData[INDEX][2];        \
             auto i3 = indexData[INDEX][3];        \
-            auto p0 = Models::Cube::vertices[i0]; \
-            auto p1 = Models::Cube::vertices[i1]; \
-            auto p2 = Models::Cube::vertices[i2]; \
-            auto p3 = Models::Cube::vertices[i3]; \
+            auto p0 = Model::Cube::vertices[i0]; \
+            auto p1 = Model::Cube::vertices[i1]; \
+            auto p2 = Model::Cube::vertices[i2]; \
+            auto p3 = Model::Cube::vertices[i3]; \
             p0 *= modelView;                      \
             p1 *= modelView;                      \
             p2 *= modelView;                      \
