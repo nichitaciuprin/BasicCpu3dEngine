@@ -1,7 +1,7 @@
-<!-- ![](.gif) -->
+![](.gif)
 
 ```
-cd src/Name
+cd src/Level
 build
 run
 ```
