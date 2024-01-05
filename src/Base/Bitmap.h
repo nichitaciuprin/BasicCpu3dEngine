@@ -215,7 +215,7 @@ public:
     }
     void DrawTriangle3(Vector3 v0, Vector3 v1, Vector3 v2, Pixel pixel)
     {
-        // TODO not aqurate, improve
+        // TODO not accurate, improve
 
         // p0 is top
         // p1 is middle
