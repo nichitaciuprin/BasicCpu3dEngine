@@ -9,7 +9,6 @@ void main2()
     auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
     Camera camera = { 0, 1, 0 };
-    // Camera camera = { 0, 1, 95 };
 
     while (window->Exists())
     {
