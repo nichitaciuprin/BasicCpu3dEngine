@@ -617,13 +617,6 @@ inline bool InFrustum(Vector3 point)
     if (point.z / MathAbs(point.y) < 1) return false;
     return true;
 }
-inline void ClipLineByZ4(Vector3& v0, Vector3& v1, int& outCode)
-{
-    if (v0.z < 0 && v1.z < 0)                                                   { outCode = 0; return; }
-    if (v0.z < 0 && v1.z > 0) { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; outCode = 1; return; }
-    if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 1; return; }
-                                                                                { outCode = 2; return; }
-}
 inline int GetPointState(float x, float y)
 {
     const int INSIDE = 0; // 0000
@@ -725,4 +718,11 @@ inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
         else               { p1.x = x; p1.y = y; code1 = GetPointState(p1.x, p1.y); }
 	}
 
+}
+inline void ClipLineByZ4(Vector3& v0, Vector3& v1, int& outCode)
+{
+    if (v0.z < 0 && v1.z < 0)                                                   { outCode = 0; return; }
+    if (v0.z < 0 && v1.z > 0) { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; outCode = 1; return; }
+    if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 1; return; }
+                                                                                { outCode = 2; return; }
 }
