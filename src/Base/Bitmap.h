@@ -62,8 +62,8 @@ public:
         int outCode;
         v0.z -= nearZ;
         v1.z -= nearZ;
-        ClipLineByZ4(v0, v1, outCode);
-        if (outCode == 0) return;
+        ClipLineByZ(v0, v1, outCode);
+        if (outCode == 1) return;
         v0.z += nearZ;
         v1.z += nearZ;
         if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
@@ -73,9 +73,8 @@ public:
     void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         int outCode;
-        // ClipLine(v0.x, v0.y, v1.x, v1.y, outCode);
         ClipLine(v0, v1, outCode);
-        if (outCode == 0) return;
+        if (outCode == 1) return;
         ToScreenSpace(v0);
         ToScreenSpace(v1);
         DrawLine3(v0, v1, pixel);
@@ -295,8 +294,8 @@ public:
     {
         v0.z -= nearZ;
         v1.z -= nearZ;
-        ClipLineByZ4(v0, v1, outCode);
-        if (outCode == 0) return;
+        ClipLineByZ(v0, v1, outCode);
+        if (outCode == 1) return;
         v0.z += nearZ;
         v1.z += nearZ;
         if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };

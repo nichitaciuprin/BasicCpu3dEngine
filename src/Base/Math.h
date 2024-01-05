@@ -654,14 +654,10 @@ inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
 	int code0 = GetPointState(p0.x, p0.y);
 	int code1 = GetPointState(p1.x, p1.y);
 
-	outCode = 2;
-
 	while (true)
     {
-		if (!(code0 | code1)) { return; } // points inside
-        if (  code0 & code1 ) { outCode = 0; return; } // points in same outside zone
-
-        outCode = 1;
+		if (!(code0 | code1)) { outCode = 0; return; } // points inside
+        if (  code0 & code1 ) { outCode = 1; return; } // points in same outside zone
 
         int code =
             code0 > code1 ?
@@ -669,7 +665,6 @@ inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
 
         float x = 0;
         float y = 0;
-
 
         if      (code & LEFT)   { y = p0.y + (p1.y - p0.y) * (xmin - p0.x) / (p1.x - p0.x); x = xmin; } // point is to the left of clip window
         else if (code & RIGHT)  { y = p0.y + (p1.y - p0.y) * (xmax - p0.x) / (p1.x - p0.x); x = xmax; } // point is to the right of clip window
@@ -679,12 +674,19 @@ inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
         if (code == code0) { p0.x = x; p0.y = y; code0 = GetPointState(p0.x, p0.y); }
         else               { p1.x = x; p1.y = y; code1 = GetPointState(p1.x, p1.y); }
 	}
-
 }
-inline void ClipLineByZ4(Vector3& v0, Vector3& v1, int& outCode)
+inline void ClipLineByZ(Vector3& v0, Vector3& v1, int& outCode)
 {
-    if (v0.z < 0 && v1.z < 0)                                                   { outCode = 0; return; }
-    if (v0.z < 0 && v1.z > 0) { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; outCode = 1; return; }
-    if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 1; return; }
-                                                                                { outCode = 2; return; }
+    int state = 0;
+
+    if (v0.z < 0) state += 1;
+    if (v1.z < 0) state += 2;
+
+    switch (state)
+    {
+        case     /* 00 */ 0: {                                                   outCode = 0; return; }
+        case     /* 01 */ 1: { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; outCode = 0; return; }
+        case     /* 10 */ 2: { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 0; return; }
+        default  /* 11 */  : {                                                   outCode = 1; return; }
+    }
 }
