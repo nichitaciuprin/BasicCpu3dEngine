@@ -573,7 +573,7 @@ inline Matrix MatrixPerspective(float width, float height, float zNear, float zF
         0, 0, b, 0
     };
 }
-void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, bool up, bool down, bool right)
+inline void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, bool up, bool down, bool right)
 {
     float speed = (float)M_PI;
     float speedDelta = speed * deltaTime;
@@ -593,7 +593,7 @@ void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, bool up, b
     if (camera->pitch >  degree) camera->pitch =  degree;
     if (camera->pitch < -degree) camera->pitch = -degree;
 }
-void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a, bool s, bool d, bool e, bool q)
+inline void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a, bool s, bool d, bool e, bool q)
 {
     Matrix matrix = MatrixView(camera);
 
@@ -611,73 +611,20 @@ void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a, bool 
     if (e) camera->position += up      * speedDelta;
     if (q) camera->position -= up      * speedDelta;
 }
-bool InFrustum(Vector3 point)
+inline bool InFrustum(Vector3 point)
 {
     if (point.z / MathAbs(point.x) < 1) return false;
     if (point.z / MathAbs(point.y) < 1) return false;
     return true;
 }
-void ClipLineByZ2(Vector3* points, int* indices, int lineCount)
-{
-    for (size_t i = 0; i < lineCount; i++)
-    {
-        auto start = i * 2;
-        int& p0 = indices[start];
-        int& p1 = indices[start + 1];
-
-        Vector3& v0 = points[p0];
-        Vector3& v1 = points[p1];
-
-        if (v0.z < 0 && v1.z > 0)
-        {
-            v0 += (v0 - v1) * v0.z / (v1.z - v0.z);
-            return;
-        }
-        if (v1.z < 0 && v0.z > 0)
-        {
-            v1 += (v1 - v0) * v1.z / (v0.z - v1.z);
-            return;
-        }
-        if (v0.z < 0 && v1.z < 0)
-        {
-            v0 = Vector3Zero();
-            v1 = Vector3Zero();
-            return;
-        }
-    }
-}
-bool ClipLineByZ(Vector3& v0, Vector3& v1)
-{
-    if (v0.z < 0 && v1.z < 0) return false;
-    if (v0.z < 0 && v1.z > 0) { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; return true; }
-    if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; return true; }
-    return true;
-}
-void ClipLineByZ4(Vector3& v0, Vector3& v1, int& outCode)
+inline void ClipLineByZ4(Vector3& v0, Vector3& v1, int& outCode)
 {
     if (v0.z < 0 && v1.z < 0)                                                   { outCode = 0; return; }
     if (v0.z < 0 && v1.z > 0) { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; outCode = 1; return; }
     if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 1; return; }
                                                                                 { outCode = 2; return; }
 }
-void ClipLineByZ5(Vector3& v0, Vector3& v1)
-{
-    v0 += (v0 - v1) * v0.z / (v1.z - v0.z);
-}
-void ClipLineByZ3(Vector3& v0, Vector3& v1, bool& include)
-{
-    // TODO optimise conditions
-    float nearZ = 0.1f;
-    v0.z -= nearZ;
-    v1.z -= nearZ;
-    if      (v0.z < 0 && v1.z < 0) {                                                   include = false; }
-    else if (v0.z < 0 && v1.z > 0) { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; include = true;  }
-    else if (v1.z < 0 && v0.z > 0) { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; include = true;  }
-    else                           {                                                   include = true;  }
-    v0.z += nearZ;
-    v1.z += nearZ;
-}
-int PointState(float x, float y)
+inline int GetPointState(float x, float y)
 {
     const int INSIDE = 0; // 0000
     const int LEFT   = 1; // 0001
@@ -691,13 +638,15 @@ int PointState(float x, float y)
     const int ymax =  1;
 
 	int code = INSIDE;
+
 	if      (x < xmin) code |= LEFT;
 	else if (x > xmax) code |= RIGHT;
 	if      (y < ymin) code |= BOTTOM;
 	else if (y > ymax) code |= TOP;
+
 	return code;
 }
-void ClipLine(float& x0, float& y0, float& x1, float& y1, int& outCode)
+inline void ClipLine(float& x0, float& y0, float& x1, float& y1, int& outCode)
 {
     const int LEFT   = 1; // 0001
     const int RIGHT  = 2; // 0010
@@ -709,8 +658,8 @@ void ClipLine(float& x0, float& y0, float& x1, float& y1, int& outCode)
     const int ymin = -1;
     const int ymax =  1;
 
-	int code0 = PointState(x0, y0);
-	int code1 = PointState(x1, y1);
+	int code0 = GetPointState(x0, y0);
+	int code1 = GetPointState(x1, y1);
 
 	while (true)
     {
@@ -729,13 +678,13 @@ void ClipLine(float& x0, float& y0, float& x1, float& y1, int& outCode)
         if      (code & BOTTOM) { x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0); y = ymin; } // point is below the clip window
         else if (code & TOP)    { x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0); y = ymax; } // point is above the clip window
 
-        if (code == code0) { x0 = x; y0 = y; code0 = PointState(x0, y0); }
-        else               { x1 = x; y1 = y; code1 = PointState(x1, y1); }
+        if (code == code0) { x0 = x; y0 = y; code0 = GetPointState(x0, y0); }
+        else               { x1 = x; y1 = y; code1 = GetPointState(x1, y1); }
 	}
 
 	outCode = 1;
 }
-void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
+inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
 {
     const int LEFT   = 1; // 0001
     const int RIGHT  = 2; // 0010
@@ -747,8 +696,8 @@ void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
     const int ymin = -1;
     const int ymax =  1;
 
-	int code0 = PointState(p0.x, p0.y);
-	int code1 = PointState(p1.x, p1.y);
+	int code0 = GetPointState(p0.x, p0.y);
+	int code1 = GetPointState(p1.x, p1.y);
 
 	outCode = 2;
 
@@ -772,8 +721,8 @@ void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
         if      (code & BOTTOM) { x = p0.x + (p1.x - p0.x) * (ymin - p0.y) / (p1.y - p0.y); y = ymin; } // point is below the clip window
         else if (code & TOP)    { x = p0.x + (p1.x - p0.x) * (ymax - p0.y) / (p1.y - p0.y); y = ymax; } // point is above the clip window
 
-        if (code == code0) { p0.x = x; p0.y = y; code0 = PointState(p0.x, p0.y); }
-        else               { p1.x = x; p1.y = y; code1 = PointState(p1.x, p1.y); }
+        if (code == code0) { p0.x = x; p0.y = y; code0 = GetPointState(p0.x, p0.y); }
+        else               { p1.x = x; p1.y = y; code1 = GetPointState(p1.x, p1.y); }
 	}
 
 }
