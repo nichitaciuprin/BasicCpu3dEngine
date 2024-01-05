@@ -73,7 +73,8 @@ public:
     void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         int outCode;
-        ClipLine(v0.x, v0.y, v1.x, v1.y, outCode);
+        // ClipLine(v0.x, v0.y, v1.x, v1.y, outCode);
+        ClipLine(v0, v1, outCode);
         if (outCode == 0) return;
         ToScreenSpace(v0);
         ToScreenSpace(v1);

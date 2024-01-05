@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = 0.1f;

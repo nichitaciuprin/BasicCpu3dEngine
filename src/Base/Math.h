@@ -275,7 +275,7 @@ inline Vector3 Vector3Cross(Vector3 a, Vector3 b)
         a.x * b.y - a.y * b.x
     };
 }
-inline bool Vector3TriangleIsClockwise(Vector3 p1, Vector3 p2, Vector3 p3)
+inline bool Vector3TriangleIsClockwise(const Vector3& p1, const Vector3& p2, const Vector3& p3)
 {
     auto v1 = p2 - p1;
     auto v2 = p3 - p1;
@@ -638,44 +638,6 @@ inline int GetPointState(float x, float y)
 	else if (y > ymax) code |= TOP;
 
 	return code;
-}
-inline void ClipLine(float& x0, float& y0, float& x1, float& y1, int& outCode)
-{
-    const int LEFT   = 1; // 0001
-    const int RIGHT  = 2; // 0010
-    const int BOTTOM = 4; // 0100
-    const int TOP    = 8; // 1000
-
-    const int xmin = -1;
-    const int xmax =  1;
-    const int ymin = -1;
-    const int ymax =  1;
-
-	int code0 = GetPointState(x0, y0);
-	int code1 = GetPointState(x1, y1);
-
-	while (true)
-    {
-		if (!(code0 | code1)) { outCode = 2; return; } // points inside
-        if (  code0 & code1 ) { outCode = 0; return; } // points in same outside zone
-
-        int code =
-            code0 > code1 ?
-            code0 : code1;
-
-        float x = 0;
-        float y = 0;
-
-        if      (code & LEFT)   { y = y0 + (y1 - y0) * (xmin - x0) / (x1 - x0); x = xmin; } // point is to the left of clip window
-        else if (code & RIGHT)  { y = y0 + (y1 - y0) * (xmax - x0) / (x1 - x0); x = xmax; } // point is to the right of clip window
-        if      (code & BOTTOM) { x = x0 + (x1 - x0) * (ymin - y0) / (y1 - y0); y = ymin; } // point is below the clip window
-        else if (code & TOP)    { x = x0 + (x1 - x0) * (ymax - y0) / (y1 - y0); y = ymax; } // point is above the clip window
-
-        if (code == code0) { x0 = x; y0 = y; code0 = GetPointState(x0, y0); }
-        else               { x1 = x; y1 = y; code1 = GetPointState(x1, y1); }
-	}
-
-	outCode = 1;
 }
 inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
 {
