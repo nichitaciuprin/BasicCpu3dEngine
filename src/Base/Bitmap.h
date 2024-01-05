@@ -150,13 +150,7 @@ public:
         // for (int i = 0; i < v1.size() - 2; i++)
         //     DrawLine3(v1[i], v1[i + 1], RED);
     }
-    void DrawTriangle0(Vector3& p0, Vector3& p1, Vector3& p2, const Pixel& pixel, Matrix& view)
-    {
-        p0 *= view;
-        p1 *= view;
-        p2 *= view;
-        DrawTriangle1(p0, p1, p2, pixel);
-    }
+
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
     {
         auto v0 = vector<Vector3>();
