@@ -295,7 +295,7 @@ public:
         if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
     }
 
-    inline void DrawHorizontalLine1(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
+    void DrawHorizontalLine1(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
     {
         // TODO remove
         if (xLeft > xRight)
@@ -315,7 +315,7 @@ public:
             zLeft += offset;
         }
     }
-    inline void DrawHorizontalLine2(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
+    void DrawHorizontalLine2(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
     {
         int count = xRight - xLeft;
         float diff = zRight - zLeft;
