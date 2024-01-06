@@ -153,9 +153,6 @@ public:
 
         for (int i = 1; i < v1.size() - 1; i++)
             DrawTriangle3(v1[0], v1[i], v1[i + 1], pixel);
-
-        // for (int i = 0; i < v1.size() - 2; i++)
-        //     DrawLine3(v1[i], v1[i + 1], RED);
     }
 
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
