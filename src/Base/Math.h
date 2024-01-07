@@ -585,7 +585,7 @@ inline void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, boo
 
     // TODO review
     // Wrap yaw to avoid floating-point errors if we turn too far
-    float M_PI2 = 2*(float)M_PI;
+    float M_PI2 = 2 * (float)M_PI;
     while (camera->yaw >=  M_PI2) camera->yaw -= M_PI2;
     while (camera->yaw <= -M_PI2) camera->yaw += M_PI2;
 
@@ -599,7 +599,7 @@ inline void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a
     auto matrix = MatrixView(camera);
     Vector3 forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
     Vector3 up = Vector3Up();
-    Vector3 right = Vector3Cross(up,forward);
+    Vector3 right = Vector3Cross(up, forward);
     auto speed = 50.0f;
     auto speedDelta = speed * deltaTime;
 
