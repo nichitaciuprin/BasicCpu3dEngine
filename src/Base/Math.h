@@ -127,12 +127,12 @@ inline float MathToRadians(float degs)
 }
 inline void Vector3Print(Vector3 v)
 {
-    // printf("<%f,%f,%f>",v.x,v.y,v.z);
+    // printf("<%f,%f,%f>", v.x, v.y, v.z);
     cout << "<" << v.x << "," << v.y << "," << v.z << ">" << endl;
 }
 inline void Vector4Print(Vector4 v)
 {
-    // printf("<%f,%f,%f,%f>",v.x,v.y,v.z,v.w);
+    // printf("<%f,%f,%f,%f>", v.x, v.y, v.z, v.w);
     cout << "<" << v.x << "," << v.y << "," << v.z << "," << v.w << ">" << endl;
 }
 inline Vector3 Vector3Zero()
@@ -163,7 +163,7 @@ inline Vector3 Vector3Backward()
 {
     return { 0, 0, -1 };
 }
-inline float Vector3Length(Vector3 v)
+inline float Vector3Length(const Vector3& v)
 {
     return MathSqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
@@ -188,7 +188,7 @@ inline bool operator == (Vector3 left, Vector3 right)
 }
 inline Vector3 operator - (Vector3 v)
 {
-    return {-v.x, -v.y, -v.z};
+    return { -v.x, -v.y, -v.z };
 }
 inline Vector3 operator + (Vector3 left, Vector3 right)
 {
@@ -254,14 +254,14 @@ inline Vector3 operator /= (Vector3& v, float f)
     v.z /= f;
     return v;
 }
-inline Vector3 Vector3ClampLength(Vector3 vector, float min, float max)
+inline Vector3 Vector3ClampLength(const Vector3& v, float min, float max)
 {
-    auto length2 = Vector3Length(vector);
-    if (length2 > max) return vector * (max / length2);
-    if (length2 < min) return vector * (min / length2);
-    return vector;
+    auto length = Vector3Length(v);
+    if (length > max) return v * (max / length);
+    if (length < min) return v * (min / length);
+    return v;
 }
-inline Vector3 Vector3Normalize(Vector3 v)
+inline Vector3 Vector3Normalize(const Vector3& v)
 {
     return v / Vector3Length(v);
 }
@@ -284,7 +284,7 @@ inline bool Vector3TriangleIsClockwise(const Vector3& p1, const Vector3& p2, con
 inline Vector3 Vector3MoveTowards(Vector3 fromVector, Vector3 toVector, float delta)
 {
     if (fromVector == toVector) return fromVector;
-    auto diff = toVector-fromVector;
+    auto diff = toVector - fromVector;
     auto dist = Vector3Length(diff);
     if (dist <= delta) return toVector;
     diff = Vector3Normalize(diff);
@@ -311,32 +311,32 @@ inline Matrix operator * (Matrix a, Matrix b)
     Vector4 col2 = { b.m[0][2], b.m[1][2], b.m[2][2], b.m[3][2] };
     Vector4 col3 = { b.m[0][3], b.m[1][3], b.m[2][3], b.m[3][3] };
 
-    float m00 = Vector4Dot(row0,col0);
-    float m01 = Vector4Dot(row0,col1);
-    float m02 = Vector4Dot(row0,col2);
-    float m03 = Vector4Dot(row0,col3);
+    float m00 = Vector4Dot(row0, col0);
+    float m01 = Vector4Dot(row0, col1);
+    float m02 = Vector4Dot(row0, col2);
+    float m03 = Vector4Dot(row0, col3);
 
-    float m10 = Vector4Dot(row1,col0);
-    float m11 = Vector4Dot(row1,col1);
-    float m12 = Vector4Dot(row1,col2);
-    float m13 = Vector4Dot(row1,col3);
+    float m10 = Vector4Dot(row1, col0);
+    float m11 = Vector4Dot(row1, col1);
+    float m12 = Vector4Dot(row1, col2);
+    float m13 = Vector4Dot(row1, col3);
 
-    float m20 = Vector4Dot(row2,col0);
-    float m21 = Vector4Dot(row2,col1);
-    float m22 = Vector4Dot(row2,col2);
-    float m23 = Vector4Dot(row2,col3);
+    float m20 = Vector4Dot(row2, col0);
+    float m21 = Vector4Dot(row2, col1);
+    float m22 = Vector4Dot(row2, col2);
+    float m23 = Vector4Dot(row2, col3);
 
-    float m30 = Vector4Dot(row3,col0);
-    float m31 = Vector4Dot(row3,col1);
-    float m32 = Vector4Dot(row3,col2);
-    float m33 = Vector4Dot(row3,col3);
+    float m30 = Vector4Dot(row3, col0);
+    float m31 = Vector4Dot(row3, col1);
+    float m32 = Vector4Dot(row3, col2);
+    float m33 = Vector4Dot(row3, col3);
 
     Matrix result =
     {
-        m00,m01,m02,m03,
-        m10,m11,m12,m13,
-        m20,m21,m22,m23,
-        m30,m31,m32,m33
+        m00, m01, m02, m03,
+        m10, m11, m12, m13,
+        m20, m21, m22, m23,
+        m30, m31, m32, m33
     };
 
     return result;
@@ -379,9 +379,9 @@ inline Vector3 operator *= (Vector3& v, Matrix m)
 
     Vector4 row0 = { v.x, v.y, v.z, 1 };
 
-    float x = Vector4Dot(row0,col0);
-    float y = Vector4Dot(row0,col1);
-    float z = Vector4Dot(row0,col2);
+    float x = Vector4Dot(row0, col0);
+    float y = Vector4Dot(row0, col1);
+    float z = Vector4Dot(row0, col2);
 
     v = { x, y, z };
 
@@ -398,10 +398,10 @@ inline Matrix MatrixIdentity()
 {
     return
     {
-        1,0,0,0,
-        0,1,0,0,
-        0,0,1,0,
-        0,0,0,1,
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
     };
 }
 inline Matrix MatrixTranspose(Matrix a)
@@ -452,6 +452,7 @@ inline Matrix MatrixRotateZ(float rad)
 {
     float sin = sinf(rad);
     float cos = cosf(rad);
+
     return
     {
         cos, -sin,  0,   0,
@@ -472,6 +473,7 @@ inline Matrix MatrixScale(Vector3 scale)
     float x = scale.x;
     float y = scale.y;
     float z = scale.z;
+
     return
     {
         x, 0, 0, 0,
@@ -548,6 +550,7 @@ inline Matrix MatrixOrthographic(float width, float height, float zNear, float z
     float h = 2.0f / height;
     float a = 1.0f / (zFar - zNear);
     float b = a * -zNear;
+
     return
     {
         w, 0, 0, 0,
@@ -564,6 +567,7 @@ inline Matrix MatrixPerspective(float width, float height, float zNear, float zF
     float w = h / aspectRatio;
     float a = zFar / (zFar - zNear);
     float b = a * -zNear;
+
     return
     {
         w, 0, 0, 0,
@@ -594,12 +598,10 @@ inline void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, boo
 }
 inline void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a, bool s, bool d, bool e, bool q)
 {
-    Matrix matrix = MatrixView(camera);
-
-    Vector3 forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
-    Vector3 up = Vector3Up();
-    Vector3 right = Vector3Cross(up,forward);
-
+    auto matrix = MatrixView(camera);
+    auto forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
+    auto up = Vector3Up();
+    auto right = Vector3Cross(up,forward);
     auto speed = 50.0f;
     auto speedDelta = speed * deltaTime;
 
