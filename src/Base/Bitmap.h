@@ -537,16 +537,6 @@ public:
         }
     }
 
-    void ScanEffectRandom(size_t iteration)
-    {
-        size_t i1 = iteration;
-        size_t i2 = Subgen::StaticNext();
-        size_t pixelCount = width * height;
-        i1 %= pixelCount;
-        i2 %= pixelCount;
-        pixels[i1] = Subgen::StaticNext();
-        pixels[i2] = 0;
-    }
     void DrawLineShort(int x0, int y0, int x1, int y1, Pixel pixel)
     {
         int dx = abs(x1 - x0);
