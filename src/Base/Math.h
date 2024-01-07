@@ -599,9 +599,9 @@ inline void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, boo
 inline void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a, bool s, bool d, bool e, bool q)
 {
     auto matrix = MatrixView(camera);
-    auto forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
-    auto up = Vector3Up();
-    auto right = Vector3Cross(up,forward);
+    Vector3 forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
+    Vector3 up = Vector3Up();
+    Vector3 right = Vector3Cross(up,forward);
     auto speed = 50.0f;
     auto speedDelta = speed * deltaTime;
 
