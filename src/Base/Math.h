@@ -679,12 +679,12 @@ inline bool ClipLineBack(Vector3& v0, Vector3& v1)
 {
     float offset = 0;
 
-    int state = 0;
+    int flags = 0;
 
-    if (v0.z < 0) state += 1;
-    if (v1.z < 0) state += 2;
+    if (v0.z < 0) flags += 1;
+    if (v1.z < 0) flags += 2;
 
-    switch (state)
+    switch (flags)
     {
         case /* 00 */ 0: return false;
         case /* 01 */ 1:
