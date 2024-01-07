@@ -16,11 +16,11 @@ void main2()
         CheckFPS();
         bitmap->Fill(BLACK);
 
-        auto view = MatrixView(&camera);
+        auto view = MatrixView(camera);
 
         UpdateCameraRotation
         (
-            &camera, 0.00080f,
+            camera, 0.00080f,
             window->keydown_VK_LEFT,
             window->keydown_VK_UP,
             window->keydown_VK_DOWN,
@@ -29,7 +29,7 @@ void main2()
 
         UpdateCameraPosition
         (
-            &camera, 0.00020f,
+            camera, 0.00020f,
             window->keydown_W, window->keydown_A, window->keydown_S, window->keydown_D,
             window->keydown_E, window->keydown_Q
         );

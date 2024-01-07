@@ -539,9 +539,9 @@ inline Matrix MatrixView(Vector3 eye, Vector3 target, Vector3 up)
               x,       y,       z, 1.0f
     };
 }
-inline Matrix MatrixView(const Camera* camera)
+inline Matrix MatrixView(const Camera& camera)
 {
-    return MatrixView(camera->position, camera->yaw, camera->pitch);
+    return MatrixView(camera.position, camera.yaw, camera.pitch);
 }
 inline Matrix MatrixOrthographic(float width, float height, float zNear, float zFar)
 {
@@ -575,27 +575,27 @@ inline Matrix MatrixPerspective(float width, float height, float zNear, float zF
         0, 0, b, 0
     };
 }
-inline void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, bool up, bool down, bool right)
+inline void UpdateCameraRotation(Camera& camera, float deltaTime, bool left, bool up, bool down, bool right)
 {
     float speed = (float)M_PI;
     float speedDelta = speed * deltaTime;
-    if (up)    camera->pitch += speedDelta;
-    if (down)  camera->pitch -= speedDelta;
-    if (right) camera->yaw   += speedDelta;
-    if (left)  camera->yaw   -= speedDelta;
+    if (up)    camera.pitch += speedDelta;
+    if (down)  camera.pitch -= speedDelta;
+    if (right) camera.yaw   += speedDelta;
+    if (left)  camera.yaw   -= speedDelta;
 
     // TODO review
     // Wrap yaw to avoid floating-point errors if we turn too far
     float M_PI2 = 2 * (float)M_PI;
-    while (camera->yaw >=  M_PI2) camera->yaw -= M_PI2;
-    while (camera->yaw <= -M_PI2) camera->yaw += M_PI2;
+    while (camera.yaw >=  M_PI2) camera.yaw -= M_PI2;
+    while (camera.yaw <= -M_PI2) camera.yaw += M_PI2;
 
     // Clamp pitch to stop camera flipping upside down
     float degree = MathToRadians(85);
-    if (camera->pitch >  degree) camera->pitch =  degree;
-    if (camera->pitch < -degree) camera->pitch = -degree;
+    if (camera.pitch >  degree) camera.pitch =  degree;
+    if (camera.pitch < -degree) camera.pitch = -degree;
 }
-inline void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a, bool s, bool d, bool e, bool q)
+inline void UpdateCameraPosition(Camera& camera, float deltaTime, bool w, bool a, bool s, bool d, bool e, bool q)
 {
     auto matrix = MatrixView(camera);
     Vector3 forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
@@ -604,12 +604,12 @@ inline void UpdateCameraPosition(Camera* camera, float deltaTime, bool w, bool a
     auto speed = 50.0f;
     auto speedDelta = speed * deltaTime;
 
-    if (w) camera->position += forward * speedDelta;
-    if (s) camera->position -= forward * speedDelta;
-    if (d) camera->position += right   * speedDelta;
-    if (a) camera->position -= right   * speedDelta;
-    if (e) camera->position += up      * speedDelta;
-    if (q) camera->position -= up      * speedDelta;
+    if (w) camera.position += forward * speedDelta;
+    if (s) camera.position -= forward * speedDelta;
+    if (d) camera.position += right   * speedDelta;
+    if (a) camera.position -= right   * speedDelta;
+    if (e) camera.position += up      * speedDelta;
+    if (q) camera.position -= up      * speedDelta;
 }
 inline bool InFrustum(Vector3 point)
 {
