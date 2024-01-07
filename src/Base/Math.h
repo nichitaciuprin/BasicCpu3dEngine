@@ -288,7 +288,7 @@ inline Vector3 Vector3MoveTowards(Vector3 fromVector, Vector3 toVector, float de
     auto dist = Vector3Length(diff);
     if (dist <= delta) return toVector;
     diff = Vector3Normalize(diff);
-    auto moveVec = diff*delta;
+    auto moveVec = diff * delta;
     return fromVector+moveVec;
 }
 inline Vector3 Vector3PositionUpdateSimple(Vector3 position, Vector3 velocity, float deltaTime)
@@ -364,10 +364,10 @@ inline Vector4 operator * (Vector4 v, Matrix m)
 
     Vector4 row0 = { v.x, v.y, v.z, 1 };
 
-    float x = Vector4Dot(row0,col0);
-    float y = Vector4Dot(row0,col1);
-    float z = Vector4Dot(row0,col2);
-    float w = Vector4Dot(row0,col3);
+    float x = Vector4Dot(row0, col0);
+    float y = Vector4Dot(row0, col1);
+    float z = Vector4Dot(row0, col2);
+    float w = Vector4Dot(row0, col3);
 
     return { x, y, z, w };
 }
@@ -452,7 +452,6 @@ inline Matrix MatrixRotateZ(float rad)
 {
     float sin = sinf(rad);
     float cos = cosf(rad);
-
     return
     {
         cos, -sin,  0,   0,
@@ -473,7 +472,6 @@ inline Matrix MatrixScale(Vector3 scale)
     float x = scale.x;
     float y = scale.y;
     float z = scale.z;
-
     return
     {
         x, 0, 0, 0,
