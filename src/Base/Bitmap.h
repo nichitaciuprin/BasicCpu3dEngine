@@ -28,13 +28,13 @@ public:
     vector<uint32_t> pixels;
     vector<float> zbuffer;
 
-    Bitmap(int widthNew, int heightNew)
+    Bitmap(int width, int height)
     {
-        if (widthNew < 1) throw exception("Bitmap widthNew < 1");
-        if (heightNew < 1) throw exception("Bitmap heightNew < 1");
+        if (width < 1) throw exception("widthNew < 1");
+        if (height < 1) throw exception("heightNew < 1");
 
-        width = widthNew;
-        height = heightNew;
+        this->width = width;
+        this->height = height;
 
         auto size = width * height;
 
@@ -129,7 +129,7 @@ public:
         v0.push_back(p2);
         v0.push_back(p3);
 
-        ClipPoligonBack(v0, v1); if (v1.size() < 3) return; v0.clear();
+        ClipPoligonBack      (v0, v1); if (v1.size() < 3) return; v0.clear();
 
         for (auto& x : v1)
         {
@@ -140,10 +140,10 @@ public:
 
         if (!Vector3TriangleIsClockwise(v1[0], v1[1], v1[2])) return;
 
-        ClipPoligonLeft   (v1, v0); if (v0.size() < 3) return; v1.clear();
-        ClipPoligonRight  (v0, v1); if (v1.size() < 3) return; v0.clear();
-        ClipPoligonTop    (v1, v0); if (v0.size() < 3) return; v1.clear();
-        ClipPoligonBottom (v0, v1); if (v1.size() < 3) return;
+        ClipPoligonLeft      (v1, v0); if (v0.size() < 3) return; v1.clear();
+        ClipPoligonRight     (v0, v1); if (v1.size() < 3) return; v0.clear();
+        ClipPoligonTop       (v1, v0); if (v0.size() < 3) return; v1.clear();
+        ClipPoligonBottom    (v0, v1); if (v1.size() < 3) return;
 
         for (auto& x : v1)
             ToScreenSpace(x);
@@ -163,7 +163,7 @@ public:
         v0.push_back(p1);
         v0.push_back(p2);
 
-        ClipPoligonBack(v0, v1); if (v1.size() < 3) return; v0.clear();
+        ClipPoligonBack   (v0, v1); if (v1.size() < 3) return; v0.clear();
 
         for (auto& x : v1)
         {
