@@ -152,19 +152,19 @@ bool ClipLineBottom(Vector3& v0, Vector3& v1)
 void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = 0.1f;
-    int state = 0;
+    int flags = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    if (p0.z < offset) state += 2;
+    if (p0.z < offset) flags += 2;
 
     for (int i = 0; i < input.size(); i++)
     {
-        state = state >> 1;
+        flags = flags >> 1;
 
         Vector3 p1 = input[i];
-        if (p1.z < offset) state += 2;
+        if (p1.z < offset) flags += 2;
 
-        switch (state)
+        switch (flags)
         {
             /* 00 */ case 0:
             {
@@ -197,19 +197,19 @@ void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
 void ClipPoligonLeft(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = -1;
-    int state = 0;
+    int flags = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    if (p0.x < offset) state += 2;
+    if (p0.x < offset) flags += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        state = state >> 1;
+        flags = flags >> 1;
 
         Vector3 p1 = input[i];
-        if (p1.x < offset) state += 2;
+        if (p1.x < offset) flags += 2;
 
-        switch (state)
+        switch (flags)
         {
             /* 00 */ case 0:
             {
@@ -242,19 +242,19 @@ void ClipPoligonLeft(vector<Vector3>& input, vector<Vector3>& output)
 void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = 1;
-    int state = 0;
+    int flags = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    if (p0.x > offset) state += 2;
+    if (p0.x > offset) flags += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        state = state >> 1;
+        flags = flags >> 1;
 
         Vector3 p1 = input[i];
-        if (p1.x > offset) state += 2;
+        if (p1.x > offset) flags += 2;
 
-        switch (state)
+        switch (flags)
         {
             /* 00 */ case 0:
             {
@@ -287,19 +287,19 @@ void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
 void ClipPoligonTop(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = 1;
-    int state = 0;
+    int flags = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    if (p0.y > offset) state += 2;
+    if (p0.y > offset) flags += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        state = state >> 1;
+        flags = flags >> 1;
 
         Vector3 p1 = input[i];
-        if (p1.y > offset) state += 2;
+        if (p1.y > offset) flags += 2;
 
-        switch (state)
+        switch (flags)
         {
             /* 00 */ case 0:
             {
@@ -332,19 +332,19 @@ void ClipPoligonTop(vector<Vector3>& input, vector<Vector3>& output)
 void ClipPoligonBottom(vector<Vector3>& input, vector<Vector3>& output)
 {
     float offset = -1;
-    int state = 0;
+    int flags = 0;
 
     Vector3 p0 = input[input.size() - 1];
-    if (p0.y < offset) state += 2;
+    if (p0.y < offset) flags += 2;
 
     for (size_t i = 0; i < input.size(); i++)
     {
-        state = state >> 1;
+        flags = flags >> 1;
 
         Vector3 p1 = input[i];
-        if (p1.y < offset) state += 2;
+        if (p1.y < offset) flags += 2;
 
-        switch (state)
+        switch (flags)
         {
             /* 00 */ case 0:
             {
