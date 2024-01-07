@@ -26,7 +26,7 @@ void main2()
             if (abs(x) != 4 && abs(z) != 4) continue;
             Vector3 position = { (float)x, -0.5f, (float)z };
             auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube1(world * view);
+            bitmap->DrawCubeWireframe(world * view, RED);
         }
 
         bitmap->DrawBorder(GREEN);

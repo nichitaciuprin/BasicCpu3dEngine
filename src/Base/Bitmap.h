@@ -58,7 +58,7 @@ public:
         fill(pixels.begin(), pixels.end(), pixel);
     }
 
-    void DrawCube1(Matrix modelView)
+    void DrawCubeWireframe(Matrix modelView, Pixel pixel)
     {
         int indices[12][2] =
         {
@@ -82,10 +82,10 @@ public:
             auto i1 = indices[i][1];
             auto v0 = Model::Cube::vertices[i0] * modelView;
             auto v1 = Model::Cube::vertices[i1] * modelView;
-            DrawLine1(v0, v1, RED);
+            DrawLine1(v0, v1, pixel);
         }
     }
-    void DrawCube2(Matrix modelView)
+    void DrawCube2(Matrix modelView, Pixel pixel)
     {
         int indexData[12][3] =
         {
@@ -110,7 +110,7 @@ public:
             auto v0 = Model::Cube::vertices[i0] * modelView;
             auto v1 = Model::Cube::vertices[i1] * modelView;
             auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
+            DrawTriangle1(v0, v1, v2, pixel);
         }
         {
             auto i0 = indexData[1][0];
@@ -119,7 +119,7 @@ public:
             auto v0 = Model::Cube::vertices[i0] * modelView;
             auto v1 = Model::Cube::vertices[i1] * modelView;
             auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
+            DrawTriangle1(v0, v1, v2, pixel);
         }
         {
             auto i0 = indexData[3][0];
@@ -128,7 +128,7 @@ public:
             auto v0 = Model::Cube::vertices[i0] * modelView;
             auto v1 = Model::Cube::vertices[i1] * modelView;
             auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
+            DrawTriangle1(v0, v1, v2, pixel);
         }
         {
             auto i0 = indexData[4][0];
@@ -137,10 +137,10 @@ public:
             auto v0 = Model::Cube::vertices[i0] * modelView;
             auto v1 = Model::Cube::vertices[i1] * modelView;
             auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
+            DrawTriangle1(v0, v1, v2, pixel);
         }
     }
-    void DrawCube3(Matrix modelView)
+    void DrawCubeColored(Matrix modelView)
     {
         int indexData[6][4] =
         {

@@ -57,7 +57,7 @@ void main2()
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
             auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube3(world * view);
+            bitmap->DrawCubeColored(world * view);
         }
         {
             auto time = (float)clock() / 20;
@@ -65,7 +65,7 @@ void main2()
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
             auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube3(world * view);
+            bitmap->DrawCubeColored(world * view);
         }
 
         window->SetPixels(bitmap);

@@ -23,14 +23,14 @@ void main2()
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
             auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube3(world * view);
+            bitmap->DrawCubeColored(world * view);
         }
         {
             Vector3 position = { 0.5f, 0.5f, 2 };
             Vector3 rotation = { 0, 0, 0 };
             Vector3 scale = { 1, 1, 1 };
             auto world = MatrixWorld(position, rotation, scale);
-            bitmap->DrawCube3(world * view);
+            bitmap->DrawCubeColored(world * view);
         }
 
         bitmap->DrawBorder(GREEN);
