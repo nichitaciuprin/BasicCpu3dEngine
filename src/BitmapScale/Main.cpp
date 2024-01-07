@@ -8,15 +8,12 @@ void main2()
     auto scale = 40;
 
     auto bitmap = make_unique<Bitmap>(width, height);
+    auto window = make_unique<BitmapWindow>(700, 100, width * scale, height * scale);
 
-    BitmapWindow1::Create(700, 100, width * scale, height * scale);
-
-    while (BitmapWindow1::Exists())
+    while (window->Exists())
     {
         CheckFPS();
         bitmap->Fill(BLACK);
-
-        // bitmap->DrawSquare(RED);
 
         float zFar = 0;
         float zClose = -10;
@@ -42,8 +39,8 @@ void main2()
             bitmap->DrawLine(p0, p1, YELLOW);
         }
 
-        BitmapWindow1::SetPixelsScaled(bitmap, scale);
-        BitmapWindow1::Update();
+        window->SetPixelsScaled(bitmap, scale);
+        window->Update();
     }
 }
 

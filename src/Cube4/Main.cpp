@@ -8,10 +8,9 @@ void main2()
     auto scale2 = 1;
 
     auto bitmap = make_unique<Bitmap>(width, height);
+    auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
-    BitmapWindow1::Create(700, 100, width * scale2, height * scale2);
-
-    while (BitmapWindow1::Exists())
+    while (window->Exists())
     {
         CheckFPS();
         bitmap->Fill(BLACK);
@@ -29,8 +28,8 @@ void main2()
         // bitmap->DrawCube3(world * view);
 
         // bitmap->DrawBorder(GREEN);
-        BitmapWindow1::SetPixelsScaled(bitmap, scale2);
-        BitmapWindow1::Update();
+        window->SetPixelsScaled(bitmap, scale2);
+        window->Update();
     }
 }
 
