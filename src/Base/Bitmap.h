@@ -25,7 +25,6 @@ class Bitmap
 public:
     vector<uint32_t> pixels;
     vector<float> zbuffer;
-    float nearZ = 0.2f;
 
     Bitmap(int widthNew, int heightNew)
     {
