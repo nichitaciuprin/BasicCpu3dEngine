@@ -108,18 +108,18 @@ inline float MathCos(float f)
 }
 inline float MathInverseLerp(float x, float y, float value)
 {
-    return (value - x)/(y - x);
+    return (value - x) / (y - x);
 }
 inline float MathMod(float value, float div)
 {
-    return fmodf(value,div);
+    return fmodf(value, div);
 }
 inline float MathPingPong(float value, float length)
 {
     value = MathAbs(value);
     int whole = (int)(value / length);
     float rem = fmodf(value, length);
-    return whole % 2 == 0 ? rem : length-rem;
+    return whole % 2 == 0 ? rem : length - rem;
 }
 inline float MathToRadians(float degs)
 {
@@ -129,7 +129,6 @@ inline void Vector3Print(Vector3 v)
 {
     // printf("<%f,%f,%f>",v.x,v.y,v.z);
     cout << "<" << v.x << "," << v.y << "," << v.z << ">" << endl;
-    // cout << "<" << (int)v.x << "," << (int)v.y << "," << (int)v.z << ">" << endl;
 }
 inline void Vector4Print(Vector4 v)
 {
