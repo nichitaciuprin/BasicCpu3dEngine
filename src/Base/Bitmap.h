@@ -51,13 +51,6 @@ public:
         return height;
     }
 
-    void Fill(Pixel pixel)
-    {
-        // TODO Move to BeginDraw()
-        fill(zbuffer.begin(), zbuffer.end(), 100000000.0f);
-        fill(pixels.begin(), pixels.end(), pixel);
-    }
-
     void DrawCubeWireframe(Matrix modelView, Pixel pixel)
     {
         int indices[12][2] =
@@ -123,7 +116,6 @@ public:
 
         #undef DRAW
     }
-
     void DrawPoligon1(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
     {
         auto v0 = vector<Vector3>();
@@ -255,6 +247,12 @@ public:
         point.y = (height - 1) * point.y;
     }
 
+    void Fill(Pixel pixel)
+    {
+        // TODO Move to BeginDraw()
+        fill(zbuffer.begin(), zbuffer.end(), 100000000.0f);
+        fill(pixels.begin(), pixels.end(), pixel);
+    }
     void ApplyBlackWhiteColorDepth()
     {
         for (size_t i = 0; i < pixels.size(); i++)
