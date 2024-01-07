@@ -81,6 +81,7 @@ int main()
     }
     catch (const exception& e)
     {
+        cout << "EXCEPTION" << endl;
         cerr << e.what() << endl;
     }
 

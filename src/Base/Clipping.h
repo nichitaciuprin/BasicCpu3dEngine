@@ -377,7 +377,7 @@ void ClipPoligonBottom(vector<Vector3>& input, vector<Vector3>& output)
 
 // maybe better line clipping
 
-inline int GetPointState(float x, float y)
+int GetPointState(float x, float y)
 {
     const int INSIDE = 0; // 0000
     const int LEFT   = 1; // 0001
@@ -399,7 +399,7 @@ inline int GetPointState(float x, float y)
 
 	return code;
 }
-inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
+void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
 {
     const int LEFT   = 1; // 0001
     const int RIGHT  = 2; // 0010
