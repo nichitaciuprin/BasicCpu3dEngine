@@ -115,15 +115,11 @@ public:
         for (int i = 0; i < max; i++)
         {
             SetPixel2(x0, y0, z, pixel);
-            // SetPixel2(x0, y0, -10000, pixel);
-            // SetPixel(x0, y0, pixel);
             if (err < 0) { err += max; (*axis1) += val1; }
                          { err -= min; (*axis2) += val2; }
             z += offset;
         }
         SetPixel2(x0, y0, z, pixel);
-        // SetPixel2(x0, y0, -10000, pixel);
-        // SetPixel(x0, y0, pixel);
     }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
