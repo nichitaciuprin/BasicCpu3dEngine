@@ -28,10 +28,10 @@ public:
         if (instance == nullptr) return;
         instance->SetPixels(bitmap);
     }
-    static void SetPixels2(const unique_ptr<Bitmap>& bitmap, int scale)
+    static void SetPixelsScaled(const unique_ptr<Bitmap>& bitmap, int scale)
     {
         if (instance == nullptr) return;
-        instance->SetPixels2(bitmap, scale);
+        instance->SetPixelsScaled(bitmap, scale);
     }
     static uint32_t GetClientWidth()
     {

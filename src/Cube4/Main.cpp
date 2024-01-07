@@ -29,7 +29,7 @@ void main2()
         // bitmap->DrawCube3(world * view);
 
         // bitmap->DrawBorder(GREEN);
-        BitmapWindow1::SetPixels2(bitmap, scale2);
+        BitmapWindow1::SetPixelsScaled(bitmap, scale2);
         BitmapWindow1::Update();
     }
 }

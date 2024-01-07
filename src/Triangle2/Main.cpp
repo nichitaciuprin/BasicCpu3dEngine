@@ -83,7 +83,7 @@ void main2()
             // bitmap->DrawLineShort((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y, RED);
         }
 
-        BitmapWindow1::SetPixels2(bitmap, scale);
+        BitmapWindow1::SetPixelsScaled(bitmap, scale);
         BitmapWindow1::Update();
     }
 }

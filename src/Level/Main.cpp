@@ -8,7 +8,6 @@ void main2()
     auto bitmap = make_unique<Bitmap>(width, height);
     auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
-    // Camera camera = { 0, 1, 0 };
     Camera camera = { 0, 1, 95 };
 
     while (window->Exists())
@@ -16,23 +15,11 @@ void main2()
         CheckFPS();
         bitmap->Fill(BLACK);
 
+        auto state = window->GetInputState();
+        UpdateCameraRotation(camera, state, 0.00080f);
+        UpdateCameraPosition(camera, state, 0.00020f);
+
         auto view = MatrixView(camera);
-
-        UpdateCameraRotation
-        (
-            camera, 0.00080f,
-            window->keydown_VK_LEFT,
-            window->keydown_VK_UP,
-            window->keydown_VK_DOWN,
-            window->keydown_VK_RIGHT
-        );
-
-        UpdateCameraPosition
-        (
-            camera, 0.00020f,
-            window->keydown_W, window->keydown_A, window->keydown_S, window->keydown_D,
-            window->keydown_E, window->keydown_Q
-        );
 
         {
             Vector3 p0 = { -1, 0,  2 }; p0 *= view;

@@ -49,6 +49,12 @@ struct Camera
     float yaw;
     float pitch;
 };
+struct InputState
+{
+    bool w, a, s, d;
+    bool left, up, down, right;
+    bool e, q;
+};
 
 inline void Vector3Print(Vector3 v)
 {
@@ -575,14 +581,14 @@ inline Matrix MatrixPerspective(float width, float height, float zNear, float zF
         0, 0, b, 0
     };
 }
-inline void UpdateCameraRotation(Camera& camera, float deltaTime, bool left, bool up, bool down, bool right)
+inline void UpdateCameraRotation(Camera& camera, const InputState& inputState, float deltaTime)
 {
     float speed = (float)M_PI;
     float speedDelta = speed * deltaTime;
-    if (up)    camera.pitch += speedDelta;
-    if (down)  camera.pitch -= speedDelta;
-    if (right) camera.yaw   += speedDelta;
-    if (left)  camera.yaw   -= speedDelta;
+    if (inputState.up)    camera.pitch += speedDelta;
+    if (inputState.down)  camera.pitch -= speedDelta;
+    if (inputState.right) camera.yaw   += speedDelta;
+    if (inputState.left)  camera.yaw   -= speedDelta;
 
     // TODO review
     // Wrap yaw to avoid floating-point errors if we turn too far
@@ -595,7 +601,7 @@ inline void UpdateCameraRotation(Camera& camera, float deltaTime, bool left, boo
     if (camera.pitch >  degree) camera.pitch =  degree;
     if (camera.pitch < -degree) camera.pitch = -degree;
 }
-inline void UpdateCameraPosition(Camera& camera, float deltaTime, bool w, bool a, bool s, bool d, bool e, bool q)
+inline void UpdateCameraPosition(Camera& camera, const InputState& inputState, float deltaTime)
 {
     auto matrix = MatrixView(camera);
     Vector3 forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
@@ -604,12 +610,12 @@ inline void UpdateCameraPosition(Camera& camera, float deltaTime, bool w, bool a
     auto speed = 50.0f;
     auto speedDelta = speed * deltaTime;
 
-    if (w) camera.position += forward * speedDelta;
-    if (s) camera.position -= forward * speedDelta;
-    if (d) camera.position += right   * speedDelta;
-    if (a) camera.position -= right   * speedDelta;
-    if (e) camera.position += up      * speedDelta;
-    if (q) camera.position -= up      * speedDelta;
+    if (inputState.w) camera.position += forward * speedDelta;
+    if (inputState.s) camera.position -= forward * speedDelta;
+    if (inputState.d) camera.position += right   * speedDelta;
+    if (inputState.a) camera.position -= right   * speedDelta;
+    if (inputState.e) camera.position += up      * speedDelta;
+    if (inputState.q) camera.position -= up      * speedDelta;
 }
 inline bool InFrustum(Vector3 point)
 {

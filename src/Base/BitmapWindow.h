@@ -60,6 +60,7 @@ public:
         DestroyWindow(_hwnd);
         _hwnd = 0;
     }
+
     bool Exists() const
     {
         return _hwnd != 0;
@@ -91,19 +92,8 @@ public:
             auto y2 = _height - 1 - y;
             _pixels[x + y2 * _width] = pixel;
         }
-
-        // auto size = width * height;
-
-        // for (int i = 0; i < size; i++)
-        // {
-        //     auto pixel = bitmap->pixels[i];
-        //     auto y = i % _height;
-        //     auto x = i % y;
-        //     y = _height - y;
-        //     _pixels[x * y] = pixel;
-        // }
     }
-    void SetPixels2(const unique_ptr<Bitmap>& bitmap, int scale)
+    void SetPixelsScaled(const unique_ptr<Bitmap>& bitmap, int scale)
     {
         if (!Exists()) return;
 
@@ -121,6 +111,7 @@ public:
                 SetPixel(x2+i, y2+j, pixel);
         }
     }
+
     int GetClientWidth() const
     {
         return _width;
@@ -129,11 +120,17 @@ public:
     {
         return _height;
     }
+
     void SetPixel(int x, int y, Pixel pixel)
     {
         // window bitmap is bottom-up
         y = _height - 1 - y;
         _pixels[x + y * _width] = pixel;
+    }
+
+    InputState GetInputState()
+    {
+        return inputState;
     }
 
 private:
@@ -148,6 +145,8 @@ private:
     uint32_t*  _pixels;
     int        _width;
     int        _height;
+
+    InputState inputState = {};
 
     void InitBitmap()
     {
@@ -239,16 +238,16 @@ private:
                 switch (wParam)
                 {
                     case VK_ESCAPE : { DestroyWindow(hwnd);                     break; }
-                    case 'W'       : { bitmapWindow->keydown_W        = isDown; break; }
-                    case 'A'       : { bitmapWindow->keydown_A        = isDown; break; }
-                    case 'S'       : { bitmapWindow->keydown_S        = isDown; break; }
-                    case 'D'       : { bitmapWindow->keydown_D        = isDown; break; }
-                    case 'E'       : { bitmapWindow->keydown_E        = isDown; break; }
-                    case 'Q'       : { bitmapWindow->keydown_Q        = isDown; break; }
-                    case VK_UP     : { bitmapWindow->keydown_VK_UP    = isDown; break; }
-                    case VK_LEFT   : { bitmapWindow->keydown_VK_LEFT  = isDown; break; }
-                    case VK_DOWN   : { bitmapWindow->keydown_VK_DOWN  = isDown; break; }
-                    case VK_RIGHT  : { bitmapWindow->keydown_VK_RIGHT = isDown; break; }
+                    case 'W'       : { bitmapWindow->inputState.w     = isDown; break; }
+                    case 'A'       : { bitmapWindow->inputState.a     = isDown; break; }
+                    case 'S'       : { bitmapWindow->inputState.s     = isDown; break; }
+                    case 'D'       : { bitmapWindow->inputState.d     = isDown; break; }
+                    case 'E'       : { bitmapWindow->inputState.e     = isDown; break; }
+                    case 'Q'       : { bitmapWindow->inputState.q     = isDown; break; }
+                    case VK_UP     : { bitmapWindow->inputState.up    = isDown; break; }
+                    case VK_LEFT   : { bitmapWindow->inputState.left  = isDown; break; }
+                    case VK_DOWN   : { bitmapWindow->inputState.down  = isDown; break; }
+                    case VK_RIGHT  : { bitmapWindow->inputState.right = isDown; break; }
                     default        : {                                          break; }
                 }
                 break;

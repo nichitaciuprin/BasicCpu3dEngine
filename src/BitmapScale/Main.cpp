@@ -42,7 +42,7 @@ void main2()
             bitmap->DrawLine(p0, p1, YELLOW);
         }
 
-        BitmapWindow1::SetPixels2(bitmap, scale);
+        BitmapWindow1::SetPixelsScaled(bitmap, scale);
         BitmapWindow1::Update();
     }
 }
