@@ -73,6 +73,12 @@ public:
         int outCode;
         ClipLine(v0, v1, outCode);
         if (outCode == 1) return;
+
+        // if (ClipLineLeft   (v0, v1)) return;
+        // if (ClipLineRight  (v0, v1)) return;
+        // if (ClipLineTop    (v0, v1)) return;
+        // if (ClipLineBottom (v0, v1)) return;
+
         ToScreenSpace(v0);
         ToScreenSpace(v1);
         DrawLine3(v0, v1, pixel);
