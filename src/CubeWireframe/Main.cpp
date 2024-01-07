@@ -15,7 +15,7 @@ void main2()
 
         auto time = (float)clock() / 40;
         Camera camera = { 0, 0, 0 };
-        auto view = MatrixView(&camera);
+        auto view = MatrixView(camera);
         Vector3 position = { 0, 0, 2 };
         Vector3 rotation = { 0, time, 0 };
         Vector3 scale = { 1, 1, 1 };

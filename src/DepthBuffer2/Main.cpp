@@ -14,7 +14,7 @@ void main2()
         bitmap->Fill(BLACK);
 
         Camera camera = { 0, 0, 0 };
-        auto view = MatrixView(&camera);
+        auto view = MatrixView(camera);
 
         {
             auto time = (float)clock() / 40;
