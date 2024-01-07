@@ -99,15 +99,15 @@ public:
             auto i1 = indexData[INDEX][1];        \
             auto i2 = indexData[INDEX][2];        \
             auto i3 = indexData[INDEX][3];        \
-            auto p0 = Model::Cube::vertices[i0]; \
-            auto p1 = Model::Cube::vertices[i1]; \
-            auto p2 = Model::Cube::vertices[i2]; \
-            auto p3 = Model::Cube::vertices[i3]; \
+            auto p0 = Model::Cube::vertices[i0];  \
+            auto p1 = Model::Cube::vertices[i1];  \
+            auto p2 = Model::Cube::vertices[i2];  \
+            auto p3 = Model::Cube::vertices[i3];  \
             p0 *= modelView;                      \
             p1 *= modelView;                      \
             p2 *= modelView;                      \
             p3 *= modelView;                      \
-            DrawPoligon1(p0, p1, p2, p3, COLOR);   \
+            DrawPoligon1(p0, p1, p2, p3, COLOR);  \
         }                                         \
 
         DRAW(0, CYAN)
