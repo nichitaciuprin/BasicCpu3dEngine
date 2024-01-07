@@ -675,7 +675,7 @@ inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
         else               { p1.x = x; p1.y = y; code1 = GetPointState(p1.x, p1.y); }
 	}
 }
-inline void ClipLineByZ(Vector3& v0, Vector3& v1, int& outCode)
+inline bool ClipLineBack(Vector3& v0, Vector3& v1)
 {
     int state = 0;
 
@@ -684,9 +684,9 @@ inline void ClipLineByZ(Vector3& v0, Vector3& v1, int& outCode)
 
     switch (state)
     {
-        case    /* 00 */ 0: {                                                   outCode = 0; return; }
-        case    /* 01 */ 1: { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; outCode = 0; return; }
-        case    /* 10 */ 2: { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; outCode = 0; return; }
-        default /* 11 */  : {                                                   outCode = 1; return; }
+        case    /* 00 */ 0: {                                                   return false; }
+        case    /* 01 */ 1: { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; return false; }
+        case    /* 10 */ 2: { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; return false; }
+        default /* 11 */  : {                                                   return true;  }
     }
 }

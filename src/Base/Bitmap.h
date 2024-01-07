@@ -59,11 +59,9 @@ public:
 
     void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
     {
-        int outCode;
         v0.z -= nearZ;
         v1.z -= nearZ;
-        ClipLineByZ(v0, v1, outCode);
-        if (outCode == 1) return;
+        if (ClipLineBack(v0, v1)) return;
         v0.z += nearZ;
         v1.z += nearZ;
         if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
@@ -291,8 +289,7 @@ public:
     {
         v0.z -= nearZ;
         v1.z -= nearZ;
-        ClipLineByZ(v0, v1, outCode);
-        if (outCode == 1) return;
+        if (ClipLineBack(v0, v1)) return;
         v0.z += nearZ;
         v1.z += nearZ;
         if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
