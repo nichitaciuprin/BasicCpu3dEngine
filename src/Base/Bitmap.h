@@ -227,6 +227,7 @@ public:
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
+
         int dx1 = p2.x - p0.x;
         int dx2 = p1.x - p0.x;
         int dx3 = p2.x - p1.x;
@@ -268,7 +269,7 @@ public:
         {
             while (err1 < 0) { err1 += dy1; x1 += dir1; }
             while (err2 < 0) { err2 += dy2; x2 += dir2; }
-            DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
+            DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
             y++;
             err1 -= dx1abs;
             err2 -= dx2abs;
@@ -279,37 +280,17 @@ public:
         {
             while (err1 < 0) { err1 += dy1; x1 += dir1; }
             while (err3 < 0) { err3 += dy3; x2 += dir3; }
-            DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
+            DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
             y++;
             err1 -= dx1abs;
             err3 -= dx3abs;
             z1 += offset1;
             z2 += offset3;
         }
-        DrawHorizontalLine2(y, *xl, *xr, *zl, *zr, pixel);
+        DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
     }
 
-    void DrawHorizontalLine1(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
-    {
-        // TODO remove
-        if (xLeft > xRight)
-        {
-            swap(xLeft, xRight);
-            swap(zLeft, zRight);
-        }
-
-        int count = xRight - xLeft;
-        float diff = zRight - zLeft;
-        float offset = diff / count;
-
-        for (int i = 0; i < count + 1; i++)
-        {
-            auto x = xLeft + i;
-            SetPixel2(x, y, zLeft, pixel);
-            zLeft += offset;
-        }
-    }
-    void DrawHorizontalLine2(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
+    void DrawHorizontalLine(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
     {
         int count = xRight - xLeft;
         float diff = zRight - zLeft;
