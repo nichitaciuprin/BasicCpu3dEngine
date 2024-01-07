@@ -36,6 +36,9 @@ public:
         this->width = width;
         this->height = height;
 
+        widthMin1 = width - 1;
+        heightMin1 = height - 1;
+
         auto size = width * height;
 
         pixels = vector<uint32_t>(size, 0);
@@ -243,8 +246,8 @@ public:
         point.y += 1.0f;
         point.x /= 2;
         point.y /= 2;
-        point.x = (width - 1) * point.x;
-        point.y = (height - 1) * point.y;
+        point.x = widthMin1 * point.x;
+        point.y = heightMin1 * point.y;
     }
 
     void Fill(Pixel pixel)
@@ -399,8 +402,8 @@ public:
     }
     void DrawBorder(Pixel pixel)
     {
-        int x = width - 1;
-        int y = height - 1;
+        int x = widthMin1;
+        int y = heightMin1;
         for (int i = 0; i < width;  i++) SetPixel(i, 0, pixel);
         for (int i = 0; i < width;  i++) SetPixel(i, y, pixel);
         for (int i = 0; i < height; i++) SetPixel(0, i, pixel);
@@ -431,4 +434,6 @@ public:
 private:
     int width = 0;
     int height = 0;
+    int widthMin1 = 0;
+    int heightMin1 = 0;
 };
