@@ -6,18 +6,17 @@ void main2()
     auto height = 400;
 
     auto bitmap = make_unique<Bitmap>(width, height);
+    auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
-    BitmapWindow1::Create(700, 100, width, height);
-
-    while (BitmapWindow1::Exists())
+    while (window->Exists())
     {
         CheckFPS();
         bitmap->Fill(BLACK);
 
-        Vector2Int p0;
-        Vector2Int p1;
-        Vector2Int p2;
-        Vector2Int p3;
+        Vector3 p0;
+        Vector3 p1;
+        Vector3 p2;
+        Vector3 p3;
 
         // MAIN
         {
@@ -78,10 +77,9 @@ void main2()
             p0 = {  75, 100 }; bitmap->DrawTriangle(p0, p1, p2, ORANGE);
         }
 
-
         bitmap->DrawBorder(GREEN);
-        BitmapWindow1::SetPixels(bitmap);
-        BitmapWindow1::Update();
+        window->SetPixels(bitmap);
+        window->Update();
     }
 }
 
