@@ -19,13 +19,13 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-struct Vector2
-{
-    float x, y;
-};
 struct Vector2Int
 {
     int x, y, z;
+};
+struct Vector2
+{
+    float x, y;
 };
 struct Vector3
 {
