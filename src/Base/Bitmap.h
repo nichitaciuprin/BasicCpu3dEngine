@@ -255,7 +255,7 @@ public:
     }
     void ApplyBlackWhiteColorDepth()
     {
-        for (size_t i = 0; i < pixels.size(); i++)
+        for (int i = 0; i < pixels.size(); i++)
         {
             float depthLength = 100;
             float factor = MathClamp(zbuffer[i], 0.0f, depthLength);
