@@ -30,8 +30,8 @@ public:
 
     Bitmap(int width, int height)
     {
-        if (width < 1) throw exception("widthNew < 1");
-        if (height < 1) throw exception("heightNew < 1");
+        if (width < 1) throw exception("width < 1");
+        if (height < 1) throw exception("height < 1");
 
         this->width = width;
         this->height = height;
