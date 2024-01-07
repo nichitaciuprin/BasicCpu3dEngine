@@ -3,7 +3,7 @@
 
 #pragma once
 
-// TOOD find better place for colors
+// TOOD maybe find better place for colors
 
 typedef uint32_t Pixel;
 
