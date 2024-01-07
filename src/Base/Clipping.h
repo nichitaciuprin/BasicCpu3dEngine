@@ -1,6 +1,153 @@
 #pragma once
 
+// functions made for specific case
+// maybe remove hardcoded values
 
+bool ClipLineBack(Vector3& v0, Vector3& v1)
+{
+    float offset = 0;
+
+    int flags = 0;
+
+    if (v0.z < offset) flags += 1;
+    if (v1.z < offset) flags += 2;
+
+    switch (flags)
+    {
+        case /* 00 */ 0: return false;
+        case /* 01 */ 1:
+        {
+            auto diff = v0 - v1;
+            v0 = v0 + diff * (offset - v0.z) / diff.z;
+            v0.z = offset;
+            return false;
+        }
+        case /* 10 */ 2:
+        {
+            auto diff = v1 - v0;
+            v1 = v1 + diff * (offset - v1.z) / diff.z;
+            v1.z = offset;
+            return false;
+        }
+        default /* 11 */ : return true;
+    }
+}
+bool ClipLineRight(Vector3& v0, Vector3& v1)
+{
+    float offset = 1;
+
+    int flags = 0;
+
+    if (v0.x > offset) flags += 1;
+    if (v1.x > offset) flags += 2;
+
+    switch (flags)
+    {
+        case /* 00 */ 0: return false;
+        case /* 01 */ 1:
+        {
+            auto diff = v0 - v1;
+            v0 = v0 + diff * (offset - v0.x) / diff.x;
+            v0.x = offset;
+            return false;
+        }
+        case /* 10 */ 2:
+        {
+            auto diff = v1 - v0;
+            v1 = v1 + diff * (offset - v1.x) / diff.x;
+            v1.x = offset;
+            return false;
+        }
+        default /* 11 */ : return true;
+    }
+}
+bool ClipLineLeft(Vector3& v0, Vector3& v1)
+{
+    float offset = -1;
+
+    int flags = 0;
+
+    if (v0.x < offset) flags += 1;
+    if (v1.x < offset) flags += 2;
+
+    switch (flags)
+    {
+        case /* 00 */ 0: return false;
+        case /* 01 */ 1:
+        {
+            auto diff = v0 - v1;
+            v0 = v0 + diff * (offset - v0.x) / diff.x;
+            v0.x = offset;
+            return false;
+        }
+        case /* 10 */ 2:
+        {
+            auto diff = v1 - v0;
+            v1 = v1 + diff * (offset - v1.x) / diff.x;
+            v1.x = offset;
+            return false;
+        }
+        default /* 11 */ : return true;
+    }
+}
+bool ClipLineTop(Vector3& v0, Vector3& v1)
+{
+    float offset = 1;
+
+    int flags = 0;
+
+    if (v0.y > offset) flags += 1;
+    if (v1.y > offset) flags += 2;
+
+    switch (flags)
+    {
+        case /* 00 */ 0: return false;
+        case /* 01 */ 1:
+        {
+            auto diff = v0 - v1;
+            v0 = v0 + diff * (offset - v0.y) / diff.y;
+            v0.y = offset;
+            return false;
+        }
+        case /* 10 */ 2:
+        {
+            auto diff = v1 - v0;
+            v1 = v1 + diff * (offset - v1.y) / diff.y;
+            v1.y = offset;
+            return false;
+        }
+        default /* 11 */ : return true;
+    }
+}
+bool ClipLineBottom(Vector3& v0, Vector3& v1)
+{
+    float offset = -1;
+
+    int flags = 0;
+
+    if (v0.y < offset) flags += 1;
+    if (v1.y < offset) flags += 2;
+
+    switch (flags)
+    {
+        case /* 00 */ 0: return false;
+        case /* 01 */ 1:
+        {
+            auto diff = v0 - v1;
+            v0 = v0 + diff * (offset - v0.y) / diff.y;
+            v0.y = offset;
+            return false;
+        }
+        case /* 10 */ 2:
+        {
+            auto diff = v1 - v0;
+            v1 = v1 + diff * (offset - v1.y) / diff.y;
+            v1.y = offset;
+            return false;
+        }
+        default /* 11 */ : return true;
+    }
+}
 
 void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
 {
