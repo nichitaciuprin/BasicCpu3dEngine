@@ -2,16 +2,15 @@
 
 int main()
 {
-    BitmapWindow1::Create(700, 0, 100, 100);
+    auto width = 50;
+    auto height = 200;
 
-    auto width = BitmapWindow1::GetClientWidth();
-    auto height = BitmapWindow1::GetClientHeight();
-
-    auto bitmap = make_unique<Bitmap>(width,height);
+    auto bitmap = make_unique<Bitmap>(width, height);
+    auto window = make_unique<BitmapWindow>(700, 100, width, height);
 
     int iteration = 0;
 
-    while (BitmapWindow1::Exists())
+    while (window->Exists())
     {
         CheckFPS();
 
@@ -25,9 +24,8 @@ int main()
         iteration++;
 
         bitmap->DrawBorder(GREEN);
-
-        BitmapWindow1::SetPixels(bitmap);
-        BitmapWindow1::Update();
+        window->SetPixels(bitmap);
+        window->Update();
     }
 
     return 0;
