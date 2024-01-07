@@ -50,6 +50,24 @@ struct Camera
     float pitch;
 };
 
+inline void Vector3Print(Vector3 v)
+{
+    // printf("<%f,%f,%f>", v.x, v.y, v.z);
+    cout << "<" << v.x << "," << v.y << "," << v.z << ">" << endl;
+}
+inline void Vector4Print(Vector4 v)
+{
+    // printf("<%f,%f,%f,%f>", v.x, v.y, v.z, v.w);
+    cout << "<" << v.x << "," << v.y << "," << v.z << "," << v.w << ">" << endl;
+}
+inline void MatrixPrint(Matrix m)
+{
+    cout << m.m[0][0] << "," << m.m[0][1] << "," << m.m[0][2] << "," << m.m[0][3] << endl;
+    cout << m.m[1][0] << "," << m.m[1][1] << "," << m.m[1][2] << "," << m.m[1][3] << endl;
+    cout << m.m[2][0] << "," << m.m[2][1] << "," << m.m[2][2] << "," << m.m[2][3] << endl;
+    cout << m.m[3][0] << "," << m.m[3][1] << "," << m.m[3][2] << "," << m.m[3][3] << endl;
+}
+
 inline int MathSign(float value)
 {
     if (value > 0) { return  1; }
@@ -124,16 +142,6 @@ inline float MathPingPong(float value, float length)
 inline float MathToRadians(float degs)
 {
     return degs * ((float)M_PI / 180.0f);
-}
-inline void Vector3Print(Vector3 v)
-{
-    // printf("<%f,%f,%f>", v.x, v.y, v.z);
-    cout << "<" << v.x << "," << v.y << "," << v.z << ">" << endl;
-}
-inline void Vector4Print(Vector4 v)
-{
-    // printf("<%f,%f,%f,%f>", v.x, v.y, v.z, v.w);
-    cout << "<" << v.x << "," << v.y << "," << v.z << "," << v.w << ">" << endl;
 }
 inline Vector3 Vector3Zero()
 {
@@ -387,13 +395,6 @@ inline Vector3 operator *= (Vector3& v, Matrix m)
 
     return v;
 }
-inline void MatrixPrint(Matrix m)
-{
-    cout << m.m[0][0] << "," << m.m[0][1] << "," << m.m[0][2] << "," << m.m[0][3] << endl;
-    cout << m.m[1][0] << "," << m.m[1][1] << "," << m.m[1][2] << "," << m.m[1][3] << endl;
-    cout << m.m[2][0] << "," << m.m[2][1] << "," << m.m[2][2] << "," << m.m[2][3] << endl;
-    cout << m.m[3][0] << "," << m.m[3][1] << "," << m.m[3][2] << "," << m.m[3][3] << endl;
-}
 inline Matrix MatrixIdentity()
 {
     return
@@ -404,14 +405,14 @@ inline Matrix MatrixIdentity()
         0, 0, 0, 1,
     };
 }
-inline Matrix MatrixTranspose(Matrix a)
+inline Matrix MatrixTranspose(Matrix m)
 {
-    return Matrix
+    return
     {
-        a.m[0][0],a.m[1][0],a.m[2][0],a.m[3][0],
-        a.m[0][1],a.m[1][1],a.m[2][1],a.m[3][1],
-        a.m[0][2],a.m[1][2],a.m[2][2],a.m[3][2],
-        a.m[0][3],a.m[1][3],a.m[2][3],a.m[3][3]
+        m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0],
+        m.m[0][1], m.m[1][1], m.m[2][1], m.m[3][1],
+        m.m[0][2], m.m[1][2], m.m[2][2], m.m[3][2],
+        m.m[0][3], m.m[1][3], m.m[2][3], m.m[3][3]
     };
 }
 inline Matrix MatrixTranslate(Vector3 v)
