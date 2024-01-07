@@ -252,7 +252,7 @@ public:
 
     void Fill(Pixel pixel)
     {
-        // TODO Move to BeginDraw()
+        // TODO move to BeginDraw()
         fill(zbuffer.begin(), zbuffer.end(), 100000000.0f);
         fill(pixels.begin(), pixels.end(), pixel);
     }
