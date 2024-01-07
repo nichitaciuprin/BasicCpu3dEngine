@@ -175,7 +175,7 @@ void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
             {
                 output.push_back(p0);
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.z) / diff.z);
+                auto newPoint = p0 + diff * (offset - p0.z) / diff.z;
                 newPoint.z = offset;
                 output.push_back(newPoint);
                 break;
@@ -183,7 +183,7 @@ void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
             /* 01 */ case 1:
             {
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.z) / diff.z);
+                auto newPoint = p0 + diff * (offset - p0.z) / diff.z;
                 newPoint.z = offset;
                 output.push_back(newPoint);
                 break;
@@ -220,7 +220,7 @@ void ClipPoligonLeft(vector<Vector3>& input, vector<Vector3>& output)
             {
                 output.push_back(p0);
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                auto newPoint = p0 + diff * (offset - p0.x) / diff.x;
                 newPoint.x = offset;
                 output.push_back(newPoint);
                 break;
@@ -228,7 +228,7 @@ void ClipPoligonLeft(vector<Vector3>& input, vector<Vector3>& output)
             /* 01 */ case 1:
             {
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                auto newPoint = p0 + diff * (offset - p0.x) / diff.x;
                 newPoint.x = offset;
                 output.push_back(newPoint);
                 break;
@@ -265,7 +265,7 @@ void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
             {
                 output.push_back(p0);
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                auto newPoint = p0 + diff * (offset - p0.x) / diff.x;
                 newPoint.x = offset;
                 output.push_back(newPoint);
                 break;
@@ -273,7 +273,7 @@ void ClipPoligonRight(vector<Vector3>& input, vector<Vector3>& output)
             /* 01 */ case 1:
             {
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.x) / diff.x);
+                auto newPoint = p0 + diff * (offset - p0.x) / diff.x;
                 newPoint.x = offset;
                 output.push_back(newPoint);
                 break;
@@ -310,7 +310,7 @@ void ClipPoligonTop(vector<Vector3>& input, vector<Vector3>& output)
             {
                 output.push_back(p0);
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                auto newPoint = p0 + diff * (offset - p0.y) / diff.y;
                 newPoint.y = offset;
                 output.push_back(newPoint);
                 break;
@@ -318,7 +318,7 @@ void ClipPoligonTop(vector<Vector3>& input, vector<Vector3>& output)
             /* 01 */ case 1:
             {
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                auto newPoint = p0 + diff * (offset - p0.y) / diff.y;
                 newPoint.y = offset;
                 output.push_back(newPoint);
                 break;
@@ -355,7 +355,7 @@ void ClipPoligonBottom(vector<Vector3>& input, vector<Vector3>& output)
             {
                 output.push_back(p0);
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                auto newPoint = p0 + diff * (offset - p0.y) / diff.y;
                 newPoint.y = offset;
                 output.push_back(newPoint);
                 break;
@@ -363,7 +363,7 @@ void ClipPoligonBottom(vector<Vector3>& input, vector<Vector3>& output)
             /* 01 */ case 1:
             {
                 auto diff = p1 - p0;
-                auto newPoint = (p0 + diff * (offset - p0.y) / diff.y);
+                auto newPoint = p0 + diff * (offset - p0.y) / diff.y;
                 newPoint.y = offset;
                 output.push_back(newPoint);
                 break;
