@@ -75,9 +75,9 @@ void main2()
             bitmap->SetPixel((int)p0.x, (int)p0.y, RED);
             bitmap->SetPixel((int)p1.x, (int)p1.y, RED);
             bitmap->SetPixel((int)p2.x, (int)p2.y, RED);
-            // bitmap->DrawLine3(p0, p2, RED);
-            // bitmap->DrawLine3(p0, p1, RED);
-            // bitmap->DrawLine3(p1, p2, RED);
+            // bitmap->DrawLine(p0, p2, RED);
+            // bitmap->DrawLine(p0, p1, RED);
+            // bitmap->DrawLine(p1, p2, RED);
             // bitmap->DrawLineShort((int)p0.x, (int)p0.y, (int)p2.x, (int)p2.y, RED);
             // bitmap->DrawLineShort((int)p0.x, (int)p0.y, (int)p1.x, (int)p1.y, RED);
             // bitmap->DrawLineShort((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y, RED);

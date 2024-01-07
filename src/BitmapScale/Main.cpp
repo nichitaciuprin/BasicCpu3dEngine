@@ -24,22 +24,22 @@ void main2()
         {
             Vector3 p0 = { 1, 2, zFar };
             Vector3 p1 = { 8, 2, zClose };
-            bitmap->DrawLine3(p0, p1, RED);
+            bitmap->DrawLine(p0, p1, RED);
         }
         {
             Vector3 p0 = { 7, 1, zFar };
             Vector3 p1 = { 7, 8, zClose };
-            bitmap->DrawLine3(p0, p1, GREEN);
+            bitmap->DrawLine(p0, p1, GREEN);
         }
         {
             Vector3 p1 = { 8, 7, zFar };
             Vector3 p0 = { 1, 7, zClose };
-            bitmap->DrawLine3(p0, p1, BLUE);
+            bitmap->DrawLine(p0, p1, BLUE);
         }
         {
             Vector3 p1 = { 2, 8, zFar };
             Vector3 p0 = { 2, 1, zClose };
-            bitmap->DrawLine3(p0, p1, YELLOW);
+            bitmap->DrawLine(p0, p1, YELLOW);
         }
 
         BitmapWindow1::SetPixels2(bitmap, scale);
