@@ -283,6 +283,7 @@ public:
         if (v1.y > v2.y) swap(v1, v2);
         if (v0.y > v1.y) swap(v0, v1);
 
+        // TODO maybe remove Vector2Int
         Vector2Int p0 = { (int)v0.x, (int)v0.y };
         Vector2Int p1 = { (int)v1.x, (int)v1.y };
         Vector2Int p2 = { (int)v2.x, (int)v2.y };
@@ -414,38 +415,17 @@ public:
     }
     void SetPixel(int x, int y, Pixel pixel)
     {
-        // TODO remove guard
-        // if (x > width - 1) return;
-        // if (y > height - 1) return;
         auto i = x + y * width;
         pixels[i] = pixel;
-        // if (pixels[i] == BLACK)
-        //     pixels[i] = pixel;
-        // else
-        //     pixels[i] = (pixels[i] + pixel) / 2;
     }
     void SetPixelZ(int x, int y, float z, Pixel pixel)
     {
-        // TODO remove guard
-        // if (x > width - 1) return;
-        // if (y > height - 1) return;
-
         auto i = x + y * width;
-
-        // TODO maybe drop equal
         if (zbuffer[i] >= z)
         {
             zbuffer[i] = z;
-
-            // if (pixels[i] == BLACK)
-            //     pixels[i] = pixel;
-            // else
-            //     pixels[i] = (pixels[i] + pixel) / 2;
-
             pixels[i] = pixel;
         }
-
-        // pixels[i] = pixel;
     }
 
 private:
