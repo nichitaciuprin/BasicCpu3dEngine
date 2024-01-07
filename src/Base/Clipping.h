@@ -5,7 +5,7 @@
 
 bool ClipLineBack(Vector3& v0, Vector3& v1)
 {
-    float offset = 0;
+    float offset = 0.1f;
 
     int flags = 0;
 
