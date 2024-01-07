@@ -3,6 +3,8 @@
 
 #pragma once
 
+// TOOD find better place for colors
+
 typedef uint32_t Pixel;
 
 const Pixel BLACK      = 0x00000000;
@@ -56,69 +58,125 @@ public:
         fill(pixels.begin(), pixels.end(), pixel);
     }
 
-    void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
+    void DrawCube1(Matrix modelView)
     {
-        if (ClipLineBack(v0, v1)) return;
-
-        if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
-        if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
-
-        if (ClipLineLeft(v0, v1)) return;
-        if (ClipLineRight(v0, v1)) return;
-        if (ClipLineTop(v0, v1)) return;
-        if (ClipLineBottom(v0, v1)) return;
-
-        ToScreenSpace(v0);
-        ToScreenSpace(v1);
-
-        DrawLine3(v0, v1, pixel);
-    }
-    void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
-    {
-        if (ClipLineLeft(v0, v1)) return;
-        if (ClipLineRight(v0, v1)) return;
-        if (ClipLineTop(v0, v1)) return;
-        if (ClipLineBottom(v0, v1)) return;
-
-        ToScreenSpace(v0);
-        ToScreenSpace(v1);
-
-        DrawLine3(v0, v1, pixel);
-    }
-    void DrawLine3(Vector3 v0, Vector3 v1, Pixel pixel)
-    {
-        int x0 = (int)v0.x;
-        int y0 = (int)v0.y;
-
-        int x1 = (int)v1.x;
-        int y1 = (int)v1.y;
-
-        int dx, sx;
-        if (x0 < x1) { dx = x1 - x0; sx =  1; }
-        else         { dx = x0 - x1; sx = -1; }
-
-        int dy, sy;
-        if (y0 < y1) { dy = y1 - y0; sy =  1; }
-        else         { dy = y0 - y1; sy = -1; }
-
-        int max; int* axis1; int val1;
-        int min; int* axis2; int val2;
-        if (dx > dy) { max = dx; axis1 = &y0; val1 = sy; min = dy; axis2 = &x0; val2 = sx; }
-        else         { max = dy; axis1 = &x0; val1 = sx; min = dx; axis2 = &y0; val2 = sy; }
-
-        int err = max / 2 - min;
-
-        float offset = (v1.z - v0.z) / max;
-        float z = v0.z;
-
-        for (int i = 0; i < max; i++)
+        int indices[12][2] =
         {
-            SetPixel2(x0, y0, z, pixel);
-            if (err < 0) { err += max; (*axis1) += val1; }
-                         { err -= min; (*axis2) += val2; }
-            z += offset;
+            0,1,
+            1,5,
+            5,4,
+            4,0,
+            2,3,
+            3,7,
+            7,6,
+            6,2,
+            0,2,
+            1,3,
+            5,7,
+            4,6
+        };
+
+        for (size_t i = 0; i < 12; i++)
+        {
+            auto i0 = indices[i][0];
+            auto i1 = indices[i][1];
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            DrawLine1(v0, v1, RED);
         }
-        SetPixel2(x0, y0, z, pixel);
+    }
+    void DrawCube2(Matrix modelView)
+    {
+        int indexData[12][3] =
+        {
+            0, 2, 6,
+            6, 4, 0,
+            4, 6, 7,
+            7, 5, 4,
+            5, 7, 3,
+            3, 1, 5,
+            1, 3, 2,
+            2, 0, 1,
+            2, 3, 7,
+            7, 6, 2,
+            1, 0, 4,
+            4, 5, 1,
+        };
+
+        {
+            auto i0 = indexData[0][0];
+            auto i1 = indexData[0][1];
+            auto i2 = indexData[0][2];
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
+        }
+        {
+            auto i0 = indexData[1][0];
+            auto i1 = indexData[1][1];
+            auto i2 = indexData[1][2];
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
+        }
+        {
+            auto i0 = indexData[3][0];
+            auto i1 = indexData[3][1];
+            auto i2 = indexData[3][2];
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
+        }
+        {
+            auto i0 = indexData[4][0];
+            auto i1 = indexData[4][1];
+            auto i2 = indexData[4][2];
+            auto v0 = Model::Cube::vertices[i0] * modelView;
+            auto v1 = Model::Cube::vertices[i1] * modelView;
+            auto v2 = Model::Cube::vertices[i2] * modelView;
+            DrawTriangle1(v0, v1, v2, RED);
+        }
+    }
+    void DrawCube3(Matrix modelView)
+    {
+        int indexData[6][4] =
+        {
+            2, 6, 4, 0,
+            6, 7, 5, 4,
+            7, 3, 1, 5,
+            3, 2, 0, 1,
+            1, 0, 4, 5,
+            3, 7, 6, 2,
+        };
+
+        #define DRAW(INDEX, COLOR)                \
+        {                                         \
+            auto i0 = indexData[INDEX][0];        \
+            auto i1 = indexData[INDEX][1];        \
+            auto i2 = indexData[INDEX][2];        \
+            auto i3 = indexData[INDEX][3];        \
+            auto p0 = Model::Cube::vertices[i0]; \
+            auto p1 = Model::Cube::vertices[i1]; \
+            auto p2 = Model::Cube::vertices[i2]; \
+            auto p3 = Model::Cube::vertices[i3]; \
+            p0 *= modelView;                      \
+            p1 *= modelView;                      \
+            p2 *= modelView;                      \
+            p3 *= modelView;                      \
+            DrawPoligon(p0, p1, p2, p3, COLOR);   \
+        }                                         \
+
+        DRAW(0, CYAN)
+        DRAW(1, GREEN)
+        DRAW(2, BLUE)
+        DRAW(3, YELLOW)
+        DRAW(4, MAGENTA)
+        DRAW(5, RED)
+
+        #undef DRAW
     }
 
     void DrawPoligon(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Pixel pixel)
@@ -290,6 +348,71 @@ public:
         DrawHorizontalLine(y, *xl, *xr, *zl, *zr, pixel);
     }
 
+    void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
+    {
+        if (ClipLineBack(v0, v1)) return;
+
+        if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
+        if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
+
+        if (ClipLineLeft(v0, v1)) return;
+        if (ClipLineRight(v0, v1)) return;
+        if (ClipLineTop(v0, v1)) return;
+        if (ClipLineBottom(v0, v1)) return;
+
+        ToScreenSpace(v0);
+        ToScreenSpace(v1);
+
+        DrawLine3(v0, v1, pixel);
+    }
+    void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
+    {
+        if (ClipLineLeft(v0, v1)) return;
+        if (ClipLineRight(v0, v1)) return;
+        if (ClipLineTop(v0, v1)) return;
+        if (ClipLineBottom(v0, v1)) return;
+
+        ToScreenSpace(v0);
+        ToScreenSpace(v1);
+
+        DrawLine3(v0, v1, pixel);
+    }
+    void DrawLine3(Vector3 v0, Vector3 v1, Pixel pixel)
+    {
+        int x0 = (int)v0.x;
+        int y0 = (int)v0.y;
+
+        int x1 = (int)v1.x;
+        int y1 = (int)v1.y;
+
+        int dx, sx;
+        if (x0 < x1) { dx = x1 - x0; sx =  1; }
+        else         { dx = x0 - x1; sx = -1; }
+
+        int dy, sy;
+        if (y0 < y1) { dy = y1 - y0; sy =  1; }
+        else         { dy = y0 - y1; sy = -1; }
+
+        int max; int* axis1; int val1;
+        int min; int* axis2; int val2;
+        if (dx > dy) { max = dx; axis1 = &y0; val1 = sy; min = dy; axis2 = &x0; val2 = sx; }
+        else         { max = dy; axis1 = &x0; val1 = sx; min = dx; axis2 = &y0; val2 = sy; }
+
+        int err = max / 2 - min;
+
+        float offset = (v1.z - v0.z) / max;
+        float z = v0.z;
+
+        for (int i = 0; i < max; i++)
+        {
+            SetPixel2(x0, y0, z, pixel);
+            if (err < 0) { err += max; (*axis1) += val1; }
+                         { err -= min; (*axis2) += val2; }
+            z += offset;
+        }
+        SetPixel2(x0, y0, z, pixel);
+    }
+
     void DrawHorizontalLine(int y, int xLeft, int xRight, float zLeft, float zRight, Pixel pixel)
     {
         int count = xRight - xLeft;
@@ -302,163 +425,6 @@ public:
             SetPixel2(x, y, zLeft, pixel);
             zLeft += offset;
         }
-    }
-
-    void SetPixel(int x, int y, Pixel pixel)
-    {
-        // TODO remove guard
-        // if (x > width - 1) return;
-        // if (y > height - 1) return;
-        auto i = x + y * width;
-        pixels[i] = pixel;
-        // if (pixels[i] == BLACK)
-        //     pixels[i] = pixel;
-        // else
-        //     pixels[i] = (pixels[i] + pixel) / 2;
-    }
-    void SetPixel2(int x, int y, float z, Pixel pixel)
-    {
-        // TODO remove guard
-        // if (x > width - 1) return;
-        // if (y > height - 1) return;
-
-        auto i = x + y * width;
-
-        // TODO maybe drop equal
-        if (zbuffer[i] >= z)
-        {
-            zbuffer[i] = z;
-
-            // if (pixels[i] == BLACK)
-            //     pixels[i] = pixel;
-            // else
-            //     pixels[i] = (pixels[i] + pixel) / 2;
-
-            pixels[i] = pixel;
-        }
-
-        // pixels[i] = pixel;
-    }
-
-    void DrawCube1(Matrix modelView)
-    {
-        int indices[12][2] =
-        {
-            0,1,
-            1,5,
-            5,4,
-            4,0,
-            2,3,
-            3,7,
-            7,6,
-            6,2,
-            0,2,
-            1,3,
-            5,7,
-            4,6
-        };
-
-        for (size_t i = 0; i < 12; i++)
-        {
-            auto i0 = indices[i][0];
-            auto i1 = indices[i][1];
-            auto v0 = Model::Cube::vertices[i0] * modelView;
-            auto v1 = Model::Cube::vertices[i1] * modelView;
-            DrawLine1(v0, v1, RED);
-        }
-    }
-    void DrawCube2(Matrix modelView)
-    {
-        int indexData[12][3] =
-        {
-            0, 2, 6,
-            6, 4, 0,
-            4, 6, 7,
-            7, 5, 4,
-            5, 7, 3,
-            3, 1, 5,
-            1, 3, 2,
-            2, 0, 1,
-            2, 3, 7,
-            7, 6, 2,
-            1, 0, 4,
-            4, 5, 1,
-        };
-
-        {
-            auto i0 = indexData[0][0];
-            auto i1 = indexData[0][1];
-            auto i2 = indexData[0][2];
-            auto v0 = Model::Cube::vertices[i0] * modelView;
-            auto v1 = Model::Cube::vertices[i1] * modelView;
-            auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
-        }
-        {
-            auto i0 = indexData[1][0];
-            auto i1 = indexData[1][1];
-            auto i2 = indexData[1][2];
-            auto v0 = Model::Cube::vertices[i0] * modelView;
-            auto v1 = Model::Cube::vertices[i1] * modelView;
-            auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
-        }
-        {
-            auto i0 = indexData[3][0];
-            auto i1 = indexData[3][1];
-            auto i2 = indexData[3][2];
-            auto v0 = Model::Cube::vertices[i0] * modelView;
-            auto v1 = Model::Cube::vertices[i1] * modelView;
-            auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
-        }
-        {
-            auto i0 = indexData[4][0];
-            auto i1 = indexData[4][1];
-            auto i2 = indexData[4][2];
-            auto v0 = Model::Cube::vertices[i0] * modelView;
-            auto v1 = Model::Cube::vertices[i1] * modelView;
-            auto v2 = Model::Cube::vertices[i2] * modelView;
-            DrawTriangle1(v0, v1, v2, RED);
-        }
-    }
-    void DrawCube3(Matrix modelView)
-    {
-        int indexData[6][4] =
-        {
-            2, 6, 4, 0,
-            6, 7, 5, 4,
-            7, 3, 1, 5,
-            3, 2, 0, 1,
-            1, 0, 4, 5,
-            3, 7, 6, 2,
-        };
-
-        #define DRAW(INDEX, COLOR)                \
-        {                                         \
-            auto i0 = indexData[INDEX][0];        \
-            auto i1 = indexData[INDEX][1];        \
-            auto i2 = indexData[INDEX][2];        \
-            auto i3 = indexData[INDEX][3];        \
-            auto p0 = Model::Cube::vertices[i0]; \
-            auto p1 = Model::Cube::vertices[i1]; \
-            auto p2 = Model::Cube::vertices[i2]; \
-            auto p3 = Model::Cube::vertices[i3]; \
-            p0 *= modelView;                      \
-            p1 *= modelView;                      \
-            p2 *= modelView;                      \
-            p3 *= modelView;                      \
-            DrawPoligon(p0, p1, p2, p3, COLOR);   \
-        }                                         \
-
-        DRAW(0, CYAN)
-        DRAW(1, GREEN)
-        DRAW(2, BLUE)
-        DRAW(3, YELLOW)
-        DRAW(4, MAGENTA)
-        DRAW(5, RED)
-
-        #undef DRAW
     }
 
     void ToScreenSpace(Vector3& point)
@@ -507,6 +473,42 @@ public:
 
             pixels[i] = pixel;
         }
+    }
+
+    void SetPixel(int x, int y, Pixel pixel)
+    {
+        // TODO remove guard
+        // if (x > width - 1) return;
+        // if (y > height - 1) return;
+        auto i = x + y * width;
+        pixels[i] = pixel;
+        // if (pixels[i] == BLACK)
+        //     pixels[i] = pixel;
+        // else
+        //     pixels[i] = (pixels[i] + pixel) / 2;
+    }
+    void SetPixel2(int x, int y, float z, Pixel pixel)
+    {
+        // TODO remove guard
+        // if (x > width - 1) return;
+        // if (y > height - 1) return;
+
+        auto i = x + y * width;
+
+        // TODO maybe drop equal
+        if (zbuffer[i] >= z)
+        {
+            zbuffer[i] = z;
+
+            // if (pixels[i] == BLACK)
+            //     pixels[i] = pixel;
+            // else
+            //     pixels[i] = (pixels[i] + pixel) / 2;
+
+            pixels[i] = pixel;
+        }
+
+        // pixels[i] = pixel;
     }
 
 private:
