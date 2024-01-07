@@ -60,16 +60,26 @@ public:
     void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
     {
         if (ClipLineBack(v0, v1)) return;
+
         if (v0.z != 0) { v0.x /= v0.z; v0.y /= v0.z; };
         if (v1.z != 0) { v1.x /= v1.z; v1.y /= v1.z; };
-        DrawLine2(v0, v1, pixel);
+
+        if (ClipLineLeft(v0, v1)) return;
+        if (ClipLineRight(v0, v1)) return;
+        if (ClipLineTop(v0, v1)) return;
+        if (ClipLineBottom(v0, v1)) return;
+
+        ToScreenSpace(v0);
+        ToScreenSpace(v1);
+
+        DrawLine3(v0, v1, pixel);
     }
     void DrawLine2(Vector3 v0, Vector3 v1, Pixel pixel)
     {
-        if (ClipLineLeft   (v0, v1)) return;
-        if (ClipLineRight  (v0, v1)) return;
-        if (ClipLineTop    (v0, v1)) return;
-        if (ClipLineBottom (v0, v1)) return;
+        if (ClipLineLeft(v0, v1)) return;
+        if (ClipLineRight(v0, v1)) return;
+        if (ClipLineTop(v0, v1)) return;
+        if (ClipLineBottom(v0, v1)) return;
 
         ToScreenSpace(v0);
         ToScreenSpace(v1);
