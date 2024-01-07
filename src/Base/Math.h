@@ -677,6 +677,8 @@ inline void ClipLine(Vector3& p0, Vector3& p1, int& outCode)
 }
 inline bool ClipLineBack(Vector3& v0, Vector3& v1)
 {
+    float offset = 0;
+
     int state = 0;
 
     if (v0.z < 0) state += 1;
@@ -684,9 +686,21 @@ inline bool ClipLineBack(Vector3& v0, Vector3& v1)
 
     switch (state)
     {
-        case    /* 00 */ 0: {                                                   return false; }
-        case    /* 01 */ 1: { v0 += (v0 - v1) * v0.z / (v1.z - v0.z); v0.z = 0; return false; }
-        case    /* 10 */ 2: { v1 += (v1 - v0) * v1.z / (v0.z - v1.z); v1.z = 0; return false; }
-        default /* 11 */  : {                                                   return true;  }
+        case /* 00 */ 0: return false;
+        case /* 01 */ 1:
+        {
+            auto diff = v0 - v1;
+            v0 = v0 + diff * (offset - v0.z) / diff.z;
+            v0.z = offset;
+            return false;
+        }
+        case /* 10 */ 2:
+        {
+            auto diff = v1 - v0;
+            v1 = v1 + diff * (offset - v1.z) / diff.z;
+            v1.z = offset;
+            return false;
+        }
+        default /* 11 */ : return true;
     }
 }
