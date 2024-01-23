@@ -72,44 +72,39 @@ bool InsideSphere(Vector3 point, Sphere sphere)
 }
 bool RaycastFull1(Vector3 origin, Vector3 dirNorm, Sphere sphere)
 {
-    // TODO must be tested
+    auto radiusSquared = sphere.radius * sphere.radius;
 
     auto v1 = sphere.position - origin;
-    auto v2Length = Vector3Dot(dirNorm, v1);
+    auto v2Length = Vector3Dot(v1, dirNorm);
     auto v2 = dirNorm * v2Length;
     auto v3 = v2 - v1;
     auto v3LengthSquared = Vector3LengthSquared(v3);
-    auto radiusSquared = sphere.radius * sphere.radius;
 
-    // no intersection
     if (v3LengthSquared > radiusSquared) return false;
 
-    auto offset = MathSqrt(radiusSquared - v3LengthSquared);
+    auto offsetSquared = radiusSquared - v3LengthSquared;
+    auto offset = MathSqrt(offsetSquared);
 
     auto dist1 = v2Length - offset;
     auto dist2 = v2Length + offset;
 
-    auto point1 = origin + dirNorm * dist1;
-    auto point2 = origin + dirNorm * dist2;
+    auto point1 = origin + dirNorm * dist1; Vector3Print(point1);
+    auto point2 = origin + dirNorm * dist2; Vector3Print(point2);
 
-    auto normal1 = point1 - sphere.position;
-    auto normal2 = point2 - sphere.position;
-
-    normal1 = Vector3Normalize(normal1);
-    normal2 = Vector3Normalize(normal2);
+    auto normal1 = Vector3Normalize(point1 - sphere.position);
+    auto normal2 = Vector3Normalize(point2 - sphere.position);
 
     return true;
 }
 bool RaycastFull2(Vector3 origin, Vector3 dirNorm, Sphere sphere)
 {
-    // TODO must be tested
+    auto radiusSquared = sphere.radius * sphere.radius;
 
     auto diff = origin - sphere.position;
-    auto b = Vector3Dot(dirNorm, diff) * 2;
-    auto c = Vector3LengthSquared(diff) - (sphere.radius * sphere.radius);
+    auto b = Vector3Dot(diff, dirNorm) * 2;
+    auto c = Vector3LengthSquared(diff) - radiusSquared;
     auto deltaSquared = b * b - 4 * c;
 
-    // no intersection
     if (deltaSquared < 0) return false;
 
     auto delta = MathSqrt(deltaSquared);
@@ -120,11 +115,8 @@ bool RaycastFull2(Vector3 origin, Vector3 dirNorm, Sphere sphere)
     auto point1 = origin + dirNorm * dist1;
     auto point2 = origin + dirNorm * dist2;
 
-    auto normal1 = point1 - sphere.position;
-    auto normal2 = point2 - sphere.position;
-
-    normal1 = Vector3Normalize(normal1);
-    normal2 = Vector3Normalize(normal2);
+    auto normal1 = Vector3Normalize(point1 - sphere.position);
+    auto normal2 = Vector3Normalize(point2 - sphere.position);
 
     return true;
 }
