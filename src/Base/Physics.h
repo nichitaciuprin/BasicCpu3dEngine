@@ -88,8 +88,8 @@ bool RaycastFull1(Vector3 origin, Vector3 dirNorm, Sphere sphere)
     auto dist1 = v2Length - offset;
     auto dist2 = v2Length + offset;
 
-    auto point1 = origin + dirNorm * dist1; Vector3Print(point1);
-    auto point2 = origin + dirNorm * dist2; Vector3Print(point2);
+    auto point1 = origin + dirNorm * dist1;
+    auto point2 = origin + dirNorm * dist2;
 
     auto normal1 = Vector3Normalize(point1 - sphere.position);
     auto normal2 = Vector3Normalize(point2 - sphere.position);
