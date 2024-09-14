@@ -7,17 +7,17 @@ set build=%batdir%build
 set deps=%root%\deps
 set exitiferror=if %errorlevel% neq 0 exit /b %errorlevel%
 
-set INCLUDE=
-set INCLUDE=%INCLUDE%%deps%\MSVC\include;
-set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
-set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\um;
-set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\shared;
-set INCLUDE=%INCLUDE%%deps%\BaseOld;
+set include=
+set include=%include%%deps%\MSVC\include;
+set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
+set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\um;
+set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\shared;
+set include=%include%%deps%\BaseOld;
 
-set LIB=
-set LIB=%LIB%%deps%\MSVC\lib\x64;
-set LIB=%LIB%%deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
-set LIB=%LIB%%deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
+set lib=
+set lib=%lib%%deps%\MSVC\lib\x64;
+set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
+set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
 
 set LINKER_FLAGS=/INCREMENTAL:NO
 set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
