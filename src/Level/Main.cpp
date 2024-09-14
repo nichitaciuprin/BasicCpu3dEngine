@@ -25,7 +25,6 @@ using namespace std;
 #include "SysHelper.h"
 
 #include "Subgen.h"
-// #include "Math2.h"
 #include "Helper.h"
 
 #include "Models.h"

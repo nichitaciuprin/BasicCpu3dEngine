@@ -732,7 +732,8 @@ inline Matrix MatrixView(Vector3 eye, float yaw, float pitch)
 {
     eye = Vector3Negative(eye);
     Matrix mat1 = MatrixTranslate(eye);
-    Matrix mat2 = MatrixRotateY(-yaw);
+    // TODO
+    Matrix mat2 = MatrixRotateY(yaw);
     Matrix mat3 = MatrixRotateX(-pitch);
     Matrix result;
     result = mat1;
