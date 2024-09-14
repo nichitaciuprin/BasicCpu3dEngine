@@ -12,15 +12,16 @@ set _deps=%_batdir%..\..\deps
 if exist %_build% rmdir /S /Q %_build%
 mkdir %_build%
 
-set INCLUDE=^
-%_deps%\MSVC\include;^
-%_deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;^
-%_deps%\WindowsKits\10\Include\10.0.22621.0\um;^
-%_deps%\WindowsKits\10\Include\10.0.22621.0\shared
-set LIB=^
-%_deps%\MSVC\lib\x64;^
-%_deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;^
-%_deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64
+set INCLUDE=
+set INCLUDE=%INCLUDE%%_deps%\MSVC\include;
+set INCLUDE=%INCLUDE%%_deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
+set INCLUDE=%INCLUDE%%_deps%\WindowsKits\10\Include\10.0.22621.0\um;
+set INCLUDE=%INCLUDE%%_deps%\WindowsKits\10\Include\10.0.22621.0\shared;
+
+set LIB=
+set LIB=%LIB%%_deps%\MSVC\lib\x64;
+set LIB=%LIB%%_deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
+set LIB=%LIB%%_deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
 
 set LINKER_FLAGS=/INCREMENTAL:NO
 set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
