@@ -316,3 +316,60 @@ LRESULT CALLBACK BitmapWindow::MessageHandler(HWND hwnd, UINT message, WPARAM wP
 bool           BitmapWindow::_windowClassRegistered = false;
 const LPCWSTR  BitmapWindow::_windowClassName = L"WindowClass1";
 const LPCWSTR  BitmapWindow::_windowName = L"WindowName1";
+
+// BitmapWindow* CreateBitmapWindow(int x, int y, int clientWidth, int clientHeight)
+// {
+//     return new BitmapWindow(x, y, clientWidth, clientHeight);
+// }
+
+class BitmapWindow2
+{
+public:
+    BitmapWindow2(int x, int y, int clientWidth, int clientHeight);
+    ~BitmapWindow2();
+
+    bool Exists() const;
+    void Update();
+
+    // void SetPixel(int x, int y, uint32_t pixel);
+    void SetPixels(uint32_t* pixels, int width, int height);
+    // void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
+    // int GetClientWidth() const;
+    // int GetClientHeight() const;
+    InputState GetInputState();
+
+private:
+    BitmapWindow* instance;
+};
+
+BitmapWindow2::BitmapWindow2(int x, int y, int clientWidth, int clientHeight)
+{
+    instance = new BitmapWindow(x, y, clientWidth, clientHeight);
+}
+BitmapWindow2::~BitmapWindow2()
+{
+    delete instance;
+}
+
+bool BitmapWindow2::Exists() const
+{
+    return instance->Exists();
+}
+void BitmapWindow2::Update()
+{
+    instance->Update();
+}
+void BitmapWindow2::SetPixels(uint32_t* pixels, int width, int height)
+{
+    instance->SetPixels(pixels, width, height);
+}
+InputState BitmapWindow2::GetInputState()
+{
+    return instance->GetInputState();
+}
+// void BitmapWindow2::SetPixel(int x, int y, uint32_t pixel);
+// void BitmapWindow2::SetPixels(uint32_t* pixels, int width, int height);
+// void BitmapWindow2::SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
+// int BitmapWindow2::GetClientWidth() const;
+// int BitmapWindow2::GetClientHeight() const;
+// InputState BitmapWindow2::GetInputState();

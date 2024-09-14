@@ -22,7 +22,8 @@ using namespace std;
 #include "Models.h"
 #include "Clipping.h"
 #include "Bitmap.h"
-#include "BitmapWindow.h"
+#include "BitmapWindow2.h"
+
 
 void main2()
 {
@@ -30,7 +31,7 @@ void main2()
     auto height = 512;
 
     auto bitmap = make_unique<Bitmap>(width, height);
-    auto window = make_unique<BitmapWindow>(700, 100, width, height);
+    auto window = make_unique<BitmapWindow2>(700, 100, width, height);
 
     Camera camera = { 0, 1, 95 };
 
@@ -63,6 +64,7 @@ void main2()
             bitmap->DrawPoligon1(p0, p1, p2, p3, WHITE);
         }
 
+        // TODO fix this
         // bitmap->ApplyBlackWhiteColorDepth();
 
         {
@@ -83,6 +85,7 @@ void main2()
         }
 
         window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
+
         window->Update();
     }
 }
