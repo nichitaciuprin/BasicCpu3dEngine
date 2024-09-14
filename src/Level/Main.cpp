@@ -27,7 +27,6 @@ using namespace std;
 #include "Clipping.h"
 #include "Time2.h"
 #include "Subgen.h"
-#include "Physics.h"
 #include "Bitmap.h"
 #include "BitmapWindow.h"
 
