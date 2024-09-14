@@ -37,6 +37,7 @@ void main2()
     while (window->Exists())
     {
         CheckFPS();
+
         bitmap->Fill(BLACK);
 
         auto state = window->GetInputState();
@@ -62,7 +63,7 @@ void main2()
             bitmap->DrawPoligon1(p0, p1, p2, p3, WHITE);
         }
 
-        bitmap->ApplyBlackWhiteColorDepth();
+        // bitmap->ApplyBlackWhiteColorDepth();
 
         {
             auto time = (float)clock() / 600;
