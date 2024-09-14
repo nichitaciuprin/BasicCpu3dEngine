@@ -14,14 +14,6 @@
 
 using namespace std;
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#ifndef UNICODE
-#define UNICODE
-#endif
-#include <windows.h>
-#include <winuser.h>
-
 #include "SysHelper.h"
 
 #include "Subgen.h"
@@ -30,6 +22,15 @@ using namespace std;
 #include "Models.h"
 #include "Clipping.h"
 #include "Bitmap.h"
+
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#ifndef UNICODE
+#define UNICODE
+#endif
+#include <windows.h>
+#include <winuser.h>
+
 #include "BitmapWindow.h"
 
 void main2()
