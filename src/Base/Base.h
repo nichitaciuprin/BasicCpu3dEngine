@@ -21,7 +21,6 @@ using namespace std;
 #include <windows.h>
 #include <winuser.h>
 
-#include "Debug.h"
 #include "Math.h"
 #include "Models.h"
 #include "Clipping.h"
