@@ -1,5 +1,5 @@
 @echo off
-SETLOCAL
+setlocal
 
 @REM paths from bat file
 set _batdir=%~dp0
