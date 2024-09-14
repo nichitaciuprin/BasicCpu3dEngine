@@ -1,5 +1,12 @@
 #pragma once
 
+struct InputState
+{
+    bool w, a, s, d;
+    bool left, up, down, right;
+    bool e, q;
+};
+
 class BitmapWindow
 {
 public:

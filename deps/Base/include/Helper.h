@@ -16,9 +16,9 @@
 
 #pragma once
 
-#define M_PI        3.14159265358979323846
-#define M_PI_MUL_2  6.28318530717958647692
-#define M_PI_DIV_2  1.57079632679489661923
+#define M_PI        (float)3.14159265358979323846
+#define M_PI_MUL_2  (float)6.28318530717958647692
+#define M_PI_DIV_2  (float)1.57079632679489661923
 
 struct Vector2
 {
@@ -172,12 +172,12 @@ inline float MathPingPong(float value, float length)
 }
 inline float MathToDegree(float radians)
 {
-    float _180_div_pi = 57.2957795130823208768;
+    float _180_div_pi = (float)57.2957795130823208768;
     return _180_div_pi * radians;
 }
 inline float MathToRadians(float degree)
 {
-    float _pi_div_180 = 0.01745329251994329576;
+    float _pi_div_180 = (float)0.01745329251994329576;
     return _pi_div_180 * degree;
 }
 
@@ -481,38 +481,6 @@ inline Vector3 Vector3MoveTowards5(Vector3 source, Vector3 target, Vector3* velo
     *velocity = newVelocity;
 
     return result;
-}
-
-inline float SmoothDamp(float current, float target, float* currentVelocity, float smoothTime, float maxSpeed, float deltaTime)
-{
-    // Based on Game Programming Gems 4 Chapter 1.10
-    return 0;
-
-    // smoothTime = Mathf.Max(0.0001F, smoothTime);
-    // float omega = 2F / smoothTime;
-
-    // float x = omega * deltaTime;
-    // float exp = 1F / (1F + x + 0.48F * x * x + 0.235F * x * x * x);
-    // float change = current - target;
-    // float originalTo = target;
-
-    // // Clamp maximum speed
-    // float maxChange = maxSpeed * smoothTime;
-    // change = Mathf.Clamp(change, -maxChange, maxChange);
-    // target = current - change;
-
-    // float temp = (currentVelocity + omega * change) * deltaTime;
-    // currentVelocity = (currentVelocity - omega * temp) * exp;
-    // float output = target + (change + temp) * exp;
-
-    // // Prevent overshooting
-    // if (originalTo - current > 0.0F == output > originalTo)
-    // {
-    //     output = originalTo;
-    //     currentVelocity = (output - originalTo) / deltaTime;
-    // }
-
-    // return output;
 }
 
 inline float Vector4Dot(Vector4 a, Vector4 b)
@@ -1366,58 +1334,3 @@ inline Pose GetWorldPose(Pose parentWorld, Pose childLocal)
     childLocal.rotation += parentWorld.rotation;
     return childLocal;
 }
-
-
-
-
-
-
-
-
-
-struct InputState
-{
-    bool w, a, s, d;
-    bool left, up, down, right;
-    bool e, q;
-};
-// inline Matrix MatrixView2(const Camera& camera)
-// {
-//     return MatrixView(camera.position, camera.yaw, camera.pitch);
-// }
-// inline void UpdateCameraRotation(Camera& camera, const InputState& inputState, float deltaTime)
-// {
-//     float speed = (float)M_PI;
-//     float speedDelta = speed * deltaTime;
-//     if (inputState.up)    camera.pitch += speedDelta;
-//     if (inputState.down)  camera.pitch -= speedDelta;
-//     if (inputState.right) camera.yaw   += speedDelta;
-//     if (inputState.left)  camera.yaw   -= speedDelta;
-
-//     // TODO review
-//     // Wrap yaw to avoid floating-point errors if we turn too far
-//     float M_PI2 = 2 * (float)M_PI;
-//     while (camera.yaw >=  M_PI2) camera.yaw -= M_PI2;
-//     while (camera.yaw <= -M_PI2) camera.yaw += M_PI2;
-
-//     // Clamp pitch to stop camera flipping upside down
-//     float degree = MathToRadians(85);
-//     if (camera.pitch >  degree) camera.pitch =  degree;
-//     if (camera.pitch < -degree) camera.pitch = -degree;
-// }
-// inline void UpdateCameraPosition(Camera& camera, const InputState& inputState, float deltaTime)
-// {
-//     auto matrix = MatrixView2(camera);
-//     Vector3 forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
-//     Vector3 up = Vector3Up();
-//     Vector3 right = Vector3Cross(up, forward);
-//     auto speed = 50.0f;
-//     auto speedDelta = speed * deltaTime;
-
-//     if (inputState.w) camera.position += forward * speedDelta;
-//     if (inputState.s) camera.position -= forward * speedDelta;
-//     if (inputState.d) camera.position += right   * speedDelta;
-//     if (inputState.a) camera.position -= right   * speedDelta;
-//     if (inputState.e) camera.position += up      * speedDelta;
-//     if (inputState.q) camera.position -= up      * speedDelta;
-// }
