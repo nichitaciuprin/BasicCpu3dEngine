@@ -22,11 +22,12 @@ using namespace std;
 #include <windows.h>
 #include <winuser.h>
 
+#include "SysHelper.h"
+
 #include "Math2.h"
+
 #include "Models.h"
 #include "Clipping.h"
-#include "SysHelper.h"
-#include "Subgen.h"
 #include "Bitmap.h"
 #include "BitmapWindow.h"
 
