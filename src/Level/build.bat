@@ -1,12 +1,9 @@
 @echo off
 setlocal
 
-@REM paths from bat file
-set batdir=%~dp0
-
-set build=%batdir%build
-
 set root=%~dp0..\..
+set batdir=%~dp0
+set build=%batdir%build
 set deps=%root%\deps
 
 set INCLUDE=
@@ -24,7 +21,6 @@ set LINKER_FLAGS=/INCREMENTAL:NO
 set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
 
 set _cl=%deps%\MSVC\bin\Hostx64\x64\cl.exe
-set _input=%_maincpp%
 set _output=/Fe"%build%\BoidsDirectX" /Fo"%build%\BoidsDirectX"
 set _optimimisationDisable=/Od
 set _optimimisationLevel2=/O2
