@@ -2,31 +2,30 @@
 setlocal
 
 @REM paths from bat file
-set _batdir=%~dp0
+set batdir=%~dp0
 
-set _build=%_batdir%build
-@REM set _deps=%_batdir%..\..\deps
+set build=%batdir%build
 
 set root=%~dp0..\..
-set _deps=%root%\deps
+set deps=%root%\deps
 
 set INCLUDE=
-set INCLUDE=%INCLUDE%%_deps%\MSVC\include;
-set INCLUDE=%INCLUDE%%_deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
-set INCLUDE=%INCLUDE%%_deps%\WindowsKits\10\Include\10.0.22621.0\um;
-set INCLUDE=%INCLUDE%%_deps%\WindowsKits\10\Include\10.0.22621.0\shared;
+set INCLUDE=%INCLUDE%%deps%\MSVC\include;
+set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
+set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\um;
+set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\shared;
 
 set LIB=
-set LIB=%LIB%%_deps%\MSVC\lib\x64;
-set LIB=%LIB%%_deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
-set LIB=%LIB%%_deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
+set LIB=%LIB%%deps%\MSVC\lib\x64;
+set LIB=%LIB%%deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
+set LIB=%LIB%%deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
 
 set LINKER_FLAGS=/INCREMENTAL:NO
 set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
 
-set _cl=%_deps%\MSVC\bin\Hostx64\x64\cl.exe
+set _cl=%deps%\MSVC\bin\Hostx64\x64\cl.exe
 set _input=%_maincpp%
-set _output=/Fe"%_build%\BoidsDirectX" /Fo"%_build%\BoidsDirectX"
+set _output=/Fe"%build%\BoidsDirectX" /Fo"%build%\BoidsDirectX"
 set _optimimisationDisable=/Od
 set _optimimisationLevel2=/O2
 set _enableWarningsLevel4=/W4
