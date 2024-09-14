@@ -1365,3 +1365,58 @@ inline Pose GetWorldPose(Pose parentWorld, Pose childLocal)
     childLocal.rotation += parentWorld.rotation;
     return childLocal;
 }
+
+
+
+
+
+
+
+
+
+struct InputState
+{
+    bool w, a, s, d;
+    bool left, up, down, right;
+    bool e, q;
+};
+// inline Matrix MatrixView2(const Camera& camera)
+// {
+//     return MatrixView(camera.position, camera.yaw, camera.pitch);
+// }
+// inline void UpdateCameraRotation(Camera& camera, const InputState& inputState, float deltaTime)
+// {
+//     float speed = (float)M_PI;
+//     float speedDelta = speed * deltaTime;
+//     if (inputState.up)    camera.pitch += speedDelta;
+//     if (inputState.down)  camera.pitch -= speedDelta;
+//     if (inputState.right) camera.yaw   += speedDelta;
+//     if (inputState.left)  camera.yaw   -= speedDelta;
+
+//     // TODO review
+//     // Wrap yaw to avoid floating-point errors if we turn too far
+//     float M_PI2 = 2 * (float)M_PI;
+//     while (camera.yaw >=  M_PI2) camera.yaw -= M_PI2;
+//     while (camera.yaw <= -M_PI2) camera.yaw += M_PI2;
+
+//     // Clamp pitch to stop camera flipping upside down
+//     float degree = MathToRadians(85);
+//     if (camera.pitch >  degree) camera.pitch =  degree;
+//     if (camera.pitch < -degree) camera.pitch = -degree;
+// }
+// inline void UpdateCameraPosition(Camera& camera, const InputState& inputState, float deltaTime)
+// {
+//     auto matrix = MatrixView2(camera);
+//     Vector3 forward = { matrix.m[0][2], matrix.m[1][2], matrix.m[2][2] };
+//     Vector3 up = Vector3Up();
+//     Vector3 right = Vector3Cross(up, forward);
+//     auto speed = 50.0f;
+//     auto speedDelta = speed * deltaTime;
+
+//     if (inputState.w) camera.position += forward * speedDelta;
+//     if (inputState.s) camera.position -= forward * speedDelta;
+//     if (inputState.d) camera.position += right   * speedDelta;
+//     if (inputState.a) camera.position -= right   * speedDelta;
+//     if (inputState.e) camera.position += up      * speedDelta;
+//     if (inputState.q) camera.position -= up      * speedDelta;
+// }

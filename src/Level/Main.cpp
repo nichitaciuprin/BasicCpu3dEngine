@@ -25,8 +25,8 @@ using namespace std;
 #include "SysHelper.h"
 
 #include "Subgen.h"
-#include "Math2.h"
-// #include "Helper.h"
+// #include "Math2.h"
+#include "Helper.h"
 
 #include "Models.h"
 #include "Clipping.h"
@@ -49,10 +49,11 @@ void main2()
         bitmap->Fill(BLACK);
 
         auto state = window->GetInputState();
-        UpdateCameraRotation(camera, state, 0.00080f);
-        UpdateCameraPosition(camera, state, 0.00020f);
 
-        auto view = MatrixView(camera);
+        UpdateCameraRotation(&camera, 0.00080f, state.left, state.up, state.down, state.right);
+        UpdateCameraPosition(&camera, 0.00020f, state.w, state.a, state.s, state.d, state.e, state.q);
+
+        auto view = MatrixView(&camera);
 
         {
             Vector3 p0 = { -1, 0,  2 }; p0 *= view;
@@ -73,7 +74,7 @@ void main2()
         bitmap->ApplyBlackWhiteColorDepth();
 
         {
-            auto time = (float)clock() / 40;
+            auto time = (float)clock() / 600;
             Vector3 position = { 0, 0.5f, 100 };
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
@@ -81,7 +82,7 @@ void main2()
             bitmap->DrawCubeColored(world * view);
         }
         {
-            auto time = (float)clock() / 20;
+            auto time = (float)clock() / 300;
             Vector3 position = { 0, 1.5f, 100 };
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
