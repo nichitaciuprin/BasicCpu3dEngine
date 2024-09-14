@@ -5,6 +5,7 @@ set root=%~dp0..\..
 set batdir=%~dp0
 set build=%batdir%build
 set deps=%root%\deps
+set exitiferror=if %errorlevel% neq 0 exit /b %errorlevel%
 
 set INCLUDE=
 set INCLUDE=%INCLUDE%%deps%\MSVC\include;
@@ -39,12 +40,13 @@ set _options=^
 %_enableWarningsLevel4% ^
 %_enablesExtraWarning%
 
-if not exist build mkdir build
+if exist %build% rmdir /S /Q %build%
+mkdir %build%
+@REM if not exist build mkdir build
 
-%_cl% /nologo /c test.cpp /Fo%build%\test %_options%
-@REM %_cl% /nologo /c main.cpp /Fo"%build%\main" %_options%
-@REM %_link% /nologo "%build%\test.obj" "%build%\main.obj" /OUT:"%build%\main.exe" %LINKER_FLAGS% %SYSTEM_LIBS%
-
-@REM %_cl% main.cpp %_output% %_options% %LINKER_FLAGS% %SYSTEM_LIBS%
-
-if %errorlevel% neq 0 exit /b %errorlevel%
+%_cl% /nologo /c test.cpp /Fo:%build%\test %_options%
+%exitiferror%
+%_cl% /nologo /c main.cpp /Fo:%build%\main %_options%
+%exitiferror%
+%_link% /nologo %build%\test.obj %build%\main.obj /out:%build%\main.exe %LINKER_FLAGS% %SYSTEM_LIBS%
+%exitiferror%
