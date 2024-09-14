@@ -32,6 +32,7 @@ using namespace std;
 #include <winuser.h>
 
 #include "BitmapWindow.h"
+#include "BitmapWindow.cpp"
 
 void main2()
 {
