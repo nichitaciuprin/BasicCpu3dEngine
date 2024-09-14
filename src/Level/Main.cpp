@@ -25,7 +25,7 @@ using namespace std;
 #include "Math2.h"
 #include "Models.h"
 #include "Clipping.h"
-#include "Time2.h"
+#include "SysHelper.h"
 #include "Subgen.h"
 #include "Bitmap.h"
 #include "BitmapWindow.h"

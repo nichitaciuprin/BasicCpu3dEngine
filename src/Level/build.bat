@@ -13,13 +13,13 @@ set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
 set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\um;
 set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\shared;
 set include=%include%%deps%\BaseOld;
+set include=%include%%deps%\Base\include;
 
 set lib=
 set lib=%lib%%deps%\MSVC\lib\x64;
 set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
 set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
 
-set LINKER_FLAGS=/INCREMENTAL:NO
 set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
 
 set _link=%deps%\MSVC\bin\Hostx64\x64\link.exe
@@ -44,9 +44,16 @@ if exist %build% rmdir /S /Q %build%
 mkdir %build%
 @REM if not exist build mkdir build
 
+%_cl% /nologo /c %deps%\Base\Time2.cpp /Fo:%build%\Time2 %_options%
+%_cl% /nologo /c %deps%\Base\SysHelperWin.cpp /Fo:%build%\SysHelperWin %_options%
 %_cl% /nologo /c test.cpp /Fo:%build%\test %_options%
-%exitiferror%
 %_cl% /nologo /c main.cpp /Fo:%build%\main %_options%
-%exitiferror%
-%_link% /nologo %build%\test.obj %build%\main.obj /out:%build%\main.exe %LINKER_FLAGS% %SYSTEM_LIBS%
+
+set objfiles=^
+%build%\Time2.obj ^
+%build%\SysHelperWin.obj ^
+%build%\test.obj ^
+%build%\main.obj
+
+%_link% %objfiles% /out:%build%\main.exe /INCREMENTAL:NO /nologo %SYSTEM_LIBS%
 %exitiferror%
