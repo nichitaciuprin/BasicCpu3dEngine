@@ -11,6 +11,7 @@ set INCLUDE=%INCLUDE%%deps%\MSVC\include;
 set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
 set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\um;
 set INCLUDE=%INCLUDE%%deps%\WindowsKits\10\Include\10.0.22621.0\shared;
+set INCLUDE=%INCLUDE%%deps%\BaseOld;
 
 set LIB=
 set LIB=%LIB%%deps%\MSVC\lib\x64;
