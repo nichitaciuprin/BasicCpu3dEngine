@@ -22,7 +22,7 @@ set LINKER_FLAGS=/INCREMENTAL:NO
 set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
 
 set _cl=%deps%\MSVC\bin\Hostx64\x64\cl.exe
-set _output=/Fe"%build%\BoidsDirectX" /Fo"%build%\BoidsDirectX"
+set _output=/Fe"%build%\main" /Fo"%build%\main"
 set _optimimisationDisable=/Od
 set _optimimisationLevel2=/O2
 set _enableWarningsLevel4=/W4
