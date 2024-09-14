@@ -1028,7 +1028,7 @@ inline Vector3 RandomPointInside(Subgen* subgen, Bound* bound)
     float x = SubgenRange(subgen, BoundMinX(bound), BoundMaxX(bound) );
     float y = SubgenRange(subgen, BoundMinY(bound), BoundMaxY(bound) );
     float z = SubgenRange(subgen, BoundMinZ(bound), BoundMaxZ(bound) );
-    return (Vector3) { x, y, z };
+    return { x, y, z };
 }
 inline Vector3 RandomPointTopFace(Subgen* subgen, Bound* bound)
 {
