@@ -44,12 +44,14 @@ if exist %build% rmdir /S /Q %build%
 mkdir %build%
 @REM if not exist build mkdir build
 
-%_cl% /nologo /c %deps%\Base\Time2.cpp /Fo:%build%\Time2 %_options%
-%_cl% /nologo /c %deps%\Base\SysHelperWin.cpp /Fo:%build%\SysHelperWin %_options%
-%_cl% /nologo /c test.cpp /Fo:%build%\test %_options%
-%_cl% /nologo /c main.cpp /Fo:%build%\main %_options%
+%_cl%  /nologo /c  %deps%\BaseOld\BitmapWindow.cpp  /Fo:%build%\BitmapWindow  %_options%
+%_cl%  /nologo /c  %deps%\Base\Time2.cpp            /Fo:%build%\Time2         %_options%
+%_cl%  /nologo /c  %deps%\Base\SysHelperWin.cpp     /Fo:%build%\SysHelperWin  %_options%
+%_cl%  /nologo /c  test.cpp                         /Fo:%build%\test          %_options%
+%_cl%  /nologo /c  main.cpp                         /Fo:%build%\main          %_options%
 
 set objfiles=^
+%build%\BitmapWindow.obj ^
 %build%\Time2.obj ^
 %build%\SysHelperWin.obj ^
 %build%\test.obj ^

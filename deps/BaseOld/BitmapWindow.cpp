@@ -1,11 +1,88 @@
 #pragma once
 
-// struct InputState
-// {
-//     bool w, a, s, d;
-//     bool left, up, down, right;
-//     bool e, q;
-// };
+#include <stdlib.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <assert.h>
+
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <memory>
+#include <vector>
+#include <array>
+
+using namespace std;
+
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#ifndef UNICODE
+#define UNICODE
+#endif
+#include <windows.h>
+#include <winuser.h>
+
+#pragma once
+
+struct InputState
+{
+    bool w, a, s, d;
+    bool left, up, down, right;
+    bool e, q;
+};
+
+class BitmapWindow
+{
+public:
+    bool keydown_W = false;
+    bool keydown_A = false;
+    bool keydown_S = false;
+    bool keydown_D = false;
+    bool keydown_E = false;
+    bool keydown_Q = false;
+    bool keydown_VK_UP = false;
+    bool keydown_VK_LEFT = false;
+    bool keydown_VK_DOWN = false;
+    bool keydown_VK_RIGHT = false;
+
+    BitmapWindow(int x, int y, int clientWidth, int clientHeight);
+    ~BitmapWindow();
+
+    bool Exists() const;
+    void Update();
+    void SetPixels(uint32_t* pixels, int width, int height);
+    void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
+
+    int GetClientWidth() const;
+    int GetClientHeight() const;
+
+    void SetPixel(int x, int y, uint32_t pixel);
+
+    InputState GetInputState();
+
+private:
+    static bool           _windowClassRegistered;
+    static const LPCWSTR  _windowClassName;
+    static const LPCWSTR  _windowName;
+
+    HWND       _hwnd;
+
+    HDC        _hdc;
+    HBITMAP    _hbitmap;
+    uint32_t*  _pixels;
+    int        _width;
+    int        _height;
+
+    InputState inputState = {};
+
+    void InitBitmap();
+    void ResetBitmap(int clientWidth, int clientHeight);
+    void PaintBitmap();
+
+    static void SetInstance(HWND hwnd, BitmapWindow* window);
+    static BitmapWindow* GetInstance(HWND hwnd);
+    static LRESULT CALLBACK MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+};
 
 BitmapWindow::BitmapWindow(int x, int y, int clientWidth, int clientHeight)
 {
@@ -69,34 +146,28 @@ void BitmapWindow::Update()
     InvalidateRect(_hwnd, NULL, FALSE);
     UpdateWindow(_hwnd);
 }
-void BitmapWindow::SetPixels(const unique_ptr<Bitmap>& bitmap)
+void BitmapWindow::SetPixels(uint32_t* pixels, int width, int height)
 {
     if (!Exists()) return;
 
     // copy from Top-Down bitmap to Bottom-Up bitmap
 
-    auto width = MathMin(bitmap->Width(), _width);
-    auto height = MathMin(bitmap->Height(), _height);
-
     for (int y = 0; y < height; y++)
     for (int x = 0; x < width; x++)
     {
-        auto pixel = bitmap->pixels[x + y * width];
-        auto y2 = _height - 1 - y;
-        _pixels[x + y2 * _width] = pixel;
+        auto pixel = pixels[x + y * width];
+        auto y2 = height - 1 - y;
+        _pixels[x + y2 * width] = pixel;
     }
 }
-void BitmapWindow::SetPixelsScaled(const unique_ptr<Bitmap>& bitmap, int scale)
+void BitmapWindow::SetPixelsScaled(uint32_t* pixels, int width, int height, int scale)
 {
     if (!Exists()) return;
 
-    auto width = bitmap->Width();
-    auto height = bitmap->Height();
-
     for (int y = 0; y < height; y++)
     for (int x = 0; x < width; x++)
     {
-        auto pixel = bitmap->pixels[x + y * width];
+        auto pixel = pixels[x + y * width];
         auto x2 = x * scale;
         auto y2 = y * scale;
         for (int i = 0; i < scale; i++)
@@ -113,7 +184,7 @@ int BitmapWindow::GetClientHeight() const
 {
     return _height;
 }
-void BitmapWindow::SetPixel(int x, int y, Pixel pixel)
+void BitmapWindow::SetPixel(int x, int y, uint32_t pixel)
 {
     // window bitmap is bottom-up
     y = _height - 1 - y;

@@ -22,17 +22,7 @@ using namespace std;
 #include "Models.h"
 #include "Clipping.h"
 #include "Bitmap.h"
-
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#ifndef UNICODE
-#define UNICODE
-#endif
-#include <windows.h>
-#include <winuser.h>
-
 #include "BitmapWindow.h"
-#include "BitmapWindow.cpp"
 
 void main2()
 {
@@ -91,7 +81,7 @@ void main2()
             bitmap->DrawCubeColored(world * view);
         }
 
-        window->SetPixels(bitmap);
+        window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
         window->Update();
     }
 }
