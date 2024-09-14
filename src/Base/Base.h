@@ -24,7 +24,6 @@ using namespace std;
 #include "Math.h"
 #include "Models.h"
 #include "Clipping.h"
-#include "FileHelper.h"
 #include "Time.h"
 #include "Subgen.h"
 #include "Physics.h"
