@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 
 #ifndef WIN32_LEAN_AND_MEAN

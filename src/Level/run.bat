@@ -1,6 +1,4 @@
 @echo off
-SETLOCAL
-set _projectroot=%~dp0
+setlocal
 
-%_projectroot%build\main.exe
-if %errorlevel% neq 0 echo === ERROR === %errorlevel%
+echo y | gdb -q -ex=run -ex=backtrace -ex=quit --args build\main.exe
