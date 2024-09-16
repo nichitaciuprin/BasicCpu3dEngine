@@ -1,4 +1,12 @@
-#include "../Base/Base.h"
+#include "Std.h"
+#include "StdExt.h"
+#include "SysHelper.h"
+#include "Subgen.h"
+#include "Helper.h"
+#include "Models.h"
+#include "Clipping.h"
+#include "Bitmap.h"
+#include "BitmapWindow.h"
 
 void main2()
 {
@@ -14,10 +22,10 @@ void main2()
         bitmap->Fill(BLACK);
 
         Camera camera = { 0, 0, 0 };
-        auto view = MatrixView(camera);
+        auto view = MatrixView(&camera);
 
         {
-            auto time = (float)clock() / 40;
+            auto time = (float)clock() / 400;
             Vector3 position = { 0, 0, 2 };
             Vector3 rotation = { 0, time, 0 };
             Vector3 scale = { 1, 1, 1 };
@@ -33,7 +41,7 @@ void main2()
         }
 
         bitmap->DrawBorder(GREEN);
-        window->SetPixels(bitmap);
+        window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
         window->Update();
     }
 }

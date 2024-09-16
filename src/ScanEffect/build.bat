@@ -1,33 +1,30 @@
 @echo off
-SETLOCAL
+setlocal
 
-@REM paths from bat file
-set _batdir=%~dp0
+set root=%~dp0..\..
+set batdir=%~dp0
+set build=%batdir%build
+set deps=%root%\deps
+set exitiferror=if %errorlevel% neq 0 exit /b %errorlevel%
 
-set _build=%_batdir%build
-set _maincpp=%_batdir%Main.cpp
-set _deps=%_batdir%..\..\deps
+set include=
+set include=%include%%deps%\MSVC\include;
+set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
+set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\um;
+set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\shared;
+set include=%include%%deps%\BaseOld;
+set include=%include%%deps%\Base\include;
 
-@REM removes and created build directory
-if exist %_build% rmdir /S /Q %_build%
-mkdir %_build%
+set lib=
+set lib=%lib%%deps%\MSVC\lib\x64;
+set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
+set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
 
-set INCLUDE=^
-%_deps%\MSVC\include;^
-%_deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;^
-%_deps%\WindowsKits\10\Include\10.0.22621.0\um;^
-%_deps%\WindowsKits\10\Include\10.0.22621.0\shared
-set LIB=^
-%_deps%\MSVC\lib\x64;^
-%_deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;^
-%_deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64
-
-set LINKER_FLAGS=/INCREMENTAL:NO
 set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
 
-set _cl=%_deps%\MSVC\bin\Hostx64\x64\cl.exe
-set _input=%_maincpp%
-set _output=/Fe"%_build%\BoidsDirectX" /Fo"%_build%\BoidsDirectX"
+set _link=%deps%\MSVC\bin\Hostx64\x64\link.exe
+set _cl=%deps%\MSVC\bin\Hostx64\x64\cl.exe
+
 set _optimimisationDisable=/Od
 set _optimimisationLevel2=/O2
 set _enableWarningsLevel4=/W4
@@ -35,12 +32,28 @@ set _treatWarningsAsErrors=/WX
 set _hidelogs=/nologo
 set _exceptionHandling=/EHsc
 set _enablesExtraWarning=/analyze
+
 set _options=^
 %_exceptionHandling% ^
 %_hidelogs% ^
-%_optimimisationDisable% ^
+%_optimimisationLevel2% ^
 %_enableWarningsLevel4% ^
 %_enablesExtraWarning%
-%_cl% %_input% %_output% %_options% %LINKER_FLAGS% %SYSTEM_LIBS%
 
-if %errorlevel% neq 0 exit /b %errorlevel%
+if exist %build% rmdir /S /Q %build%
+mkdir %build%
+@REM if not exist build mkdir build
+
+%_cl%  /nologo /c  %deps%\BaseOld\BitmapWindow.cpp  /Fo:%build%\BitmapWindow  %_options%
+%_cl%  /nologo /c  %deps%\Base\SysHelperWin.cpp     /Fo:%build%\SysHelperWin  %_options%
+%_cl%  /nologo /c  %deps%\Base\SysHelperWin2.cpp    /Fo:%build%\SysHelperWin2 %_options%
+%_cl%  /nologo /c  main.cpp                         /Fo:%build%\main          %_options%
+
+set objfiles=^
+%build%\BitmapWindow.obj ^
+%build%\SysHelperWin.obj ^
+%build%\SysHelperWin2.obj ^
+%build%\main.obj
+
+%_link% %objfiles% /out:%build%\main.exe /INCREMENTAL:NO /nologo %SYSTEM_LIBS%
+%exitiferror%
