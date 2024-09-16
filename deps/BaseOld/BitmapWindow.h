@@ -5,13 +5,13 @@ struct InputState
     bool e, q;
 };
 
-class BitmapWindow;
+class BitmapWindowPrivate;
 
-class BitmapWindow2
+class BitmapWindow
 {
 public:
-    BitmapWindow2(int x, int y, int clientWidth, int clientHeight);
-    ~BitmapWindow2();
+    BitmapWindow(int x, int y, int clientWidth, int clientHeight);
+    ~BitmapWindow();
 
     bool Exists() const;
     void Update();
@@ -21,5 +21,5 @@ public:
     InputState GetInputState();
 
 private:
-    BitmapWindow* instance;
+    BitmapWindowPrivate* instance;
 };

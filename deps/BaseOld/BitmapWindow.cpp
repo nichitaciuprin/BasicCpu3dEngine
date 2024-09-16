@@ -31,7 +31,7 @@ struct InputState
     bool e, q;
 };
 
-class BitmapWindow
+class BitmapWindowPrivate
 {
 public:
     bool keydown_W = false;
@@ -45,7 +45,7 @@ public:
     bool keydown_VK_DOWN = false;
     bool keydown_VK_RIGHT = false;
 
-    BitmapWindow(int x, int y, int clientWidth, int clientHeight)
+    BitmapWindowPrivate(int x, int y, int clientWidth, int clientHeight)
     {
         HINSTANCE hInstance = GetModuleHandle(nullptr);
 
@@ -85,7 +85,7 @@ public:
         SetWindowLong(_hwnd, GWL_STYLE, lStyle);
         SetWindowPos(_hwnd, NULL, 0,0,0,0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
     }
-    ~BitmapWindow()
+    ~BitmapWindowPrivate()
     {
         if (!Exists()) return;
         DestroyWindow(_hwnd);
@@ -214,13 +214,13 @@ private:
         EndPaint(_hwnd, &paint);
     }
 
-    static void SetInstance(HWND hwnd, BitmapWindow* window)
+    static void SetInstance(HWND hwnd, BitmapWindowPrivate* window)
     {
         SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
     }
-    static BitmapWindow* GetInstance(HWND hwnd)
+    static BitmapWindowPrivate* GetInstance(HWND hwnd)
     {
-        return reinterpret_cast<BitmapWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+        return reinterpret_cast<BitmapWindowPrivate*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
     }
     static LRESULT CALLBACK MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
@@ -291,15 +291,15 @@ private:
     }
 };
 
-bool           BitmapWindow::_windowClassRegistered = false;
-const LPCWSTR  BitmapWindow::_windowClassName = L"WindowClass1";
-const LPCWSTR  BitmapWindow::_windowName = L"WindowName1";
+bool           BitmapWindowPrivate::_windowClassRegistered = false;
+const LPCWSTR  BitmapWindowPrivate::_windowClassName = L"WindowClass1";
+const LPCWSTR  BitmapWindowPrivate::_windowName = L"WindowName1";
 
-class BitmapWindow2
+class BitmapWindow
 {
 public:
-    BitmapWindow2(int x, int y, int clientWidth, int clientHeight);
-    ~BitmapWindow2();
+    BitmapWindow(int x, int y, int clientWidth, int clientHeight);
+    ~BitmapWindow();
 
     bool Exists() const;
     void Update();
@@ -314,35 +314,35 @@ public:
     // int GetClientHeight() const;
 
 private:
-    BitmapWindow* instance;
+    BitmapWindowPrivate* instance;
 };
 
-BitmapWindow2::BitmapWindow2(int x, int y, int clientWidth, int clientHeight)
+BitmapWindow::BitmapWindow(int x, int y, int clientWidth, int clientHeight)
 {
-    instance = new BitmapWindow(x, y, clientWidth, clientHeight);
+    instance = new BitmapWindowPrivate(x, y, clientWidth, clientHeight);
 }
-BitmapWindow2::~BitmapWindow2()
+BitmapWindow::~BitmapWindow()
 {
     delete instance;
 }
-bool BitmapWindow2::Exists() const
+bool BitmapWindow::Exists() const
 {
     return instance->Exists();
 }
-void BitmapWindow2::Update()
+void BitmapWindow::Update()
 {
     instance->Update();
 }
-void BitmapWindow2::SetPixels(uint32_t* pixels, int width, int height)
+void BitmapWindow::SetPixels(uint32_t* pixels, int width, int height)
 {
     instance->SetPixels(pixels, width, height);
 }
-void BitmapWindow2::SetPixelsScaled(uint32_t* pixels, int width, int height, int scale)
+void BitmapWindow::SetPixelsScaled(uint32_t* pixels, int width, int height, int scale)
 {
     instance->SetPixelsScaled(pixels, width, height, scale);
 }
 
-InputState BitmapWindow2::GetInputState()
+InputState BitmapWindow::GetInputState()
 {
     return instance->GetInputState();
 }
