@@ -38,6 +38,7 @@ set src=%src% %deps%\Base\SysHelperWin.cpp
 set src=%src% %deps%\Base\SysHelperWin2.cpp
 set src=%src% %deps%\RaylibWrap\RaylibWrap.cpp
 
-if not exist build mkdir build
+if exist %build% rmdir /S /Q %build%
+   mkdir %build%
 
 g++ main.cpp %src% -o build/main.exe %flags% %include% %lib%

@@ -17,6 +17,7 @@ set optimisationLevel=-Og
 set flags=-g3 %optimisationLevel% -Wall -std=c++17 -Wno-missing-braces -pthread -m64
 
 @REM set lib=%lib% -L%deps%\raylib\lib -ldloadhelper -lglmf32 -lm -lopengl32 -lgdi32 -lwinmm -ld3d11 -ld3dcompiler
+
 @REM set lib=%lib% -lpthread -lm
 
 set lib=
@@ -37,6 +38,7 @@ set src=%src% %deps%\Base\SysHelperWin.cpp
 set src=%src% %deps%\Base\SysHelperWin2.cpp
 set src=%src% %deps%\RaylibWrap\RaylibWrap.cpp
 
-if not exist build mkdir build
+if exist %build% rmdir /S /Q %build%
+   mkdir %build%
 
 g++ main.cpp %src% -o build/main.exe %flags% %include% %lib%
