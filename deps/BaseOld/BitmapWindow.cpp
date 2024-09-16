@@ -305,6 +305,7 @@ public:
     void Update();
 
     void SetPixels(uint32_t* pixels, int width, int height);
+    void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
     InputState GetInputState();
 
     // void SetPixel(int x, int y, uint32_t pixel);
@@ -336,6 +337,11 @@ void BitmapWindow2::SetPixels(uint32_t* pixels, int width, int height)
 {
     instance->SetPixels(pixels, width, height);
 }
+void BitmapWindow2::SetPixelsScaled(uint32_t* pixels, int width, int height, int scale)
+{
+    instance->SetPixelsScaled(pixels, width, height, scale);
+}
+
 InputState BitmapWindow2::GetInputState()
 {
     return instance->GetInputState();

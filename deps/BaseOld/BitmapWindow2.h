@@ -17,6 +17,7 @@ public:
     void Update();
 
     void SetPixels(uint32_t* pixels, int width, int height);
+    void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
     InputState GetInputState();
 
 private:
