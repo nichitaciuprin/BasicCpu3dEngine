@@ -67,8 +67,8 @@ void main2()
             bitmap->DrawCubeColored(world * view);
         }
 
-        window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
-        // window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
+        // window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
+        window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
 
         window->Update();
     }
