@@ -86,7 +86,7 @@ void main2()
         }
 
         bitmap->DrawBorder(GREEN);
-        window->SetPixels(bitmap);
+        window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
         window->Update();
     }
 }
