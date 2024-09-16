@@ -304,12 +304,13 @@ public:
     bool Exists() const;
     void Update();
 
-    // void SetPixel(int x, int y, uint32_t pixel);
     void SetPixels(uint32_t* pixels, int width, int height);
+    InputState GetInputState();
+
+    // void SetPixel(int x, int y, uint32_t pixel);
     // void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
     // int GetClientWidth() const;
     // int GetClientHeight() const;
-    InputState GetInputState();
 
 private:
     BitmapWindow* instance;
@@ -323,7 +324,6 @@ BitmapWindow2::~BitmapWindow2()
 {
     delete instance;
 }
-
 bool BitmapWindow2::Exists() const
 {
     return instance->Exists();
@@ -340,9 +340,3 @@ InputState BitmapWindow2::GetInputState()
 {
     return instance->GetInputState();
 }
-// void BitmapWindow2::SetPixel(int x, int y, uint32_t pixel);
-// void BitmapWindow2::SetPixels(uint32_t* pixels, int width, int height);
-// void BitmapWindow2::SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
-// int BitmapWindow2::GetClientWidth() const;
-// int BitmapWindow2::GetClientHeight() const;
-// InputState BitmapWindow2::GetInputState();

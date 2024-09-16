@@ -24,7 +24,6 @@ using namespace std;
 #include "Bitmap.h"
 #include "BitmapWindow2.h"
 
-
 void main2()
 {
     auto width = 512;
@@ -98,7 +97,6 @@ int main()
     }
     catch (const exception& e)
     {
-        cout << "EXCEPTION" << endl;
         cerr << e.what() << endl;
     }
 
