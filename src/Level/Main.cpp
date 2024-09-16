@@ -1,24 +1,11 @@
 #pragma once
 
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <assert.h>
-
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <memory>
-#include <vector>
-#include <array>
-
-using namespace std;
+#include "Base.h"
+#include "BaseExt.h"
 
 #include "SysHelper.h"
-
 #include "Subgen.h"
 #include "Helper.h"
-
 #include "Models.h"
 #include "Clipping.h"
 #include "Bitmap.h"
