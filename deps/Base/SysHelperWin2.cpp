@@ -51,7 +51,7 @@ TICKS FixedTimeStep()
         FixedTimeStepCache = TicksPerMillisecond()*20;
     return FixedTimeStepCache;
 }
-TICKS GetTime()
+TICKS GetTime2()
 {
     LARGE_INTEGER ticks;
     QueryPerformanceCounter(&ticks);
@@ -71,11 +71,11 @@ void CheckFPS()
 {
     if (TimeOld == 0)
     {
-        TimeOld = GetTime();
+        TimeOld = GetTime2();
         return;
     }
 
-    TimeNew = GetTime();
+    TimeNew = GetTime2();
 
     auto diff = GetCalcTime(TimeOld,TimeNew);
 

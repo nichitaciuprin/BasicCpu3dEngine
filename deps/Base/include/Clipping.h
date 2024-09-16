@@ -157,7 +157,7 @@ void ClipPoligonBack(vector<Vector3>& input, vector<Vector3>& output)
     Vector3 p0 = input[input.size() - 1];
     if (p0.z < offset) flags += 2;
 
-    for (int i = 0; i < input.size(); i++)
+    for (size_t i = 0; i < input.size(); i++)
     {
         flags = flags >> 1;
 

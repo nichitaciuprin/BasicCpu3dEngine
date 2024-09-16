@@ -30,8 +30,8 @@ public:
 
     Bitmap(int width, int height)
     {
-        if (width < 1) throw exception("width < 1");
-        if (height < 1) throw exception("height < 1");
+        if (width < 1) throw "width < 1";
+        if (height < 1) throw "height < 1";
 
         this->width = width;
         this->height = height;
@@ -151,7 +151,7 @@ public:
         for (auto& x : v1)
             ToScreenSpace(x);
 
-        for (int i = 1; i < v1.size() - 1; i++)
+        for (size_t i = 1; i < v1.size() - 1; i++)
             DrawTriangle(v1[0], v1[i], v1[i + 1], pixel);
     }
     void DrawTriangle1(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
@@ -185,7 +185,7 @@ public:
         for (auto& x : v1)
             ToScreenSpace(x);
 
-        for (int i = 1; i < v1.size() - 1; i++)
+        for (size_t i = 1; i < v1.size() - 1; i++)
             DrawTriangle(v1[0], v1[i], v1[i + 1], pixel);
     }
     void DrawTriangle2(Vector3 p0, Vector3 p1, Vector3 p2, Pixel pixel)
@@ -207,7 +207,7 @@ public:
         for (auto& x : v1)
             ToScreenSpace(x);
 
-        for (int i = 1; i < v1.size() - 1; i++)
+        for (size_t i = 1; i < v1.size() - 1; i++)
             DrawTriangle(v1[0], v1[i], v1[i + 1], pixel);
     }
     void DrawLine1(Vector3 v0, Vector3 v1, Pixel pixel)
@@ -258,7 +258,7 @@ public:
     }
     void ApplyBlackWhiteColorDepth()
     {
-        for (int i = 0; i < pixels.size(); i++)
+        for (size_t i = 0; i < pixels.size(); i++)
         {
             float depthLength = 100;
             float factor = MathClamp(zbuffer[i], 0.0f, depthLength);
