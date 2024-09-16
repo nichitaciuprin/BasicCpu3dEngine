@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Std.h"
 #include "StdExt.h"
 #include "SysHelper.h"

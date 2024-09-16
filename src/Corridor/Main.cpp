@@ -1,4 +1,12 @@
-#include "../Base/Base.h"
+#include "Std.h"
+#include "StdExt.h"
+#include "SysHelper.h"
+#include "Subgen.h"
+#include "Helper.h"
+#include "Models.h"
+#include "Clipping.h"
+#include "Bitmap.h"
+#include "BitmapWindow.h"
 
 void main2()
 {
@@ -25,7 +33,7 @@ void main2()
         }
 
         bitmap->DrawBorder(GREEN);
-        window->SetPixels(bitmap);
+        window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
         window->Update();
     }
 }
