@@ -92,7 +92,25 @@
         "wingdi.h": "c",
         "windows.h": "c",
         "winuser.h": "c",
-        "windef.h": "c"
+        "windef.h": "c",
+        "deps2.h": "c",
+        "libloaderapi.h": "c",
+        "apisetcconv.h": "c",
+        "winapifamily.h": "c",
+        "minwindef.h": "c",
+        "winnt.h": "c",
+        "_mingw.h": "c",
+        "x86intrin.h": "c",
+        "emmintrin.h": "c",
+        "basetsd.h": "c",
+        "_mingw_unicode.h": "c",
+        "xmmintrin.h": "c",
+        "mm_malloc.h": "c",
+        "stdlib.h": "c",
+        "corecrt.h": "c",
+        "_mingw_secapi.h": "c",
+        "_mingw_mac.h": "c",
+        "lightwindow.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -1,6 +1,8 @@
 @echo off
 setlocal
 
+cls
+
 set root=%~dp0..\..
 set deps=%root%\deps
 set batdir=%~dp0
@@ -44,6 +46,6 @@ if exist %build% rmdir /S /Q %build%
    mkdir %build%
 
 @REM gcc -E -P main.c -o main2.c
-gcc main.c %src% -o build/main.exe %flags% %include% %lib%
+gcc main.c %src% -o build/main.exe %flags% %include% %lib% -Wunused-function
 @REM gcc main2.c %src% -o build/main.exe %flags% %include% %lib%
 
