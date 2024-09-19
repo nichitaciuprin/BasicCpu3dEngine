@@ -3,15 +3,6 @@
 #include <stdint.h>
 #include <assert.h>
 
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <memory>
-#include <vector>
-#include <array>
-
-using namespace std;
-
 #define WIN32_LEAN_AND_MEAN
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -21,19 +12,20 @@ using namespace std;
 #endif
 
 #include <windows.h>
+#include <time.h>
 
 typedef struct BitmapWindow
 {
-    bool keydown_W = false;
-    bool keydown_A = false;
-    bool keydown_S = false;
-    bool keydown_D = false;
-    bool keydown_E = false;
-    bool keydown_Q = false;
-    bool keydown_UP = false;
-    bool keydown_LEFT = false;
-    bool keydown_DOWN = false;
-    bool keydown_RIGHT = false;
+    bool keydown_W;
+    bool keydown_A;
+    bool keydown_S;
+    bool keydown_D;
+    bool keydown_E;
+    bool keydown_Q;
+    bool keydown_UP;
+    bool keydown_LEFT;
+    bool keydown_DOWN;
+    bool keydown_RIGHT;
 
     HWND       _hwnd;
 
@@ -65,7 +57,7 @@ void _BitmapWindow_ResetBitmap(BitmapWindow* instance, int clientWidth, int clie
         DeleteObject(instance->_hbitmap);
 
     instance->_hbitmap = CreateDIBSection(NULL, &bitmapinfo, DIB_RGB_COLORS, (void**)&instance->_pixels, 0, 0);
-    assert(instance->_hbitmap != nullptr);
+    assert(instance->_hbitmap != 0);
     SelectObject(instance->_hdc, instance->_hbitmap);
 
     instance->_width  = clientWidth;
@@ -90,7 +82,7 @@ void _BitmapWindow_PaintBitmap(BitmapWindow* instance)
 
 LRESULT CALLBACK _BitmapWindow_MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    BitmapWindow* instance = reinterpret_cast<BitmapWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    BitmapWindow* instance = (BitmapWindow*)(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
     if (instance == NULL)
         return DefWindowProc(hwnd, message, wParam, lParam);
@@ -110,8 +102,6 @@ LRESULT CALLBACK _BitmapWindow_MessageHandler(HWND hwnd, UINT message, WPARAM wP
         }
         case WM_SIZE:
         {
-            cout << "HI" << endl;
-
             int clientWidth = LOWORD(lParam);
             int clientHeight = HIWORD(lParam);
 
@@ -164,7 +154,26 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 {
     BitmapWindow* instance = (BitmapWindow*)malloc(sizeof(BitmapWindow));
 
-    HINSTANCE hInstance = GetModuleHandle(nullptr);
+    instance->keydown_W = false;
+    instance->keydown_A = false;
+    instance->keydown_S = false;
+    instance->keydown_D = false;
+    instance->keydown_E = false;
+    instance->keydown_Q = false;
+    instance->keydown_UP = false;
+    instance->keydown_LEFT = false;
+    instance->keydown_DOWN = false;
+    instance->keydown_RIGHT = false;
+
+    instance->_hwnd = 0;
+
+    instance->_hdc = 0;
+    instance->_hbitmap = 0;
+    instance->_pixels = 0;
+    instance->_width = 0;
+    instance->_height = 0;
+
+    HINSTANCE hInstance = GetModuleHandle(0);
 
     const LPCWSTR className = L"BitmapWindowClass";
 
@@ -175,7 +184,7 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
         window_class.lpfnWndProc = _BitmapWindow_MessageHandler;
         window_class.hInstance = hInstance;
         window_class.lpszClassName = className;
-        window_class.hCursor = LoadCursorW(nullptr, IDC_ARROW);
+        window_class.hCursor = LoadCursorW(0, IDC_ARROW);
         RegisterClass(&window_class);
     }
 
@@ -186,8 +195,8 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     RECT rect = { 0, 0, (LONG)clientWidth, (LONG)clientHeight };
     AdjustWindowRect(&rect, lStyle, FALSE);
-    auto windowWidth = rect.right - rect.left;
-    auto windowHeight = rect.bottom - rect.top;
+    int windowWidth = rect.right - rect.left;
+    int windowHeight = rect.bottom - rect.top;
 
     _BitmapWindow_InitBitmap(instance);
     _BitmapWindow_ResetBitmap(instance, clientWidth, clientHeight);
@@ -201,7 +210,7 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     assert(instance->_hwnd != NULL);
 
-    SetWindowLongPtr(instance->_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(instance));
+    SetWindowLongPtr(instance->_hwnd, GWLP_USERDATA, (LONG_PTR)(instance));
 
     // Forces window to update style
     // Setting lStyle before CreateWindow() wont work
@@ -249,8 +258,8 @@ void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width,
     for (int y = 0; y < height; y++)
     for (int x = 0; x < width; x++)
     {
-        auto pixel = pixels[x + y * width];
-        auto y2 = height - 1 - y;
+        uint32_t pixel = pixels[x + y * width];
+        int y2 = height - 1 - y;
         instance->_pixels[x + y2 * width] = pixel;
     }
 }

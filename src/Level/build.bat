@@ -27,12 +27,12 @@ set lib=%lib% -L%deps%\raylib\lib -lraylib -lgdi32 -lwinmm
 set lib=%lib% -L%deps%\ReactPhysics3D\lib -lreactphysics3d
 
 set include=
-set include=%include% -I%deps%\Base\include
-set include=%include% -I%deps%\Raylib\include
-set include=%include% -I%deps%\RaylibWrap\include
-set include=%include% -I%deps%\ReactPhysics3D\include
-set include=%include% -I%deps%\ReactPhysics3DWrap\include
-set include=%include% -I%~dp0src
+@REM set include=%include% -I%deps%\Base\include
+@REM set include=%include% -I%deps%\Raylib\include
+@REM set include=%include% -I%deps%\RaylibWrap\include
+@REM set include=%include% -I%deps%\ReactPhysics3D\include
+@REM set include=%include% -I%deps%\ReactPhysics3DWrap\include
+@REM set include=%include% -I%~dp0src
 
 set src=
 @REM set src=%src% %deps%\Base\src\BitmapWindow.cpp
