@@ -33,17 +33,6 @@ struct InputState
 class BitmapWindowPrivate
 {
 public:
-    bool keydown_W = false;
-    bool keydown_A = false;
-    bool keydown_S = false;
-    bool keydown_D = false;
-    bool keydown_E = false;
-    bool keydown_Q = false;
-    bool keydown_VK_UP = false;
-    bool keydown_VK_LEFT = false;
-    bool keydown_VK_DOWN = false;
-    bool keydown_VK_RIGHT = false;
-
     BitmapWindowPrivate(int x, int y, int clientWidth, int clientHeight)
     {
         HINSTANCE hInstance = GetModuleHandle(nullptr);
@@ -152,12 +141,29 @@ public:
         _pixels[x + y * _width] = pixel;
     }
 
-    InputState GetInputState()
-    {
-        return inputState;
-    }
+    bool KeyDown_W() { return keydown_W; }
+    bool KeyDown_A() { return keydown_A; }
+    bool KeyDown_S() { return keydown_S; }
+    bool KeyDown_D() { return keydown_D; }
+    bool KeyDown_E() { return keydown_E; }
+    bool KeyDown_Q() { return keydown_Q; }
+    bool KeyDown_UP() { return keydown_UP; }
+    bool KeyDown_LEFT() { return keydown_LEFT; }
+    bool KeyDown_DOWN() { return keydown_DOWN; }
+    bool KeyDown_RIGHT() { return keydown_RIGHT; }
 
 private:
+    bool keydown_W = false;
+    bool keydown_A = false;
+    bool keydown_S = false;
+    bool keydown_D = false;
+    bool keydown_E = false;
+    bool keydown_Q = false;
+    bool keydown_UP = false;
+    bool keydown_LEFT = false;
+    bool keydown_DOWN = false;
+    bool keydown_RIGHT = false;
+
     static bool           _windowClassRegistered;
     static const LPCWSTR  _windowClassName;
     static const LPCWSTR  _windowName;
@@ -169,8 +175,6 @@ private:
     uint32_t*  _pixels;
     int        _width;
     int        _height;
-
-    InputState inputState = {};
 
     void InitBitmap()
     {
@@ -259,20 +263,21 @@ private:
             case WM_KEYUP:
             {
                 bool isDown = (message == WM_KEYDOWN);
+
                 switch (wParam)
                 {
-                    case VK_ESCAPE : { DestroyWindow(hwnd);                     break; }
-                    case 'W'       : { bitmapWindow->inputState.w     = isDown; break; }
-                    case 'A'       : { bitmapWindow->inputState.a     = isDown; break; }
-                    case 'S'       : { bitmapWindow->inputState.s     = isDown; break; }
-                    case 'D'       : { bitmapWindow->inputState.d     = isDown; break; }
-                    case 'E'       : { bitmapWindow->inputState.e     = isDown; break; }
-                    case 'Q'       : { bitmapWindow->inputState.q     = isDown; break; }
-                    case VK_UP     : { bitmapWindow->inputState.up    = isDown; break; }
-                    case VK_LEFT   : { bitmapWindow->inputState.left  = isDown; break; }
-                    case VK_DOWN   : { bitmapWindow->inputState.down  = isDown; break; }
-                    case VK_RIGHT  : { bitmapWindow->inputState.right = isDown; break; }
-                    default        : {                                          break; }
+                    case VK_ESCAPE : { DestroyWindow(hwnd);                  break; }
+                    case 'W'       : { bitmapWindow->keydown_W     = isDown; break; }
+                    case 'A'       : { bitmapWindow->keydown_A     = isDown; break; }
+                    case 'S'       : { bitmapWindow->keydown_S     = isDown; break; }
+                    case 'D'       : { bitmapWindow->keydown_D     = isDown; break; }
+                    case 'E'       : { bitmapWindow->keydown_E     = isDown; break; }
+                    case 'Q'       : { bitmapWindow->keydown_Q     = isDown; break; }
+                    case VK_UP     : { bitmapWindow->keydown_UP    = isDown; break; }
+                    case VK_LEFT   : { bitmapWindow->keydown_LEFT  = isDown; break; }
+                    case VK_DOWN   : { bitmapWindow->keydown_DOWN  = isDown; break; }
+                    case VK_RIGHT  : { bitmapWindow->keydown_RIGHT = isDown; break; }
+                    default        : {                                       break; }
                 }
                 break;
             }
@@ -305,12 +310,22 @@ public:
 
     void SetPixels(uint32_t* pixels, int width, int height);
     void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
-    InputState GetInputState();
 
     // void SetPixel(int x, int y, uint32_t pixel);
     // void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale);
     // int GetClientWidth() const;
     // int GetClientHeight() const;
+
+    bool KeyDown_W();
+    bool KeyDown_A();
+    bool KeyDown_S();
+    bool KeyDown_D();
+    bool KeyDown_E();
+    bool KeyDown_Q();
+    bool KeyDown_UP();
+    bool KeyDown_LEFT();
+    bool KeyDown_DOWN();
+    bool KeyDown_RIGHT();
 
 private:
     BitmapWindowPrivate* instance;
@@ -324,6 +339,7 @@ BitmapWindow::~BitmapWindow()
 {
     delete instance;
 }
+
 bool BitmapWindow::Exists() const
 {
     return instance->Exists();
@@ -341,7 +357,13 @@ void BitmapWindow::SetPixelsScaled(uint32_t* pixels, int width, int height, int 
     instance->SetPixelsScaled(pixels, width, height, scale);
 }
 
-InputState BitmapWindow::GetInputState()
-{
-    return instance->GetInputState();
-}
+bool BitmapWindow::KeyDown_W() { return instance->KeyDown_W(); }
+bool BitmapWindow::KeyDown_A() { return instance->KeyDown_A(); }
+bool BitmapWindow::KeyDown_S() { return instance->KeyDown_S(); }
+bool BitmapWindow::KeyDown_D() { return instance->KeyDown_D(); }
+bool BitmapWindow::KeyDown_E() { return instance->KeyDown_E(); }
+bool BitmapWindow::KeyDown_Q() { return instance->KeyDown_Q(); }
+bool BitmapWindow::KeyDown_UP() { return instance->KeyDown_UP(); }
+bool BitmapWindow::KeyDown_LEFT() { return instance->KeyDown_LEFT(); }
+bool BitmapWindow::KeyDown_DOWN() { return instance->KeyDown_DOWN(); }
+bool BitmapWindow::KeyDown_RIGHT() { return instance->KeyDown_RIGHT(); }

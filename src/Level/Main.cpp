@@ -24,10 +24,8 @@ void main2()
 
         bitmap->Fill(BLACK);
 
-        auto state = window->GetInputState();
-
-        UpdateCameraRotation(&camera, 0.00080f, state.left, state.up, state.down, state.right);
-        UpdateCameraPosition(&camera, 0.00020f, state.w, state.a, state.s, state.d, state.e, state.q);
+        UpdateCameraRotation(&camera, 0.00080f, window->KeyDown_LEFT(), window->KeyDown_UP(), window->KeyDown_DOWN(), window->KeyDown_RIGHT());
+        UpdateCameraPosition(&camera, 0.00020f, window->KeyDown_W(), window->KeyDown_A(), window->KeyDown_S(), window->KeyDown_D(), window->KeyDown_E(), window->KeyDown_Q());
 
         auto view = MatrixView(&camera);
 
