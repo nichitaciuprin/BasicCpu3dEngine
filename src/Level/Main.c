@@ -3,10 +3,6 @@ typedef unsigned uint32_t;
 
 #include <assert.h>
 
-#ifndef UNICODE
-#define UNICODE
-#endif
-
 #include <windef.h>
 #include <wingdi.h>
 #include <winuser.h>
@@ -172,7 +168,7 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     HINSTANCE hInstance = GetModuleHandle(0);
 
-    const LPCWSTR className = L"BitmapWindowClass";
+    const char* className = "BitmapWindowClass";
 
     if (!_BitmapWindow_Registered)
     {
@@ -181,7 +177,7 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
         window_class.lpfnWndProc = _BitmapWindow_MessageHandler;
         window_class.hInstance = hInstance;
         window_class.lpszClassName = className;
-        window_class.hCursor = LoadCursorW(0, IDC_ARROW);
+        window_class.hCursor = LoadCursorA(0, IDC_ARROW);
         RegisterClass(&window_class);
     }
 
@@ -200,7 +196,7 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     instance->_hwnd = CreateWindow
     (
-        className, L"BitmapWindow", lStyle,
+        className, "BitmapWindow", lStyle,
         (LONG)x, (LONG)y, windowWidth, windowHeight,
         NULL, NULL, hInstance, NULL
     );

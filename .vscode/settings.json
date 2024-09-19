@@ -91,7 +91,8 @@
         "assert.h": "c",
         "wingdi.h": "c",
         "windows.h": "c",
-        "winuser.h": "c"
+        "winuser.h": "c",
+        "windef.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
