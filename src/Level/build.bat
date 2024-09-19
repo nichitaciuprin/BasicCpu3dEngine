@@ -43,4 +43,6 @@ set src=
 if exist %build% rmdir /S /Q %build%
    mkdir %build%
 
-gcc main.c %src% -o build/main.exe %flags% %include% %lib%
+gcc -E -P main.c -o main2.c
+@REM gcc main.c %src% -o build/main.exe %flags% %include% %lib%
+
