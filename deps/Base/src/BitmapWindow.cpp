@@ -23,13 +23,6 @@ using namespace std;
 #include <windows.h>
 #include <winuser.h>
 
-struct InputState
-{
-    bool w, a, s, d;
-    bool left, up, down, right;
-    bool e, q;
-};
-
 class BitmapWindowPrivate
 {
 public:
