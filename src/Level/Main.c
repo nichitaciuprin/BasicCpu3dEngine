@@ -12,7 +12,6 @@ typedef unsigned uint32_t;
 #endif
 
 #include <windows.h>
-#include <time.h>
 
 typedef struct BitmapWindow
 {
@@ -265,13 +264,16 @@ void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width,
 }
 void TestDraw(BitmapWindow* window, int width, int height)
 {
+    static int iteration = 0;
+    iteration++;
+
     for (int y = 0; y < height; y++)
     for (int x = 0; x < width; x++)
     {
         uint32_t a = 0;
-        uint32_t r = (uint8_t)(clock() / 9);
-        uint32_t g = (uint8_t)(clock() / 6);
-        uint32_t b = (uint8_t)(clock() / 3);
+        uint32_t r = (uint8_t)(iteration / 9);
+        uint32_t g = (uint8_t)(iteration / 6);
+        uint32_t b = (uint8_t)(iteration / 3);
 
         uint32_t pixel =
             (a << (8 * 3)) +
