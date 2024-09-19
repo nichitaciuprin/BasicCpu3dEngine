@@ -8,7 +8,6 @@ typedef unsigned uint32_t;
 #endif
 
 #include <windef.h>
-#include <winbase.h>
 #include <wingdi.h>
 #include <winuser.h>
 
