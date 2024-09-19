@@ -22,10 +22,6 @@ using namespace std;
 
 #include <windows.h>
 
-bool           _BitmapWindow_Registered = false;
-const LPCWSTR  _BitmapWindow_ClassName = L"BitmapWindowClass";
-const LPCWSTR  _BitmapWindow_Name = L"BitmapWindow";
-
 typedef struct BitmapWindow
 {
     bool keydown_W = false;
@@ -48,6 +44,8 @@ typedef struct BitmapWindow
     int        _height;
 }
 BitmapWindow;
+
+bool _BitmapWindow_Registered = false;
 
 void _BitmapWindow_InitBitmap(BitmapWindow* instance)
 {
@@ -168,13 +166,15 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     HINSTANCE hInstance = GetModuleHandle(nullptr);
 
+    const LPCWSTR className = L"BitmapWindowClass";
+
     if (!_BitmapWindow_Registered)
     {
         _BitmapWindow_Registered = true;
         WNDCLASS window_class = {};
         window_class.lpfnWndProc = _BitmapWindow_MessageHandler;
         window_class.hInstance = hInstance;
-        window_class.lpszClassName = _BitmapWindow_ClassName;
+        window_class.lpszClassName = className;
         window_class.hCursor = LoadCursorW(nullptr, IDC_ARROW);
         RegisterClass(&window_class);
     }
@@ -192,9 +192,12 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
     _BitmapWindow_InitBitmap(instance);
     _BitmapWindow_ResetBitmap(instance, clientWidth, clientHeight);
 
-    instance->_hwnd = CreateWindow(_BitmapWindow_ClassName, _BitmapWindow_Name, lStyle,
-                            (LONG)x, (LONG)y, windowWidth, windowHeight,
-                            NULL, NULL, hInstance, NULL);
+    instance->_hwnd = CreateWindow
+    (
+        className, L"BitmapWindow", lStyle,
+        (LONG)x, (LONG)y, windowWidth, windowHeight,
+        NULL, NULL, hInstance, NULL
+    );
 
     assert(instance->_hwnd != NULL);
 
