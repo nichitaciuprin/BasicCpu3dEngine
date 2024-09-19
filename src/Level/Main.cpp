@@ -26,7 +26,7 @@ bool           _windowClassRegistered = false;
 const LPCWSTR  _windowClassName = L"WindowClass1";
 const LPCWSTR  _windowName = L"WindowName1";
 
-typedef struct Window2
+typedef struct BitmapWindow
 {
     bool keydown_W = false;
     bool keydown_A = false;
@@ -47,13 +47,13 @@ typedef struct Window2
     int        _width;
     int        _height;
 }
-Window2;
+BitmapWindow;
 
-void InitBitmap(Window2* instance)
+void _BitmapWindow_InitBitmap(BitmapWindow* instance)
 {
     instance->_hdc = CreateCompatibleDC(0);
 }
-void ResetBitmap(Window2* instance, int clientWidth, int clientHeight)
+void _BitmapWindow_ResetBitmap(BitmapWindow* instance, int clientWidth, int clientHeight)
 {
     BITMAPINFO bitmapinfo = {};
     bitmapinfo.bmiHeader.biSize = sizeof(bitmapinfo.bmiHeader);
@@ -73,7 +73,7 @@ void ResetBitmap(Window2* instance, int clientWidth, int clientHeight)
     instance->_width  = clientWidth;
     instance->_height = clientHeight;
 }
-void PaintBitmap(Window2* instance)
+void _BitmapWindow_PaintBitmap(BitmapWindow* instance)
 {
     PAINTSTRUCT paint;
 
@@ -90,17 +90,20 @@ void PaintBitmap(Window2* instance)
     EndPaint(instance->_hwnd, &paint);
 }
 
-void SetInstance(HWND hwnd, Window2* window)
+void _BitmapWindow_SetInstance(BitmapWindow* window)
 {
-    SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
+    SetWindowLongPtr(window->_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
 }
-Window2* GetInstance(HWND hwnd)
+void _BitmapWindow_GetInstance(HWND hwnd, BitmapWindow** outWindow)
 {
-    return reinterpret_cast<Window2*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    *outWindow = reinterpret_cast<BitmapWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 }
-LRESULT CALLBACK MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+
+LRESULT CALLBACK _BitmapWindow_MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    Window2* instance = GetInstance(hwnd);
+    BitmapWindow* instance;
+
+    _BitmapWindow_GetInstance(hwnd, &instance);
 
     if (instance == NULL)
         return DefWindowProc(hwnd, message, wParam, lParam);
@@ -115,7 +118,7 @@ LRESULT CALLBACK MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
         }
         case WM_PAINT:
         {
-            PaintBitmap(instance);
+            _BitmapWindow_PaintBitmap(instance);
             break;
         }
         case WM_SIZE:
@@ -128,7 +131,7 @@ LRESULT CALLBACK MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
                 instance->_height != clientHeight;
 
             if (sizeChanged)
-                ResetBitmap(instance, clientWidth, clientHeight);
+                _BitmapWindow_ResetBitmap(instance, clientWidth, clientHeight);
 
             break;
         }
@@ -168,13 +171,9 @@ LRESULT CALLBACK MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM l
     return 0;
 }
 
-bool Window2_Exists(Window2* instance)
+BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeight)
 {
-    return instance->_hwnd != 0;
-}
-Window2* Window2_Create(int x, int y, int clientWidth, int clientHeight)
-{
-    Window2* instance = (Window2*)malloc(sizeof(Window2));
+    BitmapWindow* instance = (BitmapWindow*)malloc(sizeof(BitmapWindow));
 
     HINSTANCE hInstance = GetModuleHandle(nullptr);
 
@@ -182,7 +181,7 @@ Window2* Window2_Create(int x, int y, int clientWidth, int clientHeight)
     {
         _windowClassRegistered = true;
         WNDCLASS window_class = {};
-        window_class.lpfnWndProc = MessageHandler;
+        window_class.lpfnWndProc = _BitmapWindow_MessageHandler;
         window_class.hInstance = hInstance;
         window_class.lpszClassName = _windowClassName;
         window_class.hCursor = LoadCursorW(nullptr, IDC_ARROW);
@@ -200,7 +199,7 @@ Window2* Window2_Create(int x, int y, int clientWidth, int clientHeight)
     auto windowHeight = rect.bottom - rect.top;
 
 
-    InitBitmap(instance);
+    _BitmapWindow_InitBitmap(instance);
     // instance->_hdc = CreateCompatibleDC(0);
 
     instance->_hwnd = CreateWindow(_windowClassName, _windowName, lStyle,
@@ -209,7 +208,7 @@ Window2* Window2_Create(int x, int y, int clientWidth, int clientHeight)
 
     assert(instance->_hwnd != NULL);
 
-    SetInstance(instance->_hwnd, instance);
+    _BitmapWindow_SetInstance(instance);
 
     // Forces window to update style
     // Setting lStyle before CreateWindow() wont work
@@ -218,15 +217,19 @@ Window2* Window2_Create(int x, int y, int clientWidth, int clientHeight)
 
     return instance;
 }
-void Window2_Destroy(Window2* instance)
+bool BitmapWindow_Exists(BitmapWindow* instance)
 {
-    if (!Window2_Exists(instance)) return;
+    return instance->_hwnd != 0;
+}
+void BitmapWindow_Destroy(BitmapWindow* instance)
+{
+    if (!BitmapWindow_Exists(instance)) return;
     DestroyWindow(instance->_hwnd);
     instance->_hwnd = 0;
 }
-void Window2_Update(Window2* instance)
+void BitmapWindow_Update(BitmapWindow* instance)
 {
-    if (!Window2_Exists(instance)) return;
+    if (!BitmapWindow_Exists(instance)) return;
 
     MSG message = {};
 
@@ -236,17 +239,17 @@ void Window2_Update(Window2* instance)
     InvalidateRect(instance->_hwnd, NULL, FALSE);
     UpdateWindow(instance->_hwnd);
 }
-void Window2_SetPixel(Window2* instance, int x, int y, uint32_t pixel)
+void BitmapWindow_SetPixel(BitmapWindow* instance, int x, int y, uint32_t pixel)
 {
-    if (!Window2_Exists(instance)) return;
+    if (!BitmapWindow_Exists(instance)) return;
 
     // window bitmap is bottom-up
     y = instance->_height - 1 - y;
     instance->_pixels[x + y * instance->_width] = pixel;
 }
-void Window2_SetPixels(Window2* instance, uint32_t* pixels, int width, int height)
+void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width, int height)
 {
-    if (!Window2_Exists(instance)) return;
+    if (!BitmapWindow_Exists(instance)) return;
 
     // copy from Top-Down bitmap to Bottom-Up bitmap
 
@@ -259,33 +262,37 @@ void Window2_SetPixels(Window2* instance, uint32_t* pixels, int width, int heigh
     }
 }
 
+void TestDraw(BitmapWindow* window, int width, int height)
+{
+    for (size_t y = 0; y < height; y++)
+    for (size_t x = 0; x < width; x++)
+    {
+        uint32_t a = 0;
+        uint32_t r = (uint8_t)(clock() / 9);
+        uint32_t g = (uint8_t)(clock() / 6);
+        uint32_t b = (uint8_t)(clock() / 3);
+
+        uint32_t pixel =
+            (a << (8 * 3)) +
+            (r << (8 * 2)) +
+            (g << (8 * 1)) +
+            (b << (8 * 0));
+
+        BitmapWindow_SetPixel(window, x, y, pixel);
+    }
+}
+
 int main()
 {
-    Window2* window = Window2_Create(0, 0, 200, 200);
+    BitmapWindow* window = BitmapWindow_Create(0, 0, 200, 200);
 
-    while (Window2_Exists(window))
+    while (BitmapWindow_Exists(window))
     {
-        Window2_Update(window);
-
-        for (size_t y = 0; y < 200; y++)
-        for (size_t x = 0; x < 200; x++)
-        {
-            uint32_t a = 0;
-            uint32_t r = (uint8_t)(clock() / 9);
-            uint32_t g = (uint8_t)(clock() / 6);
-            uint32_t b = (uint8_t)(clock() / 3);
-
-            uint32_t pixel =
-                (a << (8 * 3)) +
-                (r << (8 * 2)) +
-                (g << (8 * 1)) +
-                (b << (8 * 0));
-
-            Window2_SetPixel(window, x, y, pixel);
-        }
+        BitmapWindow_Update(window);
+        TestDraw(window, 200, 200);
     }
 
-    Window2_Destroy(window);
+    BitmapWindow_Destroy(window);
 
     return 0;
 }
