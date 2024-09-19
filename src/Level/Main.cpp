@@ -22,9 +22,9 @@ using namespace std;
 
 #include <windows.h>
 
-bool           _windowClassRegistered = false;
-const LPCWSTR  _windowClassName = L"WindowClass1";
-const LPCWSTR  _windowName = L"WindowName1";
+bool           _BitmapWindow_Registered = false;
+const LPCWSTR  _BitmapWindow_ClassName = L"BitmapWindowClass";
+const LPCWSTR  _BitmapWindow_Name = L"BitmapWindow";
 
 typedef struct BitmapWindow
 {
@@ -90,20 +90,9 @@ void _BitmapWindow_PaintBitmap(BitmapWindow* instance)
     EndPaint(instance->_hwnd, &paint);
 }
 
-void _BitmapWindow_SetInstance(BitmapWindow* window)
-{
-    SetWindowLongPtr(window->_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window));
-}
-void _BitmapWindow_GetInstance(HWND hwnd, BitmapWindow** outWindow)
-{
-    *outWindow = reinterpret_cast<BitmapWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-}
-
 LRESULT CALLBACK _BitmapWindow_MessageHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    BitmapWindow* instance;
-
-    _BitmapWindow_GetInstance(hwnd, &instance);
+    BitmapWindow* instance = reinterpret_cast<BitmapWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
     if (instance == NULL)
         return DefWindowProc(hwnd, message, wParam, lParam);
@@ -123,6 +112,8 @@ LRESULT CALLBACK _BitmapWindow_MessageHandler(HWND hwnd, UINT message, WPARAM wP
         }
         case WM_SIZE:
         {
+            cout << "HI" << endl;
+
             int clientWidth = LOWORD(lParam);
             int clientHeight = HIWORD(lParam);
 
@@ -177,13 +168,13 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     HINSTANCE hInstance = GetModuleHandle(nullptr);
 
-    if (!_windowClassRegistered)
+    if (!_BitmapWindow_Registered)
     {
-        _windowClassRegistered = true;
+        _BitmapWindow_Registered = true;
         WNDCLASS window_class = {};
         window_class.lpfnWndProc = _BitmapWindow_MessageHandler;
         window_class.hInstance = hInstance;
-        window_class.lpszClassName = _windowClassName;
+        window_class.lpszClassName = _BitmapWindow_ClassName;
         window_class.hCursor = LoadCursorW(nullptr, IDC_ARROW);
         RegisterClass(&window_class);
     }
@@ -198,17 +189,16 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
     auto windowWidth = rect.right - rect.left;
     auto windowHeight = rect.bottom - rect.top;
 
-
     _BitmapWindow_InitBitmap(instance);
-    // instance->_hdc = CreateCompatibleDC(0);
+    _BitmapWindow_ResetBitmap(instance, clientWidth, clientHeight);
 
-    instance->_hwnd = CreateWindow(_windowClassName, _windowName, lStyle,
+    instance->_hwnd = CreateWindow(_BitmapWindow_ClassName, _BitmapWindow_Name, lStyle,
                             (LONG)x, (LONG)y, windowWidth, windowHeight,
                             NULL, NULL, hInstance, NULL);
 
     assert(instance->_hwnd != NULL);
 
-    _BitmapWindow_SetInstance(instance);
+    SetWindowLongPtr(instance->_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(instance));
 
     // Forces window to update style
     // Setting lStyle before CreateWindow() wont work
@@ -261,7 +251,6 @@ void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width,
         instance->_pixels[x + y2 * width] = pixel;
     }
 }
-
 void TestDraw(BitmapWindow* window, int width, int height)
 {
     for (size_t y = 0; y < height; y++)
@@ -284,12 +273,14 @@ void TestDraw(BitmapWindow* window, int width, int height)
 
 int main()
 {
-    BitmapWindow* window = BitmapWindow_Create(0, 0, 200, 200);
+    int size = 512;
+
+    BitmapWindow* window = BitmapWindow_Create(0, 0, size, size);
 
     while (BitmapWindow_Exists(window))
     {
         BitmapWindow_Update(window);
-        TestDraw(window, 200, 200);
+        TestDraw(window, size, size);
     }
 
     BitmapWindow_Destroy(window);
