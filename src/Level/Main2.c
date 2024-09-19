@@ -1,5 +1,5 @@
-             
-             
+
+
 #pragma pack(push,_CRT_PACKING)
   typedef __builtin_va_list __gnuc_va_list;
   typedef __gnuc_va_list va_list;
@@ -50,23 +50,23 @@ typedef struct threadlocaleinfostruct {
 } threadlocinfo;
 #pragma pack(pop)
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _itow_s (int _Val,wchar_t *_DstBuf,size_t _SizeInWords,int _Radix);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _ltow_s (long _Val,wchar_t *_DstBuf,size_t _SizeInWords,int _Radix);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _ultow_s (unsigned long _Val,wchar_t *_DstBuf,size_t _SizeInWords,int _Radix);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wgetenv_s(size_t *_ReturnSize,wchar_t *_DstBuf,size_t _DstSizeInWords,const wchar_t *_VarName);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wdupenv_s(wchar_t **_Buffer,size_t *_BufferSizeInWords,const wchar_t *_VarName);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _i64tow_s(long long _Val,wchar_t *_DstBuf,size_t _SizeInWords,int _Radix);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _ui64tow_s(unsigned long long _Val,wchar_t *_DstBuf,size_t _SizeInWords,int _Radix);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wmakepath_s(wchar_t *_PathResult,size_t _SizeInWords,const wchar_t *_Drive,const wchar_t *_Dir,const wchar_t *_Filename,const wchar_t *_Ext);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wputenv_s(const wchar_t *_Name,const wchar_t *_Value);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wsearchenv_s(const wchar_t *_Filename,const wchar_t *_EnvVar,wchar_t *_ResultPath,size_t _SizeInWords);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wsplitpath_s(const wchar_t *_FullPath,wchar_t *_Drive,size_t _DriveSizeInWords,wchar_t *_Dir,size_t _DirSizeInWords,wchar_t *_Filename,size_t _FilenameSizeInWords,wchar_t *_Ext,size_t _ExtSizeInWords);
- 
+
 #pragma pack(push,_CRT_PACKING)
   typedef int (__attribute__((__cdecl__)) *_onexit_t)(void);
   typedef struct _div_t {
@@ -88,11 +88,11 @@ typedef struct threadlocaleinfostruct {
   typedef struct {
     float f;
   } _CRT_FLOAT;
-       
+
   typedef struct {
     long double x;
   } _LONGDOUBLE;
-       
+
 #pragma pack(4)
   typedef struct {
     unsigned char ld12[12];
@@ -134,9 +134,9 @@ __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) ___mb_cur_max_fun
   void __attribute__((__cdecl__)) __attribute__ ((__nothrow__)) _exit(int _Code) __attribute__ ((__noreturn__));
   void __attribute__((__cdecl__)) __attribute__ ((__nothrow__)) quick_exit(int _Code) __attribute__ ((__noreturn__));
   void __attribute__((__cdecl__)) _Exit(int) __attribute__ ((__noreturn__));
-       
+
   void __attribute__((__cdecl__)) __attribute__ ((__noreturn__)) abort(void);
-       
+
   __attribute__ ((__dllimport__)) unsigned int __attribute__((__cdecl__)) _set_abort_behavior(unsigned int _Flags,unsigned int _Mask);
   int __attribute__((__cdecl__)) abs(int _X);
   long __attribute__((__cdecl__)) labs(long _X);
@@ -264,18 +264,18 @@ unsigned long __attribute__((__cdecl__)) _lrotr(unsigned long,int);
   __attribute__ ((__dllimport__)) void __attribute__((__cdecl__)) _makepath(char *_Path,const char *_Drive,const char *_Dir,const char *_Filename,const char *_Ext);
   _onexit_t __attribute__((__cdecl__)) _onexit(_onexit_t _Func);
   void __attribute__((__cdecl__)) perror(const char *_ErrMsg);
-       
-       
+
+
   __extension__ unsigned long long __attribute__((__cdecl__)) _rotl64(unsigned long long _Val,int _Shift);
   __extension__ unsigned long long __attribute__((__cdecl__)) _rotr64(unsigned long long Value,int Shift);
-       
-       
-       
-       
+
+
+
+
   unsigned int __attribute__((__cdecl__)) _rotr(unsigned int _Val,int _Shift);
   unsigned int __attribute__((__cdecl__)) _rotl(unsigned int _Val,int _Shift);
-       
-       
+
+
   __extension__ unsigned long long __attribute__((__cdecl__)) _rotr64(unsigned long long _Val,int _Shift);
   __attribute__ ((__dllimport__)) void __attribute__((__cdecl__)) _searchenv(const char *_Filename,const char *_EnvVar,char *_ResultPath) ;
   __attribute__ ((__dllimport__)) void __attribute__((__cdecl__)) _splitpath(const char *_FullPath,char *_Drive,char *_Dir,char *_Filename,char *_Ext) ;
@@ -312,25 +312,25 @@ unsigned long __attribute__((__cdecl__)) _lrotr(unsigned long,int);
   __attribute__ ((__dllimport__)) void * __attribute__((__cdecl__)) bsearch_s(const void *_Key,const void *_Base,rsize_t _NumOfElements,rsize_t _SizeOfElements,int (__attribute__((__cdecl__)) * _PtFuncCompare)(void *, const void *, const void *), void *_Context);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _dupenv_s(char **_PBuffer,size_t *_PBufferSizeInBytes,const char *_VarName);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) getenv_s(size_t *_ReturnSize,char *_DstBuf,rsize_t _DstSize,const char *_VarName);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _itoa_s(int _Value,char *_DstBuf,size_t _Size,int _Radix);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _i64toa_s(long long _Val,char *_DstBuf,size_t _Size,int _Radix);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _ui64toa_s(unsigned long long _Val,char *_DstBuf,size_t _Size,int _Radix);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _ltoa_s(long _Val,char *_DstBuf,size_t _Size,int _Radix);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) mbstowcs_s(size_t *_PtNumOfCharConverted,wchar_t *_DstBuf,size_t _SizeInWords,const char *_SrcBuf,size_t _MaxCount);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _mbstowcs_s_l(size_t *_PtNumOfCharConverted,wchar_t *_DstBuf,size_t _SizeInWords,const char *_SrcBuf,size_t _MaxCount,_locale_t _Locale);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _ultoa_s(unsigned long _Val,char *_DstBuf,size_t _Size,int _Radix);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) wctomb_s(int *_SizeConverted,char *_MbCh,rsize_t _SizeInBytes,wchar_t _WCh);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wctomb_s_l(int *_SizeConverted,char *_MbCh,size_t _SizeInBytes,wchar_t _WCh,_locale_t _Locale);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) wcstombs_s(size_t *_PtNumOfCharConverted,char *_Dst,size_t _DstSizeInBytes,const wchar_t *_Src,size_t _MaxCountInBytes);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcstombs_s_l(size_t *_PtNumOfCharConverted,char *_Dst,size_t _DstSizeInBytes,const wchar_t *_Src,size_t _MaxCountInBytes,_locale_t _Locale);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _ecvt_s(char *_DstBuf,size_t _Size,double _Val,int _NumOfDights,int *_PtDec,int *_PtSign);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _fcvt_s(char *_DstBuf,size_t _Size,double _Val,int _NumOfDec,int *_PtDec,int *_PtSign);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _gcvt_s(char *_DstBuf,size_t _Size,double _Val,int _NumOfDigits);
@@ -338,7 +338,7 @@ unsigned long __attribute__((__cdecl__)) _lrotr(unsigned long,int);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _putenv_s(const char *_Name,const char *_Value);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _searchenv_s(const char *_Filename,const char *_EnvVar,char *_ResultPath,size_t _SizeInBytes);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _splitpath_s(const char *_FullPath,char *_Drive,size_t _DriveSize,char *_Dir,size_t _DirSize,char *_Filename,size_t _FilenameSize,char *_Ext,size_t _ExtSize);
- 
+
   __attribute__ ((__dllimport__)) void __attribute__((__cdecl__)) qsort_s(void *_Base,size_t _NumOfElements,size_t _SizeOfElements,int (__attribute__((__cdecl__)) *_PtFuncCompare)(void *,const void *,const void *),void *_Context);
 #pragma pack(push,_CRT_PACKING)
   typedef struct _heapinfo {
@@ -478,11 +478,11 @@ __attribute__ ((__dllimport__)) void __attribute__((__cdecl__)) _assert (const c
   typedef UCHAR *PUCHAR;
   typedef char *PSZ;
 typedef int WINBOOL;
-       
+
   typedef int BOOL;
 typedef WINBOOL *PBOOL;
 typedef WINBOOL *LPBOOL;
-       
+
   typedef unsigned char BYTE;
   typedef unsigned short WORD;
   typedef unsigned long DWORD;
@@ -587,7 +587,7 @@ int __attribute__((__cdecl__)) isblank(int _C);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _iswcsym_l(wint_t _C,_locale_t _Locale);
   int __attribute__((__cdecl__)) is_wctype(wint_t _C,wctype_t _Type);
 int __attribute__((__cdecl__)) iswblank(wint_t _C);
-       
+
 void __faststorefence(void);
 extern __inline__ __attribute__((__always_inline__,__gnu_inline__))
 void __faststorefence(void) {
@@ -821,7 +821,7 @@ void __movsw(unsigned short *Destination, unsigned short const *Source, size_t C
 void __movsd(unsigned long *Dest, unsigned long const *Source, size_t Count);
 extern __inline__ __attribute__((__always_inline__,__gnu_inline__))
 void __movsd(unsigned long *Destination, unsigned long const *Source, size_t Count) { __asm__ __volatile__ ( "rep movs" "d" : "=D" (Destination), "=S" (Source), "=c" (Count) : "0" (Destination), "1" (Source), "2" (Count) : "memory"); }
-       
+
 __extension__ typedef unsigned long long POINTER_64_INT;
   typedef signed char INT8,*PINT8;
   typedef signed short INT16,*PINT16;
@@ -997,18 +997,18 @@ typedef LONG RTL_REFERENCE_COUNT32, *PRTL_REFERENCE_COUNT32;
     unsigned short __attribute__((__cdecl__)) _rotl16(unsigned short Value,unsigned char Shift);
     unsigned char __attribute__((__cdecl__)) _rotr8(unsigned char Value,unsigned char Shift);
     unsigned short __attribute__((__cdecl__)) _rotr16(unsigned short Value,unsigned char Shift);
-       
-       
+
+
     unsigned int __attribute__((__cdecl__)) _rotl(unsigned int Value,int Shift);
     unsigned int __attribute__((__cdecl__)) _rotr(unsigned int Value,int Shift);
-       
-       
-       
-       
+
+
+
+
     __extension__ unsigned long long __attribute__((__cdecl__)) _rotl64(unsigned long long Value,int Shift);
     __extension__ unsigned long long __attribute__((__cdecl__)) _rotr64(unsigned long long Value,int Shift);
-       
-       
+
+
   typedef BYTE BOOLEAN;
   typedef BOOLEAN *PBOOLEAN;
   typedef struct _LIST_ENTRY {
@@ -1092,9 +1092,9 @@ typedef FMTID *LPFMTID;
   size_t __attribute__((__cdecl__)) strspn(const char *_Str,const char *_Control);
   char *__attribute__((__cdecl__)) strstr(const char *_Str,const char *_SubStr);
   char *__attribute__((__cdecl__)) strtok(char * __restrict__ _Str,const char * __restrict__ _Delim) ;
-       
+
   char *strtok_r(char * __restrict__ _Str, const char * __restrict__ _Delim, char ** __restrict__ __last);
-       
+
   __attribute__ ((__dllimport__)) char *__attribute__((__cdecl__)) _strupr(char *_String) ;
   __attribute__ ((__dllimport__)) char *_strupr_l(char *_String,_locale_t _Locale) ;
   size_t __attribute__((__cdecl__)) strxfrm(char * __restrict__ _Dst,const char * __restrict__ _Src,size_t _MaxCount);
@@ -1170,15 +1170,15 @@ typedef FMTID *LPFMTID;
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) strncat_s(char *_Dst,size_t _DstSizeInChars,const char *_Src,size_t _MaxCount);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _strncat_s_l(char *_Dst,size_t _DstSizeInChars,const char *_Src,size_t _MaxCount,_locale_t _Locale);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) strcpy_s(char *_Dst, rsize_t _SizeInBytes, const char *_Src);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) strncpy_s(char *_Dst, size_t _DstSizeInChars, const char *_Src, size_t _MaxCount);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _strncpy_s_l(char *_Dst, size_t _DstSizeInChars, const char *_Src, size_t _MaxCount, _locale_t _Locale);
   ;
   __attribute__ ((__dllimport__)) char *__attribute__((__cdecl__)) strtok_s(char *_Str,const char *_Delim,char **_Context);
   __attribute__ ((__dllimport__)) char *__attribute__((__cdecl__)) _strtok_s_l(char *_Str,const char *_Delim,char **_Context,_locale_t _Locale);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) strcat_s(char *_Dst, rsize_t _SizeInBytes, const char * _Src);
- 
+
   extern __inline__ __attribute__((__always_inline__,__gnu_inline__)) size_t __attribute__((__cdecl__)) strnlen_s(const char * _src, size_t _count) {
     return _src ? strnlen(_src, _count) : 0;
   }
@@ -1189,17 +1189,17 @@ typedef FMTID *LPFMTID;
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcsnset_s(wchar_t *_Dst,size_t _DstSizeInWords,wchar_t _Val,size_t _MaxCount);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcsset_s(wchar_t *_Str,size_t _SizeInWords,wchar_t _Val);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcslwr_s(wchar_t *_Str,size_t _SizeInWords);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcslwr_s_l(wchar_t *_Str,size_t _SizeInWords,_locale_t _Locale);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcsupr_s(wchar_t *_Str,size_t _Size);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcsupr_s_l(wchar_t *_Str,size_t _Size,_locale_t _Locale);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) wcscpy_s(wchar_t *_Dst, rsize_t _SizeInWords, const wchar_t *_Src);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) wcscat_s(wchar_t * _Dst, rsize_t _SizeInWords, const wchar_t *_Src);
- 
+
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) wcsncat_s(wchar_t *_Dst,size_t _DstSizeInChars,const wchar_t *_Src,size_t _MaxCount);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) _wcsncat_s_l(wchar_t *_Dst,size_t _DstSizeInChars,const wchar_t *_Src,size_t _MaxCount,_locale_t _Locale);
   __attribute__ ((__dllimport__)) errno_t __attribute__((__cdecl__)) wcsncpy_s(wchar_t *_Dst, size_t _DstSizeInChars, const wchar_t *_Src, size_t _MaxCount);
@@ -46217,8 +46217,8 @@ typedef const REDIRECTION_DESCRIPTOR *PCREDIRECTION_DESCRIPTOR;
   __attribute__((dllimport)) HRESULT __attribute__((__stdcall__)) IsWow64GuestMachineSupported (USHORT WowGuestMachine, WINBOOL *MachineIsSupported);
   __attribute__((dllimport)) WINBOOL __attribute__((__stdcall__)) IsWow64Process (HANDLE hProcess, PBOOL Wow64Process);
   __attribute__((dllimport)) WINBOOL __attribute__((__stdcall__)) IsWow64Process2 (HANDLE hProcess, USHORT *pProcessMachine, USHORT *pNativeMachine);
-       
-       
+
+
   typedef void (__attribute__((__stdcall__)) *PFIBER_START_ROUTINE) (LPVOID lpFiberParameter);
   typedef PFIBER_START_ROUTINE LPFIBER_START_ROUTINE;
   typedef LPVOID (__attribute__((__stdcall__)) *PFIBER_CALLOUT_ROUTINE) (LPVOID lpParameter);
@@ -53557,13 +53557,13 @@ struct timezone {
   extern int __attribute__((__cdecl__)) mingw_gettimeofday (struct timeval *p, struct timezone *z);
 #pragma pack(pop)
 typedef int clockid_t;
-       
+
 int __attribute__((__cdecl__)) nanosleep(const struct timespec *request, struct timespec *remain);
 int __attribute__((__cdecl__)) clock_nanosleep(clockid_t clock_id, int flags, const struct timespec *request, struct timespec *remain);
 int __attribute__((__cdecl__)) clock_getres(clockid_t clock_id, struct timespec *res);
 int __attribute__((__cdecl__)) clock_gettime(clockid_t clock_id, struct timespec *tp);
 int __attribute__((__cdecl__)) clock_settime(clockid_t clock_id, const struct timespec *tp);
-       
+
 typedef struct BitmapWindow
 {
     _Bool keydown_W;
