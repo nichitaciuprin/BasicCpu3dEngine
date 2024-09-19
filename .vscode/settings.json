@@ -86,7 +86,9 @@
         "hash_map": "cpp",
         "hash_set": "cpp",
         "execution": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "deps.h": "c",
+        "assert.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

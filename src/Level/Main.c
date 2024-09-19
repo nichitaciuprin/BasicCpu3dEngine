@@ -1,6 +1,6 @@
-#include <stdlib.h>
-#include <stdbool.h>
-#include <stdint.h>
+typedef unsigned char uint8_t;
+typedef unsigned uint32_t;
+
 #include <assert.h>
 
 #define WIN32_LEAN_AND_MEAN
@@ -16,16 +16,16 @@
 
 typedef struct BitmapWindow
 {
-    bool keydown_W;
-    bool keydown_A;
-    bool keydown_S;
-    bool keydown_D;
-    bool keydown_E;
-    bool keydown_Q;
-    bool keydown_UP;
-    bool keydown_LEFT;
-    bool keydown_DOWN;
-    bool keydown_RIGHT;
+    _Bool keydown_W;
+    _Bool keydown_A;
+    _Bool keydown_S;
+    _Bool keydown_D;
+    _Bool keydown_E;
+    _Bool keydown_Q;
+    _Bool keydown_UP;
+    _Bool keydown_LEFT;
+    _Bool keydown_DOWN;
+    _Bool keydown_RIGHT;
 
     HWND       _hwnd;
 
@@ -37,7 +37,7 @@ typedef struct BitmapWindow
 }
 BitmapWindow;
 
-bool _BitmapWindow_Registered = false;
+_Bool _BitmapWindow_Registered = 0;
 
 void _BitmapWindow_InitBitmap(BitmapWindow* instance)
 {
@@ -105,7 +105,7 @@ LRESULT CALLBACK _BitmapWindow_MessageHandler(HWND hwnd, UINT message, WPARAM wP
             int clientWidth = LOWORD(lParam);
             int clientHeight = HIWORD(lParam);
 
-            bool sizeChanged =
+            _Bool sizeChanged =
                 instance->_width != clientWidth ||
                 instance->_height != clientHeight;
 
@@ -117,7 +117,7 @@ LRESULT CALLBACK _BitmapWindow_MessageHandler(HWND hwnd, UINT message, WPARAM wP
         case WM_KEYDOWN:
         case WM_KEYUP:
         {
-            bool isDown = (message == WM_KEYDOWN);
+            _Bool isDown = (message == WM_KEYDOWN);
 
             switch (wParam)
             {
@@ -154,16 +154,16 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 {
     BitmapWindow* instance = (BitmapWindow*)malloc(sizeof(BitmapWindow));
 
-    instance->keydown_W = false;
-    instance->keydown_A = false;
-    instance->keydown_S = false;
-    instance->keydown_D = false;
-    instance->keydown_E = false;
-    instance->keydown_Q = false;
-    instance->keydown_UP = false;
-    instance->keydown_LEFT = false;
-    instance->keydown_DOWN = false;
-    instance->keydown_RIGHT = false;
+    instance->keydown_W = 0;
+    instance->keydown_A = 0;
+    instance->keydown_S = 0;
+    instance->keydown_D = 0;
+    instance->keydown_E = 0;
+    instance->keydown_Q = 0;
+    instance->keydown_UP = 0;
+    instance->keydown_LEFT = 0;
+    instance->keydown_DOWN = 0;
+    instance->keydown_RIGHT = 0;
 
     instance->_hwnd = 0;
 
@@ -179,7 +179,7 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     if (!_BitmapWindow_Registered)
     {
-        _BitmapWindow_Registered = true;
+        _BitmapWindow_Registered = 1;
         WNDCLASS window_class = {};
         window_class.lpfnWndProc = _BitmapWindow_MessageHandler;
         window_class.hInstance = hInstance;
@@ -219,7 +219,7 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 
     return instance;
 }
-bool BitmapWindow_Exists(BitmapWindow* instance)
+_Bool BitmapWindow_Exists(BitmapWindow* instance)
 {
     return instance->_hwnd != 0;
 }
@@ -265,8 +265,8 @@ void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width,
 }
 void TestDraw(BitmapWindow* window, int width, int height)
 {
-    for (size_t y = 0; y < height; y++)
-    for (size_t x = 0; x < width; x++)
+    for (int y = 0; y < height; y++)
+    for (int x = 0; x < width; x++)
     {
         uint32_t a = 0;
         uint32_t r = (uint8_t)(clock() / 9);
