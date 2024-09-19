@@ -88,7 +88,10 @@
         "execution": "cpp",
         "deque": "cpp",
         "deps.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "wingdi.h": "c",
+        "windows.h": "c",
+        "winuser.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
