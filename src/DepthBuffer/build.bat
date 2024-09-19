@@ -2,58 +2,45 @@
 setlocal
 
 set root=%~dp0..\..
+set deps=%root%\deps
 set batdir=%~dp0
 set build=%batdir%build
-set deps=%root%\deps
-set exitiferror=if %errorlevel% neq 0 exit /b %errorlevel%
 
-set include=
-set include=%include%%deps%\MSVC\include;
-set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\ucrt;
-set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\um;
-set include=%include%%deps%\WindowsKits\10\Include\10.0.22621.0\shared;
-set include=%include%%deps%\BaseOld;
-set include=%include%%deps%\Base\include;
+@REM -O (Same as -O1)
+@REM -O0 (do no optimize, the default if no optimization level is specified)
+@REM -O1 (optimize minimally, favoring compilation time)
+@REM -O2 (optimize more, without speed/size tradeoff)
+@REM -O3 (optimize even more, favoring speed)
+@REM -Ofast (optimize very aggressively to the point of breaking standard compliance, favoring speed. May change program behavior)
+@REM -Og (Optimize debugging experience. -Og enables optimizations that do not interfere with debugging. It should be the optimization level of choice for the standard edit-compile-debug cycle, offering a reasonable level of optimization while maintaining fast compilation and a good debugging experience.)
+@REM -Os (Optimize for size. -Os enables all -O2 optimizations that do not typically increase code size. It also performs further optimizations designed to reduce code size. -Os disables the following optimization flags: -falign-functions -falign-jumps -falign-loops -falign-labels -freorder-blocks -freorder-blocks-and-partition -fprefetch-loop-arrays -ftree-vect-loop-version)
+set optimisationLevel=-Og
+
+set flags=-g3 %optimisationLevel% -Werror -std=c++17 -pthread -m64
+
+@REM set lib=%lib% -L%deps%\raylib\lib -ldloadhelper -lglmf32 -lm -lopengl32 -lgdi32 -lwinmm -ld3d11 -ld3dcompiler
+
+@REM set lib=%lib% -lpthread -lm
 
 set lib=
-set lib=%lib%%deps%\MSVC\lib\x64;
-set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\um\x64;
-set lib=%lib%%deps%\WindowsKits\10\Lib\10.0.22621.0\ucrt\x64;
+set lib=%lib% -L%deps%\raylib\lib -lraylib -lgdi32 -lwinmm
+set lib=%lib% -L%deps%\ReactPhysics3D\lib -lreactphysics3d
 
-set SYSTEM_LIBS=user32.lib gdi32.lib winmm.lib d3d11.lib d3dcompiler.lib
+set include=
+set include=%include% -I%deps%\Base\include
+set include=%include% -I%deps%\Raylib\include
+set include=%include% -I%deps%\RaylibWrap\include
+set include=%include% -I%deps%\ReactPhysics3D\include
+set include=%include% -I%deps%\ReactPhysics3DWrap\include
+set include=%include% -I%~dp0src
 
-set _link=%deps%\MSVC\bin\Hostx64\x64\link.exe
-set _cl=%deps%\MSVC\bin\Hostx64\x64\cl.exe
-
-set _optimimisationDisable=/Od
-set _optimimisationLevel2=/O2
-set _enableWarningsLevel4=/W4
-set _treatWarningsAsErrors=/WX
-set _hidelogs=/nologo
-set _exceptionHandling=/EHsc
-set _enablesExtraWarning=/analyze
-
-set _options=^
-%_exceptionHandling% ^
-%_hidelogs% ^
-%_optimimisationLevel2% ^
-%_enableWarningsLevel4% ^
-%_enablesExtraWarning%
+set src=
+set src=%src% %deps%\Base\src\BitmapWindow.cpp
+set src=%src% %deps%\Base\src\SysHelperWin.cpp
+set src=%src% %deps%\Base\src\SysHelperWin2.cpp
+set src=%src% %deps%\RaylibWrap\src\RaylibWrap.cpp
 
 if exist %build% rmdir /S /Q %build%
-mkdir %build%
-@REM if not exist build mkdir build
+   mkdir %build%
 
-%_cl%  /nologo /c  %deps%\Base\BitmapWindow.cpp     /Fo:%build%\BitmapWindow  %_options%
-%_cl%  /nologo /c  %deps%\Base\SysHelperWin.cpp     /Fo:%build%\SysHelperWin  %_options%
-%_cl%  /nologo /c  %deps%\Base\SysHelperWin2.cpp    /Fo:%build%\SysHelperWin2 %_options%
-%_cl%  /nologo /c  main.cpp                         /Fo:%build%\main          %_options%
-
-set objfiles=^
-%build%\BitmapWindow.obj ^
-%build%\SysHelperWin.obj ^
-%build%\SysHelperWin2.obj ^
-%build%\main.obj
-
-%_link% %objfiles% /out:%build%\main.exe /INCREMENTAL:NO /nologo %SYSTEM_LIBS%
-%exitiferror%
+g++ main.cpp %src% -o build/main.exe %flags% %include% %lib%
