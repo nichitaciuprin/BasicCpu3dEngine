@@ -3,7 +3,8 @@
         {
             "name": "Windows",
             "includePath": [
-                "${workspaceFolder}/src/*"
+                "${workspaceFolder}/deps/Base/**",
+                "${workspaceFolder}/src/**"
             ],
             "cStandard": "c17",
             "cppStandard": "c++17",
