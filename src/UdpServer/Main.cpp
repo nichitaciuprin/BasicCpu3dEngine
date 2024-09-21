@@ -1,28 +1,30 @@
+#include "Std.h"
+#include "SysHelper.h"
 #include "NetHelper.h"
 
 int main()
 {
-    InitNetHelper();
-    SOCKET sock = CreateSocket(27015);
-    SOCKADDR addr = CreateSocketAddressEmpty();
+    NetHelper_InitNetHelper();
+    SOCKET sock = NetHelper_CreateSocket(27015);
+    SOCKADDR addr = NetHelper_CreateSocketAddressEmpty();
 
     char buffer[1024];
     int messageLength = 0;
 
     while (true)
     {
-        RecvMessage(&sock, &addr, buffer, &messageLength);
+        NetHelper_RecvMessage(&sock, &addr, buffer, &messageLength);
         if (messageLength > 0)
             printf("%.*s\n", messageLength, buffer);
 
-        Sleep(1000);
+        Halt(1000);
 
         const char* message = "server";
         strcpy(buffer, message);
         messageLength = strlen(message);
-        SendMessage(&sock, &addr, buffer, messageLength);
+        NetHelper_SendMessage(&sock, &addr, buffer, messageLength);
 
-        Sleep(1000);
+        Halt(1000);
     }
 
     return 0;

@@ -37,8 +37,9 @@ set include=%include% -I%deps%\Base\include
 
 set src=
 @REM set src=%src% %deps%\Base\src\BitmapWindow.cpp
-@REM set src=%src% %deps%\Base\src\SysHelperWin.cpp
-@REM set src=%src% %deps%\Base\src\SysHelperWin2.cpp
+set src=%src% %deps%\Base\src\SysHelperWin.cpp
+set src=%src% %deps%\Base\src\SysHelperWin2.cpp
+set src=%src% %deps%\Base\src\NetHelper.cpp
 @REM set src=%src% %deps%\RaylibWrap\src\RaylibWrap.cpp
 
 if exist %build% rmdir /S /Q %build%

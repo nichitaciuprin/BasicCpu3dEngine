@@ -12,7 +12,7 @@
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
 
-void InitNetHelper()
+void NetHelper_InitNetHelper()
 {
     WSADATA wsaData;
 
@@ -21,7 +21,20 @@ void InitNetHelper()
     if (result != NO_ERROR)
         printf("WSAStartup failed with error %d\n", result);
 }
-SOCKET CreateSocket()
+SOCKADDR NetHelper_CreateSocketAddressEmpty()
+{
+    struct sockaddr_in addr1;
+    return *((SOCKADDR*)&addr1);
+}
+SOCKADDR NetHelper_CreateSocketAddress(const char* ip, short port)
+{
+    struct sockaddr_in addr1;
+    addr1.sin_family = AF_INET;
+    addr1.sin_port = htons(port);
+    addr1.sin_addr.s_addr = inet_addr(ip);
+    return *((SOCKADDR*)&addr1);
+}
+SOCKET NetHelper_CreateSocketNoBind()
 {
     SOCKET sock = INVALID_SOCKET;
     sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -35,27 +48,64 @@ SOCKET CreateSocket()
 
     return sock;
 }
-SOCKADDR CreateSocketAddress(const char* ip, short port)
+SOCKET NetHelper_CreateSocketLocalHost(int port)
 {
-    struct sockaddr_in addr1;
-    addr1.sin_family = AF_INET;
-    addr1.sin_port = htons(port);
-    addr1.sin_addr.s_addr = inet_addr(ip);
-    return *((SOCKADDR*)&addr1);
+    SOCKET sock = INVALID_SOCKET;
+    sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+    // makes socket non-blocking
+    u_long mode = 1;
+    ioctlsocket(sock, FIONBIO, &mode);
+
+    if (sock == INVALID_SOCKET)
+        printf("socket failed with error %d\n", WSAGetLastError());
+
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    if (bind(sock, (SOCKADDR*)&addr, sizeof(addr)))
+    {
+        printf("bind failed with error %d\n", WSAGetLastError());
+        return 1;
+    }
+
+    return sock;
 }
-SOCKADDR CreateSocketAddressEmpty()
+SOCKET NetHelper_CreateSocket(int port)
 {
-    struct sockaddr_in addr1;
-    return *((SOCKADDR*)&addr1);
+    SOCKET sock = INVALID_SOCKET;
+    sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+    // makes socket non-blocking
+    u_long mode = 1;
+    ioctlsocket(sock, FIONBIO, &mode);
+
+    if (sock == INVALID_SOCKET)
+        printf("socket failed with error %d\n", WSAGetLastError());
+
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    if (bind(sock, (SOCKADDR*)&addr, sizeof(addr)))
+    {
+        printf("bind failed with error %d\n", WSAGetLastError());
+        return 1;
+    }
+
+    return sock;
 }
-void SendMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int messageSize)
+void NetHelper_SendMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int messageSize)
 {
     int addrSize = (sizeof(*addr));
     sendto(*sock, buffer, messageSize, 0, addr, addrSize);
 }
-void RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* messageSize)
+void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* messageSize)
 {
-    int addrSize;
+    int addrSize = (sizeof(*addr));
     int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
     *messageSize = byteCount;
 }
