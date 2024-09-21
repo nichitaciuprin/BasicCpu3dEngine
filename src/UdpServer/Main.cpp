@@ -4,16 +4,14 @@
 
 int main()
 {
-    NetHelper_InitNetHelper();
-    SOCKET sock = NetHelper_CreateSocket(27015);
-    SOCKADDR addr = NetHelper_CreateSocketAddressEmpty();
+    NetListen(27015);
 
     char buffer[1024];
     int messageLength = 0;
 
     while (true)
     {
-        NetHelper_RecvMessage(&sock, &addr, buffer, &messageLength);
+        NetRecv(buffer, &messageLength);
         if (messageLength > 0)
             printf("%.*s\n", messageLength, buffer);
 
@@ -22,7 +20,7 @@ int main()
         const char* message = "server";
         strcpy(buffer, message);
         messageLength = strlen(message);
-        NetHelper_SendMessage(&sock, &addr, buffer, messageLength);
+        NetResp(buffer, messageLength);
 
         Halt(1000);
     }
