@@ -1,64 +1,32 @@
-#include <Std.h>
-#include <StdExt.h>
-
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#include <windows.h>
-#include <winuser.h>
-
-#include <WinSock2.h>
-#include <Ws2tcpip.h>
+#include "NetHelper.h"
 
 int main()
 {
-    int iResult = 0;
+    InitNetHelper();
 
-    WSADATA wsaData;
-    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    SOCKET sock = CreateSocket();
+    SOCKADDR source = CreateSocketAddressEmpty();
+    SOCKADDR target = CreateSocketAddress("127.0.0.1", 27015);
 
-    if (iResult != NO_ERROR)
+    char buffer[1024];
+
+    while (true)
     {
-        printf("WSAStartup failed with error %d\n", iResult);
-        return 1;
+        const char* message = "sendtome";
+        int messageLen = strlen(message);
+        strcpy(buffer, message);
+        SendMessage(&sock, &target, buffer, messageLen);
+
+        Sleep(1000);
+
+        int messageSize = 0;
+
+        RecvMessage(&sock, &source, buffer, &messageSize);
+        if (messageSize > 0)
+            printf("%.*s\n", messageSize, buffer);
+
+        Sleep(1000);
     }
-
-    SOCKET soc = INVALID_SOCKET;
-    soc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-    if (soc == INVALID_SOCKET)
-    {
-        printf("socket failed with error %d\n", WSAGetLastError());
-        return 1;
-    }
-
-    struct sockaddr_in serverAddr;
-    int SenderAddrSize = sizeof(serverAddr);
-
-    char SendBuf[1024];
-    int BufLen = (int)(sizeof(SendBuf) - 1);
-    const char* toSend = "foobar";
-    strcpy(SendBuf, toSend);
-
-    struct sockaddr_in ClientAddr;
-    int clientAddrSize = (int)sizeof(ClientAddr);
-    short port = 27015;
-    const char* local_host = "127.0.0.1";
-    ClientAddr.sin_family = AF_INET;
-    ClientAddr.sin_port = htons(port);
-    ClientAddr.sin_addr.s_addr = inet_addr(local_host);
-    printf("Sending a datagram to the receiver...\n");
-
-    int clientResult = sendto(soc, SendBuf, BufLen, 0, (SOCKADDR*)&ClientAddr, clientAddrSize);
-
-    int bytes_received = recvfrom(soc, SendBuf, BufLen, 0, (SOCKADDR*)&ClientAddr, &SenderAddrSize);
-
-    SendBuf[bytes_received] = '\0';
-
-    printf(SendBuf);
-    printf("\n");
 
     return 0;
 }

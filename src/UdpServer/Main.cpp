@@ -28,6 +28,10 @@ int main()
     SOCKET serverSocket = INVALID_SOCKET;
     serverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
+    // makes socket non-blocking
+    // u_long mode = 1;
+    // ioctlsocket(serverSocket, FIONBIO, &mode);
+
     if (serverSocket == INVALID_SOCKET)
     {
         printf("socket failed with error %d\n", WSAGetLastError());
@@ -51,26 +55,27 @@ int main()
     char messageBuffer[1025];
     int serverBufLen = 1024;
 
-    // Keep a seperate address struct to store sender information.
     struct sockaddr_in SenderAddr;
     int SenderAddrSize = sizeof(SenderAddr);
 
-    printf("Receiving datagrams on %s\n", "127.0.0.1");
+    while (true)
+    {
+        bytes_received = recvfrom(serverSocket, messageBuffer, serverBufLen, 0, (SOCKADDR*)&SenderAddr, &SenderAddrSize);
 
-    bytes_received = recvfrom(serverSocket, messageBuffer, serverBufLen, 0 /* no flags*/, (SOCKADDR *)&SenderAddr, &SenderAddrSize);
+        if (bytes_received == SOCKET_ERROR)
+            printf("recvfrom failed with error %d\n", WSAGetLastError());
 
-    if (bytes_received == SOCKET_ERROR)
-        printf("recvfrom failed with error %d\n", WSAGetLastError());
+        messageBuffer[bytes_received] = '\0';
 
-    messageBuffer[bytes_received] = '\0';
+        char sendBuf[] = {'h', 'e', 'l', 'l', 'o', '\0'};
+        int sendBufLen = (int)(sizeof(sendBuf) - 1);
+        printf("echo\n");
+        int sendResult = sendto(serverSocket, sendBuf, sendBufLen, 0, (SOCKADDR *)&SenderAddr, SenderAddrSize);
 
-    char sendBuf[] = {'h', 'e', 'l', 'l', 'o', '\0'};
-    int sendBufLen = (int)(sizeof(sendBuf) - 1);
-    printf("Sending message back\n");
-    int sendResult = sendto(serverSocket, sendBuf, sendBufLen, 0, (SOCKADDR *)&SenderAddr, SenderAddrSize);
+        if (result == SOCKET_ERROR)
+            printf("Sending back response got an error: %d\n", WSAGetLastError());
+    }
 
-    if (result == SOCKET_ERROR)
-        printf("Sending back response got an error: %d\n", WSAGetLastError());
 
     return 0;
 }
