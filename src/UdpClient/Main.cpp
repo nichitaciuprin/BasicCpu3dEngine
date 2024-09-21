@@ -2,28 +2,24 @@
 
 int main()
 {
-    InitNetHelper();
-
-    SOCKET sock = CreateSocket();
     SOCKADDR source = CreateSocketAddressEmpty();
     SOCKADDR target = CreateSocketAddress("127.0.0.1", 27015);
 
     char buffer[1024];
+    int messageLength = 0;
 
     while (true)
     {
         const char* message = "sendtome";
-        int messageLen = strlen(message);
+        messageLength = strlen(message);
         strcpy(buffer, message);
-        SendMessage(&sock, &target, buffer, messageLen);
+        NetHelper_SendMessage(&target, buffer, messageLength);
 
         Sleep(1000);
 
-        int messageSize = 0;
-
-        RecvMessage(&sock, &source, buffer, &messageSize);
-        if (messageSize > 0)
-            printf("%.*s\n", messageSize, buffer);
+        NetHelper_RecvMessage(&source, buffer, &messageLength);
+        if (messageLength > 0)
+            printf("%.*s\n", messageLength, buffer);
 
         Sleep(1000);
     }

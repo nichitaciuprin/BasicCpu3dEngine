@@ -60,29 +60,30 @@ void RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* messageSize)
     *messageSize = byteCount;
 }
 
-// bool _NetHelper_inited = false;
-// SOCKET _NetHelper_socket;
-// SOCKADDR _NetHelper_socketAddrEmpty;
+bool _NetHelper_inited = false;
+SOCKET _NetHelper_socket;
+SOCKADDR _NetHelper_socketAddrEmpty;
 
-// void _NetHelper_Init()
-// {
-//     if (_NetHelper_inited) return;
-//     InitNetHelper();
-//     _NetHelper_socket = CreateSocket();
-//     _NetHelper_socketAddrEmpty = CreateSocketAddressEmpty();
-// }
-// void NetHelper_SendMessage(SOCKADDR* addr, char* buffer, int messageSize)
-// {
-//     _NetHelper_Init();
-//     SendMessage(&_NetHelper_socket, addr, buffer, messageSize);
-// }
-// void NetHelper_RecvMessage(SOCKADDR* addr, char* buffer, int* messageSize)
-// {
-//     _NetHelper_Init();
-//     RecvMessage(&_NetHelper_socket, addr, buffer, messageSize);
-// }
-// void NetHelper_RecvMessage(char* buffer, int* messageSize)
-// {
-//     _NetHelper_Init();
-//     RecvMessage(&_NetHelper_socket, &_NetHelper_socketAddrEmpty, buffer, messageSize);
-// }
+void _NetHelper_Init()
+{
+    if (_NetHelper_inited) return;
+    _NetHelper_inited = true;
+    InitNetHelper();
+    _NetHelper_socket = CreateSocket();
+    _NetHelper_socketAddrEmpty = CreateSocketAddressEmpty();
+}
+void NetHelper_SendMessage(SOCKADDR* addr, char* buffer, int messageSize)
+{
+    _NetHelper_Init();
+    SendMessage(&_NetHelper_socket, addr, buffer, messageSize);
+}
+void NetHelper_RecvMessage(SOCKADDR* addr, char* buffer, int* messageSize)
+{
+    _NetHelper_Init();
+    RecvMessage(&_NetHelper_socket, addr, buffer, messageSize);
+}
+void NetHelper_RecvMessage(char* buffer, int* messageSize)
+{
+    _NetHelper_Init();
+    RecvMessage(&_NetHelper_socket, &_NetHelper_socketAddrEmpty, buffer, messageSize);
+}
