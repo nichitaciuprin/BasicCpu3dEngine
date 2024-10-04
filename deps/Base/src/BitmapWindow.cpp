@@ -269,10 +269,10 @@ void BitmapWindow_SetPixelsScaled(BitmapWindow* instance, uint32_t* pixels, int 
 {
     if (!BitmapWindow_Exists(instance)) return;
 
-    for (int y = 0; y < instance->_height; y++)
-    for (int x = 0; x < instance->_width; x++)
+    for (int y = 0; y < height; y++)
+    for (int x = 0; x < width; x++)
     {
-        uint32_t pixel = instance->_pixels[x + y * width];
+        uint32_t pixel = pixels[x + y * width];
         int x2 = x * scale;
         int y2 = y * scale;
         for (int i = 0; i < scale; i++)

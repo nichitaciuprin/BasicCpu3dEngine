@@ -59,7 +59,8 @@ void main2()
     auto width = 512;
     auto height = 512;
 
-    auto bitmap = make_unique<Bitmap>(width, height);
+    auto bitmap = make_unique<Bitmap>(width/16, height/16);
+    // auto bitmap = make_unique<Bitmap>(width, height);
     auto window = make_unique<BitmapWindow2>(700, 100, width, height);
 
     Camera camera = { 0, 1, 95 };
@@ -73,8 +74,8 @@ void main2()
 
         Draw(*bitmap, camera, clock());
 
-        window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
-        // window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
+        // window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
+        window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
 
         window->Update();
 

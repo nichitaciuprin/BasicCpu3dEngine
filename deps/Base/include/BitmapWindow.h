@@ -48,7 +48,7 @@ public:
     }
     void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale)
     {
-        BitmapWindow_SetPixels(instance, pixels, width, height);
+        BitmapWindow_SetPixelsScaled(instance, pixels, width, height, scale);
     }
 
     bool KeyDown_W() { return BitmapWindow_KeyDown_W(instance); };
