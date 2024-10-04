@@ -25,6 +25,7 @@ set flags=-g3 %optimisationLevel% -Werror -std=c++17 -pthread -m64
 set lib=
 set lib=%lib% -L%deps%\raylib\lib -lraylib -lgdi32 -lwinmm
 set lib=%lib% -L%deps%\ReactPhysics3D\lib -lreactphysics3d
+set lib=%lib% -lWs2_32
 
 set include=
 set include=%include% -I%deps%\Base\include
@@ -38,6 +39,7 @@ set src=
 set src=%src% %deps%\Base\src\BitmapWindow.cpp
 set src=%src% %deps%\Base\src\SysHelperWin.cpp
 set src=%src% %deps%\Base\src\SysHelperWin2.cpp
+set src=%src% %deps%\Base\src\NetHelper.cpp
 set src=%src% %deps%\RaylibWrap\src\RaylibWrap.cpp
 
 if exist %build% rmdir /S /Q %build%

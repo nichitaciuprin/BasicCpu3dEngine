@@ -29,18 +29,18 @@ set lib=%lib% -lWs2_32
 
 set include=
 set include=%include% -I%deps%\Base\include
-@REM set include=%include% -I%deps%\Raylib\include
-@REM set include=%include% -I%deps%\RaylibWrap\include
-@REM set include=%include% -I%deps%\ReactPhysics3D\include
-@REM set include=%include% -I%deps%\ReactPhysics3DWrap\include
-@REM set include=%include% -I%~dp0src
+set include=%include% -I%deps%\Raylib\include
+set include=%include% -I%deps%\RaylibWrap\include
+set include=%include% -I%deps%\ReactPhysics3D\include
+set include=%include% -I%deps%\ReactPhysics3DWrap\include
+set include=%include% -I%~dp0src
 
 set src=
-@REM set src=%src% %deps%\Base\src\BitmapWindow.cpp
+set src=%src% %deps%\Base\src\BitmapWindow.cpp
 set src=%src% %deps%\Base\src\SysHelperWin.cpp
 set src=%src% %deps%\Base\src\SysHelperWin2.cpp
 set src=%src% %deps%\Base\src\NetHelper.cpp
-@REM set src=%src% %deps%\RaylibWrap\src\RaylibWrap.cpp
+set src=%src% %deps%\RaylibWrap\src\RaylibWrap.cpp
 
 if exist %build% rmdir /S /Q %build%
    mkdir %build%

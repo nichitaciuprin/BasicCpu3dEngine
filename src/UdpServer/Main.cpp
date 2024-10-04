@@ -15,14 +15,14 @@ int main()
         if (messageLength > 0)
             printf("%.*s\n", messageLength, buffer);
 
-        Halt(1000);
+        // Halt(1000);
 
         const char* message = "server";
         strcpy(buffer, message);
         messageLength = strlen(message);
         NetResp(buffer, messageLength);
 
-        Halt(1000);
+        // Halt(1000);
     }
 
     return 0;

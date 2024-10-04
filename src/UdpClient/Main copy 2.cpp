@@ -11,32 +11,36 @@
 
 int main()
 {
+    auto width = 512;
+    auto height = 512;
+
+    auto bitmap = make_unique<Bitmap>(width, height);
+    auto window = make_unique<BitmapWindow2>(700, 100, width, height);
+
     NetSetTarget("127.0.0.1", 27015);
 
     char buffer[1024];
     int messageLength = 0;
 
-    while (true)
+    while (window->Exists())
     {
+        bitmap->Fill(BLACK);
+
         const char* message = "sendtome";
         messageLength = strlen(message);
         strcpy(buffer, message);
         NetSend(buffer, messageLength);
 
-        Halt(1000);
+        // Halt(1000);
 
-        // NetRecv(buffer, &messageLength);
-        // if (messageLength > 0)
-        //     printf("%.*s\n", messageLength, buffer);
-
-        while (true)
+        NetRecv(buffer, &messageLength);
+        while (messageLength > 0)
         {
             NetRecv(buffer, &messageLength);
-            printf("%i\n", messageLength);
-            if (messageLength <= 0) break;
-            // printf("%.*s\n", messageLength, buffer);
+            printf("%.*s\n", messageLength, buffer);
         }
 
+        window->Update();
     }
 
     return 0;

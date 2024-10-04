@@ -1,12 +1,5 @@
 #include "Std.h"
-#include "StdExt.h"
 #include "SysHelper.h"
-#include "Subgen.h"
-#include "Helper.h"
-#include "Models.h"
-#include "Clipping.h"
-#include "Bitmap.h"
-#include "BitmapWindow.h"
 #include "NetHelper.h"
 
 int main()
@@ -25,18 +18,14 @@ int main()
 
         Halt(1000);
 
-        // NetRecv(buffer, &messageLength);
-        // if (messageLength > 0)
-        //     printf("%.*s\n", messageLength, buffer);
-
-        while (true)
+        NetRecv(buffer, &messageLength);
+        while (messageLength > 0)
         {
             NetRecv(buffer, &messageLength);
-            printf("%i\n", messageLength);
-            if (messageLength <= 0) break;
-            // printf("%.*s\n", messageLength, buffer);
+            printf("%.*s\n", messageLength, buffer);
         }
 
+        Halt(1000);
     }
 
     return 0;

@@ -7,9 +7,12 @@
 #include "Clipping.h"
 #include "Bitmap.h"
 #include "BitmapWindow.h"
+#include "NetHelper.h"
 
 void main2()
 {
+    NetListen(27015);
+
     auto width = 512;
     auto height = 512;
 
@@ -69,6 +72,21 @@ void main2()
         // window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
 
         window->Update();
+
+        char buffer[1024];
+        int messageLength = 0;
+
+        NetRecv(buffer, &messageLength);
+        while (messageLength > 0)
+        {
+            NetRecv(buffer, &messageLength);
+            printf("%.*s\n", messageLength, buffer);
+        }
+
+        const char* message = "server";
+        strcpy(buffer, message);
+        messageLength = strlen(message);
+        NetResp(buffer, messageLength);
     }
 }
 
