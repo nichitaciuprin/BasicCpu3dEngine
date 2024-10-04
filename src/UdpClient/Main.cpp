@@ -9,34 +9,56 @@
 #include "BitmapWindow.h"
 #include "NetHelper.h"
 
-int main()
+// void Copy512to32(uint8_t* pixels1, uint8_t* pixels2)
+// {
+// }
+
+void main2()
 {
     NetSetTarget("127.0.0.1", 27015);
 
-    char buffer[1024];
-    int messageLength = 0;
+    auto width = 32;
+    auto height = 32;
 
-    while (true)
+    char pixels[1024];
+
+    auto window = make_unique<BitmapWindow2>(700, 100, width*16, height*16);
+
+    Camera camera = { 0, 1, 95 };
+
+    while (window->Exists())
     {
+        // window->SetPixelsScaled(pixels, 32, 32, 16);
+
+        int messageLength = 0;
+
+        char tempBuffer[1024];
         const char* message = "sendtome";
+        strcpy(tempBuffer, message);
         messageLength = strlen(message);
-        strcpy(buffer, message);
-        NetSend(buffer, messageLength);
-
-        Halt(1000);
-
-        // NetRecv(buffer, &messageLength);
-        // if (messageLength > 0)
-        //     printf("%.*s\n", messageLength, buffer);
+        NetSend(tempBuffer, messageLength);
 
         while (true)
         {
-            NetRecv(buffer, &messageLength);
-            printf("%i\n", messageLength);
+            NetRecv(pixels, &messageLength);
             if (messageLength <= 0) break;
-            // printf("%.*s\n", messageLength, buffer);
         }
 
+        window->SetPixelsScaled2((uint8_t*)pixels, 32, 32, 16);
+
+        window->Update();
+    }
+}
+
+int main()
+{
+    try
+    {
+        main2();
+    }
+    catch (const exception& e)
+    {
+        cerr << e.what() << endl;
     }
 
     return 0;

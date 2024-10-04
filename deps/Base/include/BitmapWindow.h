@@ -6,6 +6,7 @@ void BitmapWindow_Update(BitmapWindow* instance);
 void BitmapWindow_SetPixel(BitmapWindow* instance, int x, int y, uint32_t pixel);
 void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width, int height);
 void BitmapWindow_SetPixelsScaled(BitmapWindow* instance, uint32_t* pixels, int width, int height, int scale);
+void BitmapWindow_SetPixelsScaled2(BitmapWindow* instance, uint8_t* pixels, int width, int height, int scale);
 bool BitmapWindow_KeyDown_W(BitmapWindow* instance);
 bool BitmapWindow_KeyDown_A(BitmapWindow* instance);
 bool BitmapWindow_KeyDown_S(BitmapWindow* instance);
@@ -49,6 +50,10 @@ public:
     void SetPixelsScaled(uint32_t* pixels, int width, int height, int scale)
     {
         BitmapWindow_SetPixelsScaled(instance, pixels, width, height, scale);
+    }
+    void SetPixelsScaled2(uint8_t* pixels, int width, int height, int scale)
+    {
+        BitmapWindow_SetPixelsScaled2(instance, pixels, width, height, scale);
     }
 
     bool KeyDown_W() { return BitmapWindow_KeyDown_W(instance); };

@@ -273,6 +273,26 @@ void BitmapWindow_SetPixelsScaled(BitmapWindow* instance, uint32_t* pixels, int 
     for (int x = 0; x < width; x++)
     {
         uint32_t pixel = pixels[x + y * width];
+        // pixel = PixelToBwPixel(pixel);
+        int x2 = x * scale;
+        int y2 = y * scale;
+        for (int i = 0; i < scale; i++)
+        for (int j = 0; j < scale; j++)
+            BitmapWindow_SetPixel(instance, x2+i, y2+j, pixel);
+    }
+}
+void BitmapWindow_SetPixelsScaled2(BitmapWindow* instance, uint8_t* pixels, int width, int height, int scale)
+{
+    if (!BitmapWindow_Exists(instance)) return;
+
+    for (int y = 0; y < height; y++)
+    for (int x = 0; x < width; x++)
+    {
+        uint32_t pixel = pixels[x + y * width];
+
+        float fraction = (float)pixel / 255;
+        pixel = 0x00FFFFFF * fraction;
+
         int x2 = x * scale;
         int y2 = y * scale;
         for (int i = 0; i < scale; i++)

@@ -22,6 +22,34 @@ const Pixel GREENCOLD  = 0x0000FF80;
 const Pixel VIOLET     = 0x008000FF;
 const Pixel LIGHTBLUE  = 0x000080FF;
 
+uint32_t PixelToBwPixel(uint32_t pixel)
+{
+    int r = (uint8_t)((pixel >> 8 * 2));
+    int g = (uint8_t)((pixel >> 8 * 1));
+    int b = (uint8_t)((pixel >> 8 * 0));
+
+    uint8_t value = ((r + g + b) / 3);
+    float fraction = (float)value / 255;
+
+    return 0x00FFFFFF * fraction;
+}
+uint8_t PixelToLightValue(uint32_t pixel)
+{
+    int r = (uint8_t)((pixel >> 8 * 2));
+    int g = (uint8_t)((pixel >> 8 * 1));
+    int b = (uint8_t)((pixel >> 8 * 0));
+
+    uint8_t value = ((r + g + b) / 3);
+
+    return value;
+}
+uint32_t LightValueToPixel(uint8_t pixel)
+{
+    float fraction = (float)pixel / 255;
+    return 0x00FFFFFF * fraction;
+}
+
+
 class Bitmap
 {
 public:
