@@ -12,6 +12,11 @@
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
 
+bool _NetInited = false;
+SOCKET _NetSock;
+SOCKADDR _NetTarget;
+SOCKADDR _NetSource;
+
 void NetHelper_InitNetHelper()
 {
     WSADATA wsaData;
@@ -108,4 +113,36 @@ void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* mess
     int addrSize = (sizeof(*addr));
     int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
     *messageSize = byteCount;
+}
+
+void _NetInit()
+{
+    if (_NetInited) return;
+        _NetInited = true;
+
+    NetHelper_InitNetHelper();
+    _NetSource = NetHelper_CreateSocketAddressEmpty();
+}
+void NetListen(int port)
+{
+    _NetInit();
+    _NetSock = NetHelper_CreateSocket(port);
+}
+void NetSetTarget(const char* ip, int port)
+{
+    _NetInit();
+    _NetSock = NetHelper_CreateSocketNoBind();
+    _NetTarget = NetHelper_CreateSocketAddress(ip, port);
+}
+void NetSend(char* buffer, int messageSize)
+{
+    NetHelper_SendMessage(&_NetSock, &_NetTarget, buffer, messageSize);
+}
+void NetRecv(char* buffer, int* messageSize)
+{
+    NetHelper_RecvMessage(&_NetSock, &_NetSource, buffer, messageSize);
+}
+void NetResp(char* buffer, int messageSize)
+{
+    NetHelper_SendMessage(&_NetSock, &_NetSource, buffer, messageSize);
 }
