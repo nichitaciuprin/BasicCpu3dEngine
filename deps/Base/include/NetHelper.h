@@ -1,9 +1,11 @@
 typedef unsigned long long SOCKET;
 typedef unsigned short u_short;
+
 struct sockaddr {
 	u_short	sa_family;
 	char	sa_data[14];
 };
+
 typedef struct sockaddr SOCKADDR;
 
 void NetHelper_InitNetHelper();
@@ -24,6 +26,7 @@ void _NetInit()
 {
     if (_NetInited) return;
         _NetInited = true;
+
     NetHelper_InitNetHelper();
     _NetSource = NetHelper_CreateSocketAddressEmpty();
 }
