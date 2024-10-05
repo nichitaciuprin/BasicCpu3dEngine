@@ -115,7 +115,7 @@ void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* mess
     *messageSize = byteCount;
 }
 
-void _NetInit()
+void NetInit()
 {
     if (_NetInited) return;
         _NetInited = true;
@@ -123,14 +123,15 @@ void _NetInit()
     NetHelper_InitNetHelper();
     _NetSource = NetHelper_CreateSocketAddressEmpty();
 }
+
 void NetListen(int port)
 {
-    _NetInit();
+    NetInit();
     _NetSock = NetHelper_CreateSocket(port);
 }
 void NetSetTarget(const char* ip, int port)
 {
-    _NetInit();
+    NetInit();
     _NetSock = NetHelper_CreateSocketNoBind();
     _NetTarget = NetHelper_CreateSocketAddress(ip, port);
 }
@@ -146,3 +147,4 @@ void NetResp(char* buffer, int messageSize)
 {
     NetHelper_SendMessage(&_NetSock, &_NetSource, buffer, messageSize);
 }
+

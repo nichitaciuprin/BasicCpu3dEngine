@@ -51,6 +51,11 @@ void Draw(Bitmap& bitmap, Camera camera, long time)
         bitmap.DrawCubeColored(world * view);
     }
 }
+void UpdateCamera(Camera& camera, BitmapWindow2& window)
+{
+    UpdateCameraRotation(&camera, 0.0230f, window.KeyDown_LEFT(), window.KeyDown_UP(), window.KeyDown_DOWN(), window.KeyDown_RIGHT());
+    UpdateCameraPosition(&camera, 0.0080f, window.KeyDown_W(), window.KeyDown_A(), window.KeyDown_S(), window.KeyDown_D(), window.KeyDown_E(), window.KeyDown_Q());
+}
 
 void main2()
 {
@@ -59,7 +64,7 @@ void main2()
     auto width = 32;
     auto height = 32;
 
-    char pixels[1024];
+    char buffer[1024];
 
     auto bitmap = make_unique<Bitmap>(width, height);
     auto window = make_unique<BitmapWindow2>(0, 100, width*16, height*16);
@@ -69,19 +74,24 @@ void main2()
     while (window->Exists())
     {
         CheckFPS();
-
-        UpdateCameraRotation(&camera, 0.0230f, window->KeyDown_LEFT(), window->KeyDown_UP(), window->KeyDown_DOWN(), window->KeyDown_RIGHT());
-        UpdateCameraPosition(&camera, 0.0080f, window->KeyDown_W(), window->KeyDown_A(), window->KeyDown_S(), window->KeyDown_D(), window->KeyDown_E(), window->KeyDown_Q());
+        UpdateCamera(camera, *window);
         Draw(*bitmap, camera, clock());
+
         window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
         window->Update();
 
         for (int i = 0; i < 1024; i++)
-            pixels[i] = PixelToLightValue(bitmap->pixels[i]);
-        int messageLength = 0;
-        char bufferTemp[1024];
-        do { NetRecv(bufferTemp, &messageLength); } while (messageLength > 0);
-        NetResp(pixels, 1024);
+            buffer[i] = PixelToLightValue(bitmap->pixels[i]);
+
+        while (true)
+        {
+            int messageLength = 0;
+            NetRecv(buffer, &messageLength)
+            if (messageLength <= 0) break;
+        }
+
+        NetResp(buffer, 1024);
+
         Halt(10);
     }
 }
