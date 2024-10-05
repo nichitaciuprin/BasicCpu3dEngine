@@ -9,10 +9,6 @@
 #include "BitmapWindow.h"
 #include "NetHelper.h"
 
-// void Copy512to32(uint8_t* pixels1, uint8_t* pixels2)
-// {
-// }
-
 void main2()
 {
     NetSetTarget("127.0.0.1", 27015);
@@ -28,8 +24,6 @@ void main2()
 
     while (window->Exists())
     {
-        // window->SetPixelsScaled(pixels, 32, 32, 16);
-
         int messageLength = 0;
 
         char tempBuffer[1024];

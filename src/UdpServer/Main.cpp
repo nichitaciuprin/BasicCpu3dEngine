@@ -52,10 +52,6 @@ void Draw(Bitmap& bitmap, Camera camera, long time)
     }
 }
 
-// void Copy512to32(uint8_t* pixels1, uint8_t* pixels2)
-// {
-// }
-
 void main2()
 {
     NetListen(27015);
@@ -66,7 +62,6 @@ void main2()
     char pixels[1024];
 
     auto bitmap = make_unique<Bitmap>(width, height);
-    // auto bitmap = make_unique<Bitmap>(width, height);
     auto window = make_unique<BitmapWindow2>(0, 100, width*16, height*16);
 
     Camera camera = { 0, 1, 95 };
@@ -77,24 +72,16 @@ void main2()
 
         UpdateCameraRotation(&camera, 0.0230f, window->KeyDown_LEFT(), window->KeyDown_UP(), window->KeyDown_DOWN(), window->KeyDown_RIGHT());
         UpdateCameraPosition(&camera, 0.0080f, window->KeyDown_W(), window->KeyDown_A(), window->KeyDown_S(), window->KeyDown_D(), window->KeyDown_E(), window->KeyDown_Q());
-
         Draw(*bitmap, camera, clock());
-
         window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
-
         window->Update();
 
         for (int i = 0; i < 1024; i++)
             pixels[i] = PixelToLightValue(bitmap->pixels[i]);
-
         int messageLength = 0;
-
         char bufferTemp[1024];
-
         do { NetRecv(bufferTemp, &messageLength); } while (messageLength > 0);
-
         NetResp(pixels, 1024);
-
         Halt(10);
     }
 }
