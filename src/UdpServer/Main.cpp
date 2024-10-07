@@ -8,6 +8,7 @@
 #include "Bitmap.h"
 #include "BitmapWindow.h"
 #include "NetHelper.h"
+#include "Temp1.h"
 
 void Draw(Bitmap& bitmap, Camera camera, long time)
 {
@@ -66,6 +67,8 @@ int main()
 
     while (window->Exists())
     {
+        FixedTimeStart();
+
         CheckFPS();
 
         bool w, a, s, d;
@@ -82,6 +85,6 @@ int main()
         for (int i = 0; i < 1024; i++)
             buffer[i] = PixelToLightValue(bitmap->pixels[i]);
 
-        Halt(10);
+        FixedTimeEnd();
     }
 }

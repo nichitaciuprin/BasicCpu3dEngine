@@ -8,37 +8,29 @@
 #include "Bitmap.h"
 #include "BitmapWindow.h"
 #include "NetHelper.h"
+#include "Temp1.h"
 
 int main()
 {
-    auto width = 32;
-    auto height = 32;
-    auto scale = 16;
+    char frame[1024];
 
-    auto window = make_unique<BitmapWindow2>(700, 100, width*scale, height*scale);
-
-    while (window->Exists())
+    while (true)
     {
-        char pixels[1024];
-        NetClientProcess(pixels, window->KeyDown_W(), window->KeyDown_A(), window->KeyDown_S(), window->KeyDown_D());
-        window->SetPixelsScaled2((uint8_t*)pixels, width, height, scale);
-        window->Update();
+        FixedTimeStart();
+
+        NetGetFrame(frame);
+        Window32Render(frame);
+
+        bool w = Window32_W();
+        bool a = Window32_A();
+        bool s = Window32_S();
+        bool d = Window32_D();
+        NetSendInput(w, a, s, d);
+
+        if (Window32Closed()) break;
+
+        FixedTimeEnd();
     }
 
     return 0;
 }
-
-// int main()
-// {
-//     char frame[1024];
-
-//     do
-//     {
-//         GetNetFrame(frame);
-//         DrawNetFrame(frame);
-//         SendWindowInput();
-//     }
-//     while (NetWindowExists())
-
-//     return 0;
-// }

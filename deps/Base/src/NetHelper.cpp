@@ -183,7 +183,7 @@ void NetServerProcess(char* frame, bool* w, bool* a, bool* s, bool* d)
 }
 
 bool NetClientProcessCalled = false;
-void NetClientProcess(char* frame, bool w, bool a, bool s, bool d)
+void NetGetFrame(char* frame)
 {
     if (!NetClientProcessCalled)
     {
@@ -191,7 +191,20 @@ void NetClientProcess(char* frame, bool w, bool a, bool s, bool d)
         NetSetTarget("127.0.0.1", 27015);
     }
 
-    int messageLength = 0;
+    while (true)
+    {
+        int messageLength = 0;
+        NetRecv(frame, &messageLength);
+        if (messageLength <= 0) break;
+    }
+}
+void NetSendInput(bool w, bool a, bool s, bool d)
+{
+    if (!NetClientProcessCalled)
+    {
+        NetClientProcessCalled = true;
+        NetSetTarget("127.0.0.1", 27015);
+    }
 
     uint8_t message = 0;
     if (w) message += 8;
@@ -200,10 +213,4 @@ void NetClientProcess(char* frame, bool w, bool a, bool s, bool d)
     if (d) message += 1;
 
     NetSend((char*)&message, 1);
-
-    while (true)
-    {
-        NetRecv(frame, &messageLength);
-        if (messageLength <= 0) break;
-    }
 }

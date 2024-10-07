@@ -4,4 +4,5 @@ void NetSend(char* buffer, int messageSize);
 void NetRecv(char* buffer, int* messageSize);
 void NetResp(char* buffer, int messageSize);
 void NetServerProcess(char* frame, bool* w, bool* a, bool* s, bool* d);
-void NetClientProcess(char* frame, bool w, bool a, bool s, bool d);
+void NetGetFrame(char* frame);
+void NetSendInput(bool w, bool a, bool s, bool d);
