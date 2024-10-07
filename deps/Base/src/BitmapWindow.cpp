@@ -41,6 +41,7 @@ typedef struct BitmapWindow
     int        _height;
 }
 BitmapWindow;
+
 bool _BitmapWindow_Registered = 0;
 void _BitmapWindow_InitBitmap(BitmapWindow* instance)
 {

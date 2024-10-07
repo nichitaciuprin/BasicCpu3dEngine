@@ -27,3 +27,18 @@ int main()
 
     return 0;
 }
+
+// int main()
+// {
+//     char frame[1024];
+
+//     do
+//     {
+//         GetNetFrame(frame);
+//         DrawNetFrame(frame);
+//         SendWindowInput();
+//     }
+//     while (NetWindowExists())
+
+//     return 0;
+// }
