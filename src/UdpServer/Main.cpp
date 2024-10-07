@@ -51,16 +51,9 @@ void Draw(Bitmap& bitmap, Camera camera, long time)
         bitmap.DrawCubeColored(world * view);
     }
 }
-void UpdateCamera(Camera& camera, BitmapWindow2& window)
-{
-    UpdateCameraRotation(&camera, 0.0230f, window.KeyDown_LEFT(), window.KeyDown_UP(), window.KeyDown_DOWN(), window.KeyDown_RIGHT());
-    UpdateCameraPosition(&camera, 0.0080f, window.KeyDown_W(), window.KeyDown_A(), window.KeyDown_S(), window.KeyDown_D(), window.KeyDown_E(), window.KeyDown_Q());
-}
 
-void main2()
+int main()
 {
-    NetListen(27015);
-
     auto width = 32;
     auto height = 32;
 
@@ -74,7 +67,13 @@ void main2()
     while (window->Exists())
     {
         CheckFPS();
-        UpdateCamera(camera, *window);
+
+        bool w, a, s, d;
+        NetServerProcess(buffer, &w, &a, &s, &d);
+
+        UpdateCameraRotation(&camera, 0.023f, window->KeyDown_LEFT(), window->KeyDown_UP(), window->KeyDown_DOWN(), window->KeyDown_RIGHT());
+        UpdateCameraPosition(&camera, 0.008f, w, a, s, d, window->KeyDown_E(), window->KeyDown_Q());
+
         Draw(*bitmap, camera, clock());
 
         window->SetPixelsScaled(bitmap->pixels.data(), bitmap->Width(), bitmap->Height(), 16);
@@ -83,29 +82,6 @@ void main2()
         for (int i = 0; i < 1024; i++)
             buffer[i] = PixelToLightValue(bitmap->pixels[i]);
 
-        while (true)
-        {
-            int messageLength = 0;
-            NetRecv(buffer, &messageLength)
-            if (messageLength <= 0) break;
-        }
-
-        NetResp(buffer, 1024);
-
         Halt(10);
     }
-}
-
-int main()
-{
-    try
-    {
-        main2();
-    }
-    catch (const exception& e)
-    {
-        cerr << e.what() << endl;
-    }
-
-    return 0;
 }

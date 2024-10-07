@@ -9,50 +9,22 @@
 #include "BitmapWindow.h"
 #include "NetHelper.h"
 
-void main2()
+int main()
 {
-    NetSetTarget("127.0.0.1", 27015);
-
     auto width = 32;
     auto height = 32;
+    auto scale = 16;
 
-    char pixels[1024];
-
-    auto window = make_unique<BitmapWindow2>(700, 100, width*16, height*16);
+    auto window = make_unique<BitmapWindow2>(700, 100, width*scale, height*scale);
 
     Camera camera = { 0, 1, 95 };
 
     while (window->Exists())
     {
-        int messageLength = 0;
-
-        char tempBuffer[1024];
-        const char* message = "sendtome";
-        strcpy(tempBuffer, message);
-        messageLength = strlen(message);
-        NetSend(tempBuffer, messageLength);
-
-        while (true)
-        {
-            NetRecv(pixels, &messageLength);
-            if (messageLength <= 0) break;
-        }
-
-        window->SetPixelsScaled2((uint8_t*)pixels, 32, 32, 16);
-
+        char pixels[1024];
+        NetClientProcess(pixels, window->KeyDown_W(), window->KeyDown_A(), window->KeyDown_S(), window->KeyDown_D());
+        window->SetPixelsScaled2((uint8_t*)pixels, width, height, scale);
         window->Update();
-    }
-}
-
-int main()
-{
-    try
-    {
-        main2();
-    }
-    catch (const exception& e)
-    {
-        cerr << e.what() << endl;
     }
 
     return 0;
