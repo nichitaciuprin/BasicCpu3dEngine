@@ -17,8 +17,6 @@ int main()
 
     auto window = make_unique<BitmapWindow2>(700, 100, width*scale, height*scale);
 
-    Camera camera = { 0, 1, 95 };
-
     while (window->Exists())
     {
         char pixels[1024];
