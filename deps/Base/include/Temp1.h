@@ -22,6 +22,19 @@ void Window32Render(char* frame)
     auto size = 32*16;
 
     if (window == nullptr)
+        window = make_unique<BitmapWindow2>(0, 100, size, size);
+
+    window->SetPixelsScaled((uint32_t*)frame, width, height, scale);
+    window->Update();
+}
+void Window32RenderBW(char* frame)
+{
+    auto width = 32;
+    auto height = 32;
+    auto scale = 16;
+    auto size = 32*16;
+
+    if (window == nullptr)
         window = make_unique<BitmapWindow2>(700, 100, size, size);
 
     window->SetPixelsScaled2((uint8_t*)frame, width, height, scale);

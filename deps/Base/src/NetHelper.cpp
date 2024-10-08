@@ -183,7 +183,7 @@ void NetServerProcess(char* frame, bool* w, bool* a, bool* s, bool* d)
 }
 
 bool NetClientProcessCalled = false;
-void NetGetFrame(char* frame)
+void NetRecvFrame(char* frame)
 {
     if (!NetClientProcessCalled)
     {
