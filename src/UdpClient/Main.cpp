@@ -8,7 +8,7 @@
 #include "Bitmap.h"
 #include "BitmapWindow.h"
 #include "NetHelper.h"
-#include "Temp1.h"
+#include "Client.h"
 
 int main()
 {

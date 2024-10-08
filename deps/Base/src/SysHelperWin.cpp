@@ -54,3 +54,17 @@ long GetTime()
     // return clock()/(CLOCKS_PER_SEC/1000);
     return clock();
 }
+
+long timeStep = 20;
+int endTime = 0;
+// float deltaTime = 0.020f;
+void FixedTimeStart()
+{
+    endTime = GetTime() + timeStep;
+}
+void FixedTimeEnd()
+{
+    long haltTime = endTime - GetTime();
+    if (haltTime > 0)
+        Halt(haltTime);
+}

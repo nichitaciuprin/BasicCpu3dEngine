@@ -123,7 +123,6 @@ void NetInit()
     NetHelper_InitNetHelper();
     _NetSource = NetHelper_CreateSocketAddressEmpty();
 }
-
 void NetListen(int port)
 {
     NetInit();

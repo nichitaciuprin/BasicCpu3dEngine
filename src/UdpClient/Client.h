@@ -1,17 +1,3 @@
-long timeStep = 20;
-int endTime = 0;
-// float deltaTime = 0.020f;
-void FixedTimeStart()
-{
-    endTime = GetTime() + timeStep;
-}
-void FixedTimeEnd()
-{
-    long haltTime = endTime - GetTime();
-    if (haltTime > 0)
-        Halt(haltTime);
-}
-
 unique_ptr<BitmapWindow2> window = nullptr;
 
 void Window32Render(char* frame)
