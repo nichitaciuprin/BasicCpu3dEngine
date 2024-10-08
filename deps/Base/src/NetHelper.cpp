@@ -149,13 +149,18 @@ void NetResp(char* buffer, int messageSize)
 }
 
 bool NetServerProcessCalled = false;
-void NetServerProcess(char* frame, bool* w, bool* a, bool* s, bool* d)
+void NetSendFrame(char* frame)
 {
-    *w = false;
-    *a = false;
-    *s = false;
-    *d = false;
+    if (!NetServerProcessCalled)
+    {
+        NetServerProcessCalled = true;
+        NetListen(27015);
+    }
 
+    NetResp(frame, 1024);
+}
+void NetRecvInput(bool* w, bool* a, bool* s, bool* d)
+{
     if (!NetServerProcessCalled)
     {
         NetServerProcessCalled = true;
@@ -163,23 +168,27 @@ void NetServerProcess(char* frame, bool* w, bool* a, bool* s, bool* d)
     }
 
     char recvBuffer[1024];
-    int messageLength = 0;
-    NetRecv(recvBuffer, &messageLength);
 
-    if (messageLength == 1)
+    while (true)
     {
+        int messageLength = 0;
+
+        *w = false;
+        *a = false;
+        *s = false;
+        *d = false;
+
+        NetRecv(recvBuffer, &messageLength);
+
         uint8_t temp2 = *(uint8_t*)recvBuffer;
 
         *w = (1 << 3 & temp2) != 0;
         *a = (1 << 2 & temp2) != 0;
         *s = (1 << 1 & temp2) != 0;
         *d = (1 << 0 & temp2) != 0;
+
+        if (messageLength <= 0) break;
     }
-
-    while (messageLength > 0)
-        NetRecv(recvBuffer, &messageLength);
-
-    NetResp(frame, 1024);
 }
 
 bool NetClientProcessCalled = false;

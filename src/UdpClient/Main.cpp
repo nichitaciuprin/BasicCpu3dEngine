@@ -19,7 +19,7 @@ int main()
         FixedTimeStart();
 
         NetRecvFrame(frame);
-        Window32Render(frame);
+        Window32RenderBw(frame);
 
         bool w = Window32_W();
         bool a = Window32_A();

@@ -49,7 +49,6 @@ uint32_t LightValueToPixel(uint8_t pixel)
     return 0x00FFFFFF * fraction;
 }
 
-
 class Bitmap
 {
 public:

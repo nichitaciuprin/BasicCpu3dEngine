@@ -58,10 +58,7 @@ int main()
     auto width = 32;
     auto height = 32;
 
-    char buffer[1024];
-
     auto bitmap = make_unique<Bitmap>(width, height);
-    // auto window = make_unique<BitmapWindow2>(0, 100, width*16, height*16);
 
     Camera camera = { 0, 1, 95 };
 
@@ -69,26 +66,28 @@ int main()
     {
         FixedTimeStart();
 
+        Draw(*bitmap, camera, clock());
+
         Window32Render((char*)bitmap->pixels.data());
+        char buffer[1024];
+        for (int i = 0; i < 1024; i++) buffer[i] = PixelToLightValue(bitmap->pixels[i]);
+        NetSendFrame(buffer);
 
         bool w, a, s, d;
-        NetServerProcess(buffer, &w, &a, &s, &d);
+        bool up, left, down, right;
+        bool e, q;
 
-        bool left = window->KeyDown_LEFT();
-        bool up = window->KeyDown_UP();
-        bool down = window->KeyDown_DOWN();
-        bool right = window->KeyDown_RIGHT();
-        bool e = window->KeyDown_E();
-        bool q = window->KeyDown_Q();
+        left = window->KeyDown_LEFT();
+        up = window->KeyDown_UP();
+        down = window->KeyDown_DOWN();
+        right = window->KeyDown_RIGHT();
+        e = window->KeyDown_E();
+        q = window->KeyDown_Q();
+
+        NetRecvInput(&w, &a, &s, &d);
 
         UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
         UpdateCameraPosition(&camera, 0.008f, w, a, s, d, e, q);
-
-        Draw(*bitmap, camera, clock());
-
-
-        for (int i = 0; i < 1024; i++)
-            buffer[i] = PixelToLightValue(bitmap->pixels[i]);
 
         if (Window32Closed()) break;
 

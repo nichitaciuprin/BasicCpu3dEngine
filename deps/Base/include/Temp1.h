@@ -27,7 +27,7 @@ void Window32Render(char* frame)
     window->SetPixelsScaled((uint32_t*)frame, width, height, scale);
     window->Update();
 }
-void Window32RenderBW(char* frame)
+void Window32RenderBw(char* frame)
 {
     auto width = 32;
     auto height = 32;
