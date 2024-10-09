@@ -12,25 +12,42 @@
 
 int main()
 {
-    char frame[1024];
+    InitClientWindow();
 
     while (true)
     {
         FixedTimeStart();
 
-        NetRecvFrame(frame);
-        Window32RenderBw(frame);
+        if (ClientWindowClosed()) break;
 
-        bool w = Window32_W();
-        bool a = Window32_A();
-        bool s = Window32_S();
-        bool d = Window32_D();
-        NetSendInput(w, a, s, d);
+        UpdateClientWindow();
 
-        if (Window32Closed()) break;
+        RecvFrame();
+        SendInput();
 
         FixedTimeEnd();
     }
 
     return 0;
 }
+
+// int main()
+// {
+//     InitClientWindow();
+
+//     while (true)
+//     {
+//         FixedTimeStart();
+
+//         if (ClientWindowClosed()) break;
+
+//         UpdateClientWindow();
+
+//         RenderClientWindow();
+//         SendInput();
+
+//         FixedTimeEnd();
+//     }
+
+//     return 0;
+// }

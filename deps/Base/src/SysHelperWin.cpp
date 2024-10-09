@@ -1,3 +1,5 @@
+#include <Std.h>
+
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
@@ -16,18 +18,18 @@ FILETIME idleNew = {};
 FILETIME userOld = {};
 FILETIME userNew = {};
 int cpu = 0;
-int count = 0;
+int cpuTimer = 0;
 
 int GetCpuUsage()
 {
     // TODO
-    if (count != 100)
+    if (cpuTimer != 100)
     {
-        count++;
+        cpuTimer++;
         return cpu;
     }
 
-    count = 0;
+    cpuTimer = 0;
 
     FILETIME kernel = {};
 
@@ -55,9 +57,10 @@ long GetTime()
     return clock();
 }
 
-long timeStep = 20;
+long timeStep = 10;
 int endTime = 0;
 // float deltaTime = 0.020f;
+
 void FixedTimeStart()
 {
     endTime = GetTime() + timeStep;
@@ -67,4 +70,6 @@ void FixedTimeEnd()
     long haltTime = endTime - GetTime();
     if (haltTime > 0)
         Halt(haltTime);
+    else
+        printf("SLOW!\n");
 }

@@ -1,36 +1,51 @@
 unique_ptr<BitmapWindow2> window = nullptr;
 
-void Window32Render(char* frame)
+char frame[1024];
+
+void InitClientWindow()
 {
     auto width = 32;
     auto height = 32;
     auto scale = 16;
     auto size = 32*16;
 
-    if (window == nullptr)
-        window = make_unique<BitmapWindow2>(0, 100, size, size);
-
-    window->SetPixelsScaled((uint32_t*)frame, width, height, scale);
-    window->Update();
+    window = make_unique<BitmapWindow2>(700, 100, size, size);
 }
-void Window32RenderBw(char* frame)
-{
-    auto width = 32;
-    auto height = 32;
-    auto scale = 16;
-    auto size = 32*16;
-
-    if (window == nullptr)
-        window = make_unique<BitmapWindow2>(700, 100, size, size);
-
-    window->SetPixelsScaled2((uint8_t*)frame, width, height, scale);
-    window->Update();
-}
-bool Window32Closed()
+bool ClientWindowClosed()
 {
     return !window->Exists();
 }
-bool Window32_W() { return window->KeyDown_W(); }
-bool Window32_A() { return window->KeyDown_A(); }
-bool Window32_S() { return window->KeyDown_S(); }
-bool Window32_D() { return window->KeyDown_D(); }
+void UpdateClientWindow()
+{
+    window->Update();
+}
+void RenderClientWindow()
+{
+    NetRecvFrame(frame);
+
+    auto width = 32;
+    auto height = 32;
+    auto scale = 16;
+    auto size = 32*16;
+
+    window->SetPixelsScaled2((uint8_t*)frame, width, height, scale);
+}
+void SendInput()
+{
+    bool w = window->KeyDown_W();
+    bool a = window->KeyDown_A();
+    bool s = window->KeyDown_S();
+    bool d = window->KeyDown_D();
+    NetSendInput(w, a, s, d);
+}
+void RecvFrame()
+{
+    NetRecvFrame(frame);
+
+    auto width = 32;
+    auto height = 32;
+    auto scale = 16;
+    auto size = 32*16;
+
+    window->SetPixelsScaled2((uint8_t*)frame, width, height, scale);
+}

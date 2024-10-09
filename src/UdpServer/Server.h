@@ -1,5 +1,6 @@
 Camera camera;
 unique_ptr<Bitmap> bitmap;
+unique_ptr<Bitmap> bitmapNet;
 unique_ptr<BitmapWindow2> window;
 
 void Draw(Bitmap& bitmap, Camera camera, long time)
@@ -50,13 +51,13 @@ void InitGame()
 }
 void InitGameWindow()
 {
-    auto width = 32;
-    auto height = 32;
     auto scale = 16;
-    auto size = 32*16;
+    auto size1 = 32;
+    auto size2 = 32*scale;
 
-    bitmap = make_unique<Bitmap>(width, height);
-    window = make_unique<BitmapWindow2>(0, 100, size, size);
+    bitmapNet = make_unique<Bitmap>(size1, size1);
+    bitmap = make_unique<Bitmap>(size2, size2);
+    window = make_unique<BitmapWindow2>(0, 100, size2, size2);
 }
 bool GameWindowClosed()
 {
@@ -69,13 +70,14 @@ void UpdateGameWindow()
 void RenderGame()
 {
     Draw(*bitmap, camera, clock());
+    Draw(*bitmapNet, camera, clock());
 
-    window->SetPixelsScaled(bitmap->pixels.data(), 32, 32, 16);
+    window->SetPixels(bitmap->pixels.data(), 32*16, 32*16);
 
     char buffer[1024];
 
     for (int i = 0; i < 1024; i++)
-        buffer[i] = PixelToLightValue(bitmap->pixels[i]);
+        buffer[i] = PixelToLightValue(bitmapNet->pixels[i]);
 
     NetSendFrame(buffer);
 }
