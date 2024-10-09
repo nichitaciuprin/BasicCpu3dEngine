@@ -48,6 +48,13 @@ void Draw(Bitmap& bitmap, Camera camera, long time)
 void InitGame()
 {
     camera = { 0, 1, 95 };
+
+    auto scale = 16;
+    auto size1 = 32;
+    auto size2 = 32*scale;
+
+    bitmapNet = make_unique<Bitmap>(size1, size1);
+    bitmap = make_unique<Bitmap>(size2, size2);
 }
 void InitGameWindow()
 {
@@ -55,8 +62,8 @@ void InitGameWindow()
     auto size1 = 32;
     auto size2 = 32*scale;
 
-    bitmapNet = make_unique<Bitmap>(size1, size1);
-    bitmap = make_unique<Bitmap>(size2, size2);
+    // bitmapNet = make_unique<Bitmap>(size1, size1);
+    // bitmap = make_unique<Bitmap>(size2, size2);
     window = make_unique<BitmapWindow2>(0, 100, size2, size2);
 }
 bool GameWindowClosed()
@@ -72,7 +79,7 @@ void RenderGame()
     Draw(*bitmap, camera, clock());
     Draw(*bitmapNet, camera, clock());
 
-    window->SetPixels(bitmap->pixels.data(), 32*16, 32*16);
+    // window->SetPixels(bitmap->pixels.data(), 32*16, 32*16);
 
     char buffer[1024];
 
@@ -87,15 +94,18 @@ void UpdateGame()
     bool up, left, down, right;
     bool e, q;
 
-    left = window->KeyDown_LEFT();
-    up = window->KeyDown_UP();
-    down = window->KeyDown_DOWN();
-    right = window->KeyDown_RIGHT();
-    e = window->KeyDown_E();
-    q = window->KeyDown_Q();
+    // left = window->KeyDown_LEFT();
+    // up = window->KeyDown_UP();
+    // down = window->KeyDown_DOWN();
+    // right = window->KeyDown_RIGHT();
+    // e = window->KeyDown_E();
+    // q = window->KeyDown_Q();
+
+    e = false;
+    q = false;
 
     NetRecvInput(&w, &a, &s, &d);
 
-    UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
+    // UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
     UpdateCameraPosition(&camera, 0.008f, w, a, s, d, e, q);
 }

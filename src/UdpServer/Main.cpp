@@ -13,15 +13,15 @@
 int main()
 {
     InitGame();
-    InitGameWindow();
+    // InitGameWindow();
 
     while (true)
     {
         FixedTimeStart();
 
-        if (GameWindowClosed()) break;
+        // if (GameWindowClosed()) break;
 
-        UpdateGameWindow();
+        // UpdateGameWindow();
 
         RenderGame();
         UpdateGame();
