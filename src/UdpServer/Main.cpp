@@ -24,7 +24,7 @@ int main()
         // UpdateGameWindow();
 
         RenderGame();
-        UpdateGame();
+        UpdateGame(0.010f);
 
         FixedTimeEnd();
     }

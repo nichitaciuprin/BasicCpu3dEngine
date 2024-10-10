@@ -59,7 +59,6 @@ long GetTime()
 
 long timeStep = 10;
 int endTime = 0;
-// float deltaTime = 0.020f;
 
 void FixedTimeStart()
 {

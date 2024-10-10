@@ -1,7 +1,67 @@
+// struct NetAddr
+// {
+//     uint8_t b1;
+//     uint8_t b2;
+//     uint8_t b3;
+//     uint8_t b4;
+//     uint16_t port;
+// };
+struct Player
+{
+    uint64_t id;
+    float timer;
+    Camera camera;
+};
+
 Camera camera;
 unique_ptr<Bitmap> bitmap;
 unique_ptr<Bitmap> bitmapNet;
 unique_ptr<BitmapWindow2> window;
+
+vector<Player> players;
+
+void DestroyPlayers(float deltaTime)
+{
+    for (int i = players.size() - 1; i >= 0; i--)
+    {
+        auto& player = players[i];
+        player.timer -= deltaTime;
+        if (player.timer <= 0)
+            erase_back(players, i);
+    }
+}
+void UpdatePlayer(RecvInput& recvInput)
+{
+    for (size_t i = 0; i < players.size(); i++)
+    {
+        auto& player = players[i];
+
+        // cout << player.id << ":" << recvInput.id << endl;
+
+        if (player.id == recvInput.id)
+        {
+            player.timer == 10;
+            bool w = recvInput.w;
+            bool a = recvInput.a;
+            bool s = recvInput.s;
+            bool d = recvInput.d;
+            bool q = false;
+            bool e = false;
+            UpdateCameraPosition(&player.camera, 0.008f, w, a, s, d, q, e);
+            return;
+        }
+    }
+
+    if (players.size() == 4) return;
+
+    // cout << recvInput.id << endl;
+
+    Player player = {};
+    player.id = recvInput.id;
+    player.timer = 10;
+    players.push_back(player);
+}
+
 
 void Draw(Bitmap& bitmap, Camera camera, long time)
 {
@@ -55,6 +115,9 @@ void InitGame()
 
     bitmapNet = make_unique<Bitmap>(size1, size1);
     bitmap = make_unique<Bitmap>(size2, size2);
+
+    players = vector<Player>();
+    players.reserve(4);
 }
 void InitGameWindow()
 {
@@ -76,19 +139,24 @@ void UpdateGameWindow()
 }
 void RenderGame()
 {
-    Draw(*bitmap, camera, clock());
-    Draw(*bitmapNet, camera, clock());
+    for (auto& i : players)
+    {
+        Draw(*bitmapNet, i.camera, clock());
+        // Draw(*bitmapNet, camera, clock());
 
-    // window->SetPixels(bitmap->pixels.data(), 32*16, 32*16);
+        // window->SetPixels(bitmap->pixels.data(), 32*16, 32*16);
 
-    char buffer[1024];
+        char buffer[1024];
 
-    for (int i = 0; i < 1024; i++)
-        buffer[i] = PixelToLightValue(bitmapNet->pixels[i]);
+        for (int i = 0; i < 1024; i++)
+            buffer[i] = PixelToLightValue(bitmapNet->pixels[i]);
 
-    NetSendFrame(buffer);
+        // cout << i.id << endl;
+
+        NetSendFrame2(i.id, buffer);
+    }
 }
-void UpdateGame()
+void UpdateGame(float deltaTime)
 {
     bool w, a, s, d;
     bool up, left, down, right;
@@ -101,11 +169,16 @@ void UpdateGame()
     // e = window->KeyDown_E();
     // q = window->KeyDown_Q();
 
-    e = false;
-    q = false;
+    DestroyPlayers(deltaTime);
 
-    NetRecvInput(&w, &a, &s, &d);
+    RecvInput recvInput;
 
-    // UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
-    UpdateCameraPosition(&camera, 0.008f, w, a, s, d, e, q);
+    while (NetRecvInput2(&recvInput))
+    {
+        // UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
+        // UpdateCameraPosition(&camera, 0.008f, w, a, s, d, e, q);
+
+        UpdatePlayer(recvInput);
+    }
 }
+

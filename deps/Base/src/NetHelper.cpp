@@ -112,8 +112,54 @@ static void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, in
 {
     int addrSize = (sizeof(*addr));
     int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
+
+    // if (byteCount > 0)
+    // {
+    //     char* ip = inet_ntoa(((sockaddr_in*)addr)->sin_addr);
+    //     // cout << ip << endl;
+    // }
+
     *messageSize = byteCount;
 }
+
+static void NetHelper_PrintId(uint64_t id)
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        uint8_t byte = id >> 8 * (5 - i);
+        printf("%02x", byte);
+    }
+
+    printf("\n");
+}
+static uint64_t NetHelper_ntohs(SOCKADDR addr)
+{
+    uint64_t ip = 0;
+
+    sockaddr_in* sockAddrIn = (sockaddr_in*)&addr;
+
+    ip += sockAddrIn->sin_addr.S_un.S_un_b.s_b1; ip = ip <<  8;
+    ip += sockAddrIn->sin_addr.S_un.S_un_b.s_b2; ip = ip <<  8;
+    ip += sockAddrIn->sin_addr.S_un.S_un_b.s_b3; ip = ip <<  8;
+    ip += sockAddrIn->sin_addr.S_un.S_un_b.s_b4; ip = ip << 16;
+    ip += ntohs(sockAddrIn->sin_port);
+
+    return ip;
+}
+static SOCKADDR NetHelper_htons(uint64_t addr)
+{
+    sockaddr_in sockAddrIn;
+
+    sockAddrIn.sin_family = AF_INET;
+    sockAddrIn.sin_port = htons(addr);           addr = addr >> 16;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b1 = addr; addr = addr >>  8;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b2 = addr; addr = addr >>  8;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b3 = addr; addr = addr >>  8;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b4 = addr;
+
+    return *((SOCKADDR*)&sockAddrIn);
+}
+
 
 void NetInit()
 {
@@ -141,11 +187,36 @@ void NetSend(char* buffer, int messageSize)
 void NetRecv(char* buffer, int* messageSize)
 {
     NetHelper_RecvMessage(&_NetSock, &_NetSource, buffer, messageSize);
+
+    // if (*messageSize >= 0)
+    // {
+    //     // struct in_addr addr = ((sockaddr_in*)&_NetSource)->sin_addr;
+    //     // char* ip = inet_ntoa(addr);
+    //     // cout << ip << endl;
+    //     // NetRecvId = NetHelper_ToId(&_NetSource);
+    //     // NetHelper_PrintId(id);
+    // }
 }
 void NetResp(char* buffer, int messageSize)
 {
     NetHelper_SendMessage(&_NetSock, &_NetSource, buffer, messageSize);
 }
+
+void NetSend2(char* buffer, int messageSize, uint64_t id)
+{
+    auto addr = NetHelper_htons(id);
+
+    NetHelper_SendMessage(&_NetSock, &addr, buffer, messageSize);
+}
+
+struct RecvInput
+{
+    uint64_t id;
+    bool w;
+    bool a;
+    bool s;
+    bool d;
+};
 
 bool NetServerProcessCalled = false;
 void NetSendFrame(char* frame)
@@ -188,6 +259,51 @@ void NetRecvInput(bool* w, bool* a, bool* s, bool* d)
 
         if (messageLength <= 0) break;
     }
+}
+
+bool NetRecvInput2(RecvInput* recvInputOut)
+{
+    if (!NetServerProcessCalled)
+    {
+        NetServerProcessCalled = true;
+        NetListen(27015);
+    }
+
+    char recvBuffer[1024];
+
+    int messageLength = 0;
+
+    // *recvInputOut = {};
+
+    NetHelper_RecvMessage(&_NetSock, &_NetSource, recvBuffer, &messageLength);
+
+    if (messageLength < 0)
+        return false;
+
+    recvInputOut->id = NetHelper_ntohs(_NetSource);
+
+    uint8_t temp2 = *(uint8_t*)recvBuffer;
+
+    recvInputOut->w = (1 << 3 & temp2) != 0;
+    recvInputOut->a = (1 << 2 & temp2) != 0;
+    recvInputOut->s = (1 << 1 & temp2) != 0;
+    recvInputOut->d = (1 << 0 & temp2) != 0;
+
+    return true;
+}
+void NetSendFrame2(uint64_t id, char* frame)
+{
+    if (!NetServerProcessCalled)
+    {
+        NetServerProcessCalled = true;
+        NetListen(27015);
+    }
+
+    NetHelper_PrintId(id);
+
+    auto addr = NetHelper_htons(id);
+
+    NetHelper_SendMessage(&_NetSock, &addr, frame, 1024);
 }
 
 bool NetClientProcessCalled = false;
