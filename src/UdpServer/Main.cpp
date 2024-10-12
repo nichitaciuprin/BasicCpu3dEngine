@@ -13,9 +13,8 @@ int main()
     while (true)
     {
         NetRecv(&addr, buffer, &messageSize);
-        // NetRecv(buffer, &messageSize);
-        if (messageSize > 0)
-            printf("%.*s\n", messageSize, buffer);
+        if (messageSize >= 0)
+            printf("got message \"%.*s\"\n", messageSize, buffer);
 
         Halt(1000);
 

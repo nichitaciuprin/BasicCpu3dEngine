@@ -16,14 +16,12 @@ int main()
         strcpy(buffer, message);
         messageSize = strlen(message);
         NetSend(&addr, buffer, &messageSize);
-        // cout << message << endl;
-        // NetSend(buffer, messageSize);
 
         Halt(1000);
 
         NetRecv(&addr, buffer, &messageSize);
-        if (messageSize > 0)
-            printf("%.*s\n", messageSize, buffer);
+        if (messageSize >= 0)
+            printf("got message \"%.*s\"\n", messageSize, buffer);
 
         Halt(1000);
     }
