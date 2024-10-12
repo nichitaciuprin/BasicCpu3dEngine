@@ -12,7 +12,7 @@ int main()
 
     while (true)
     {
-        NetRecv2(&addr, buffer, &messageSize);
+        NetRecv(&addr, buffer, &messageSize);
         // NetRecv(buffer, &messageSize);
         if (messageSize > 0)
             printf("%.*s\n", messageSize, buffer);
@@ -24,7 +24,7 @@ int main()
         const char* message = "server";
         strcpy(buffer, message);
         messageSize = strlen(message);
-        NetSend2(&addr, buffer, &messageSize);
+        NetSend(&addr, buffer, &messageSize);
 
         Halt(1000);
     }

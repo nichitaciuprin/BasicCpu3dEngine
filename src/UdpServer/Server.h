@@ -30,7 +30,7 @@ void DestroyPlayers(float deltaTime)
             erase_back(players, i);
     }
 }
-void UpdatePlayer(RecvInput& recvInput)
+void UpdatePlayer(NetInput& recvInput)
 {
     for (size_t i = 0; i < players.size(); i++)
     {
@@ -171,7 +171,7 @@ void UpdateGame(float deltaTime)
 
     DestroyPlayers(deltaTime);
 
-    RecvInput recvInput;
+    NetInput recvInput;
 
     while (NetRecvInput2(&recvInput))
     {
