@@ -8,24 +8,30 @@
 #include "Bitmap.h"
 #include "BitmapWindow.h"
 #include "NetHelper.h"
-#include "Client.h"
 
 int main()
 {
     printf("Process PID:%ld\n", (long)getpid());
 
-    InitClientWindow();
+    char frame[1024];
+
+    auto window = make_unique<BitmapWindow2>(700, 100, 512, 512);
 
     while (true)
     {
         FixedTimeStart();
 
-        if (ClientWindowClosed()) break;
+        if (!window->Exists()) break;
+        window->Update();
+        window->SetPixelsScaled2((uint8_t*)frame, 32, 32, 16);
+        NetRecvFrame(frame);
 
-        UpdateClientWindow();
-
-        RecvFrame();
-        SendInput();
+        NetInput netInput = {};
+        netInput.w = window->KeyDown_W();
+        netInput.a = window->KeyDown_A();
+        netInput.s = window->KeyDown_S();
+        netInput.d = window->KeyDown_D();
+        NetSendInput(&netInput);
 
         FixedTimeEnd();
     }
