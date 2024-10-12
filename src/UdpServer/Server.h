@@ -1,11 +1,3 @@
-// struct NetAddr
-// {
-//     uint8_t b1;
-//     uint8_t b2;
-//     uint8_t b3;
-//     uint8_t b4;
-//     uint16_t port;
-// };
 struct Player
 {
     uint64_t id;
@@ -13,11 +5,7 @@ struct Player
     Camera camera;
 };
 
-Camera camera;
-unique_ptr<Bitmap> bitmap;
 unique_ptr<Bitmap> bitmapNet;
-unique_ptr<BitmapWindow2> window;
-
 vector<Player> players;
 
 void DestroyPlayers(float deltaTime)
@@ -61,7 +49,6 @@ void UpdatePlayer(uint64_t playerAddr, NetInput& recvInput)
     player.timer = 10;
     players.push_back(player);
 }
-
 
 void Draw(Bitmap& bitmap, Camera camera, long time)
 {
@@ -107,14 +94,11 @@ void Draw(Bitmap& bitmap, Camera camera, long time)
 }
 void InitGame()
 {
-    camera = { 0, 1, 95 };
-
     auto scale = 16;
     auto size1 = 32;
     auto size2 = 32*scale;
 
     bitmapNet = make_unique<Bitmap>(size1, size1);
-    bitmap = make_unique<Bitmap>(size2, size2);
 
     players = vector<Player>();
     players.reserve(4);
@@ -127,24 +111,22 @@ void InitGameWindow()
 
     // bitmapNet = make_unique<Bitmap>(size1, size1);
     // bitmap = make_unique<Bitmap>(size2, size2);
-    window = make_unique<BitmapWindow2>(0, 100, size2, size2);
+    // window = make_unique<BitmapWindow2>(0, 100, size2, size2);
 }
-bool GameWindowClosed()
-{
-    return !window->Exists();
-}
-void UpdateGameWindow()
-{
-    window->Update();
-}
+// bool GameWindowClosed()
+// {
+//     return !window->Exists();
+// }
+// void UpdateGameWindow()
+// {
+//     window->Update();
+// }
+
 void RenderGame()
 {
     for (auto& i : players)
     {
         Draw(*bitmapNet, i.camera, clock());
-        // Draw(*bitmapNet, camera, clock());
-
-        // window->SetPixels(bitmap->pixels.data(), 32*16, 32*16);
 
         char buffer[1024];
 
@@ -185,3 +167,27 @@ void UpdateGame(float deltaTime)
     }
 }
 
+Camera testCamera;
+unique_ptr<Bitmap> testBitmap;
+unique_ptr<BitmapWindow2> testWindow;
+bool TestRenderCalled = false;
+void TestRender()
+{
+    if (!TestRenderCalled)
+    {
+        TestRenderCalled = true;
+
+        testCamera = { 0, 1, 95 };
+
+        auto size = 32*16;
+
+        testBitmap = make_unique<Bitmap>(size, size);
+        testWindow = make_unique<BitmapWindow2>(0, 0, 512, 512);
+
+        return;
+    }
+
+    Draw(*testBitmap, testCamera, clock());
+    testWindow->SetPixels(testBitmap->pixels.data(), 32*16, 32*16);
+    testWindow->Update();
+}

@@ -216,52 +216,11 @@ void NetInitServer()
 
     NetUsePort(27015);
 }
-
-bool NetInitClientCalled = false;
-void NetInitClient()
-{
-    if (NetInitClientCalled) return;
-        NetInitClientCalled = true;
-
-    NetUseAnyPort();
-}
-
 void NetSendFrame(uint64_t* addr, char* frame)
 {
     NetInitServer();
     int messageSize = 1024;
     NetSend(addr, frame, &messageSize);
-}
-void NetSendInput(NetInput* input)
-{
-    NetInitClient();
-
-    uint8_t message = 0;
-    if (input->w) message += 8;
-    if (input->a) message += 4;
-    if (input->s) message += 2;
-    if (input->d) message += 1;
-
-    uint64_t addr;
-
-    int messageSize = 1;
-
-    NetSend(&addr, (char*)&message, &messageSize);
-}
-
-bool NetRecvFrame(char* frame)
-{
-    NetInitClient();
-
-    int messageSize = 0;
-
-    uint64_t addr;
-
-    NetRecv(&addr, frame, &messageSize);
-
-    if (messageSize < 0) return false;
-
-    return true;
 }
 bool NetRecvInput(uint64_t* addr, NetInput* input)
 {
@@ -284,4 +243,43 @@ bool NetRecvInput(uint64_t* addr, NetInput* input)
     input->d = (1 << 0 & byte) != 0;
 
     return true;
+}
+
+bool NetInitClientCalled = false;
+void NetInitClient()
+{
+    if (NetInitClientCalled) return;
+        NetInitClientCalled = true;
+
+    NetUseAnyPort();
+}
+bool NetRecvFrame(char* frame)
+{
+    NetInitClient();
+
+    int messageSize = 0;
+
+    uint64_t addr;
+
+    NetRecv(&addr, frame, &messageSize);
+
+    if (messageSize < 0) return false;
+
+    return true;
+}
+void NetSendInput(NetInput* input)
+{
+    NetInitClient();
+
+    uint8_t message = 0;
+    if (input->w) message += 8;
+    if (input->a) message += 4;
+    if (input->s) message += 2;
+    if (input->d) message += 1;
+
+    uint64_t addr = NetCreateAddr(127, 0, 0, 1, 27015);
+
+    int messageSize = 1;
+
+    NetSend(&addr, (char*)&message, &messageSize);
 }

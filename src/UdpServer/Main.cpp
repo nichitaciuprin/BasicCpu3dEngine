@@ -15,16 +15,12 @@ int main()
     printf("Process PID:%ld\n", (long)getpid());
 
     InitGame();
-    // InitGameWindow();
 
     while (true)
     {
         FixedTimeStart();
 
-        // if (GameWindowClosed()) break;
-
-        // UpdateGameWindow();
-
+        TestRender();
         RenderGame();
         UpdateGame(0.010f);
 
