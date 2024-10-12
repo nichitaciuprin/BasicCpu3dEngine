@@ -1,53 +1,32 @@
 #include "Std.h"
-#include "StdExt.h"
 #include "SysHelper.h"
-#include "Subgen.h"
-#include "Helper.h"
-#include "Models.h"
-#include "Clipping.h"
-#include "Bitmap.h"
-#include "BitmapWindow.h"
 #include "NetHelper.h"
-#include "Client.h"
 
 int main()
 {
-    InitClientWindow();
+    NetUsePort(27016);
+
+    char buffer[1024];
+    int messageSize = 0;
+    uint64_t addr = NetHelper_CreateId(127, 0, 0, 1, 27015);
 
     while (true)
     {
-        FixedTimeStart();
+        const char* message = "client";
+        strcpy(buffer, message);
+        messageSize = strlen(message);
+        NetSend2(&addr, buffer, &messageSize);
+        // cout << message << endl;
+        // NetSend(buffer, messageSize);
 
-        if (ClientWindowClosed()) break;
+        Halt(1000);
 
-        UpdateClientWindow();
+        NetRecv2(&addr, buffer, &messageSize);
+        if (messageSize > 0)
+            printf("%.*s\n", messageSize, buffer);
 
-        RecvFrame();
-        SendInput();
-
-        FixedTimeEnd();
+        Halt(1000);
     }
 
     return 0;
 }
-
-// int main()
-// {
-//     InitClientWindow();
-
-//     while (true)
-//     {
-//         FixedTimeStart();
-
-//         if (ClientWindowClosed()) break;
-
-//         UpdateClientWindow();
-
-//         RenderClientWindow();
-//         SendInput();
-
-//         FixedTimeEnd();
-//     }
-
-//     return 0;
-// }

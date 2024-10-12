@@ -5,6 +5,7 @@
 #include <memory.h>
 #include <time.h>
 #include <math.h>
+#include <assert.h>
 
 #include <iostream>
 #include <algorithm>

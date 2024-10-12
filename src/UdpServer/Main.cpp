@@ -1,32 +1,32 @@
 #include "Std.h"
-#include "StdExt.h"
 #include "SysHelper.h"
-#include "Subgen.h"
-#include "Helper.h"
-#include "Models.h"
-#include "Clipping.h"
-#include "Bitmap.h"
-#include "BitmapWindow.h"
 #include "NetHelper.h"
-#include "Server.h"
 
 int main()
 {
-    InitGame();
-    // InitGameWindow();
+    NetUsePort(27015);
+
+    char buffer[1024];
+    int messageSize = 0;
+    uint64_t addr = 0;
 
     while (true)
     {
-        FixedTimeStart();
+        NetRecv2(&addr, buffer, &messageSize);
+        // NetRecv(buffer, &messageSize);
+        if (messageSize > 0)
+            printf("%.*s\n", messageSize, buffer);
 
-        // if (GameWindowClosed()) break;
+        Halt(1000);
 
-        // UpdateGameWindow();
+        if (addr == 0) continue;
 
-        RenderGame();
-        UpdateGame(0.010f);
+        const char* message = "server";
+        strcpy(buffer, message);
+        messageSize = strlen(message);
+        NetSend2(&addr, buffer, &messageSize);
 
-        FixedTimeEnd();
+        Halt(1000);
     }
 
     return 0;

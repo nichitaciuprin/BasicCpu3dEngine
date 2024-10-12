@@ -26,6 +26,7 @@ static void NetHelper_InitNetHelper()
     if (result != NO_ERROR)
         printf("WSAStartup failed with error %d\n", result);
 }
+
 static SOCKADDR NetHelper_CreateSocketAddressEmpty()
 {
     struct sockaddr_in addr1;
@@ -53,31 +54,6 @@ static SOCKET NetHelper_CreateSocketNoBind()
 
     return sock;
 }
-static SOCKET NetHelper_CreateSocketLocalHost(int port)
-{
-    SOCKET sock = INVALID_SOCKET;
-    sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-    // makes socket non-blocking
-    u_long mode = 1;
-    ioctlsocket(sock, FIONBIO, &mode);
-
-    if (sock == INVALID_SOCKET)
-        printf("socket failed with error %d\n", WSAGetLastError());
-
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    if (bind(sock, (SOCKADDR*)&addr, sizeof(addr)))
-    {
-        printf("bind failed with error %d\n", WSAGetLastError());
-        return 1;
-    }
-
-    return sock;
-}
 static SOCKET NetHelper_CreateSocket(int port)
 {
     SOCKET sock = INVALID_SOCKET;
@@ -90,10 +66,11 @@ static SOCKET NetHelper_CreateSocket(int port)
     if (sock == INVALID_SOCKET)
         printf("socket failed with error %d\n", WSAGetLastError());
 
-    struct sockaddr_in addr;
+    struct sockaddr_in addr = {};
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    // addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    // addr.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(sock, (SOCKADDR*)&addr, sizeof(addr)))
     {
@@ -122,15 +99,18 @@ static void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, in
     *messageSize = byteCount;
 }
 
-static void NetHelper_PrintId(uint64_t id)
-{
-    for (size_t i = 0; i < 6; i++)
-    {
-        uint8_t byte = id >> 8 * (5 - i);
-        printf("%02x", byte);
-    }
 
-    printf("\n");
+uint64_t NetHelper_CreateId(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint16_t port)
+{
+    uint64_t ip = 0;
+
+    ip += b1; ip = ip <<  8;
+    ip += b2; ip = ip <<  8;
+    ip += b3; ip = ip <<  8;
+    ip += b4; ip = ip << 16;
+    ip += port;
+
+    return ip;
 }
 static uint64_t NetHelper_ntohs(SOCKADDR addr)
 {
@@ -159,7 +139,20 @@ static SOCKADDR NetHelper_htons(uint64_t addr)
 
     return *((SOCKADDR*)&sockAddrIn);
 }
+bool dontPrint = false;
+void NetHelper_PrintId(uint64_t id)
+{
+    // if (dontPrint) return;
+    // dontPrint = true;
 
+    for (size_t i = 0; i < 6; i++)
+    {
+        uint8_t byte = id >> 8 * (5 - i);
+        printf("%02x", byte);
+    }
+
+    printf("\n");
+}
 
 void NetInit()
 {
@@ -169,7 +162,12 @@ void NetInit()
     NetHelper_InitNetHelper();
     _NetSource = NetHelper_CreateSocketAddressEmpty();
 }
-void NetListen(int port)
+void NetUseAnyPort()
+{
+    NetInit();
+    _NetSock = NetHelper_CreateSocketNoBind();
+}
+void NetUsePort(int port)
 {
     NetInit();
     _NetSock = NetHelper_CreateSocket(port);
@@ -202,6 +200,119 @@ void NetResp(char* buffer, int messageSize)
     NetHelper_SendMessage(&_NetSock, &_NetSource, buffer, messageSize);
 }
 
+
+static void NetHelper_SendMessage2(SOCKET* sock, uint64_t id, char* buffer, int messageSize)
+{
+    sockaddr_in sockAddrIn;
+
+    sockAddrIn.sin_family = AF_INET;
+    sockAddrIn.sin_port = htons(id);           id = id >> 16;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b1 = id; id = id >>  8;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b2 = id; id = id >>  8;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b3 = id; id = id >>  8;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b4 = id;
+
+    SOCKADDR* sockAddr = (SOCKADDR*)&sockAddrIn;
+    int sockAddrSize = (sizeof(*sockAddr));
+
+    sendto(*sock, buffer, messageSize, 0, sockAddr, sockAddrSize);
+}
+static void NetHelper_RecvMessage2(SOCKET* sock, uint64_t* id, char* buffer, int* messageSize)
+{
+    SOCKADDR sockAddr;
+    int sockAddrSize = (sizeof(sockAddr));
+    int byteCount = recvfrom(*sock, buffer, 1024, 0, &sockAddr, &sockAddrSize);
+
+    *messageSize = byteCount;
+
+    if (byteCount < 0) return;
+
+    uint64_t id2 = 0;
+
+    sockaddr_in* sockAddrIn = (sockaddr_in*)&sockAddr;
+
+    id2 += sockAddrIn->sin_addr.S_un.S_un_b.s_b1; id2 = id2 <<  8;
+    id2 += sockAddrIn->sin_addr.S_un.S_un_b.s_b2; id2 = id2 <<  8;
+    id2 += sockAddrIn->sin_addr.S_un.S_un_b.s_b3; id2 = id2 <<  8;
+    id2 += sockAddrIn->sin_addr.S_un.S_un_b.s_b4; id2 = id2 << 16;
+    id2 += ntohs(sockAddrIn->sin_port);
+
+    *id = id2;
+}
+
+void NetSend2(uint64_t* addr, char* buffer, int* messageSize)
+{
+    assert(addr != NULL);
+    assert(buffer != NULL);
+    assert(messageSize != NULL);
+    assert(*addr != 0);
+    assert(*messageSize >= 0);
+
+    sockaddr_in sockAddrIn;
+
+    uint64_t id = *addr;
+
+    // NetHelper_PrintId(id);
+
+    uint16_t port  = id;  id = id >> 16;
+    uint8_t b4     = id;  id = id >>  8;
+    uint8_t b3     = id;  id = id >>  8;
+    uint8_t b2     = id;  id = id >>  8;
+    uint8_t b1     = id;
+
+    sockAddrIn.sin_family = AF_INET;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b1 = b1;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b2 = b2;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b3 = b3;
+    sockAddrIn.sin_addr.S_un.S_un_b.s_b4 = b4;
+    sockAddrIn.sin_port = htons(port);
+
+    // cout << "===SEND===" << endl;
+    // cout << ((int)sockAddrIn.sin_addr.S_un.S_un_b.s_b1) << endl;
+    // cout << ((int)sockAddrIn.sin_addr.S_un.S_un_b.s_b2) << endl;
+    // cout << ((int)sockAddrIn.sin_addr.S_un.S_un_b.s_b3) << endl;
+    // cout << ((int)sockAddrIn.sin_addr.S_un.S_un_b.s_b4) << endl;
+
+    // char* ip = inet_ntoa(sockAddrIn.sin_addr);
+    // cout << ip << endl;
+
+    SOCKADDR* sockAddr = (SOCKADDR*)&sockAddrIn;
+    int sockAddrSize = (sizeof(*sockAddr));
+
+    NetHelper_SendMessage(&_NetSock, sockAddr, buffer, *messageSize);
+}
+void NetRecv2(uint64_t* addr, char* buffer, int* messageSize)
+{
+    SOCKADDR sockAddr;
+
+    NetHelper_RecvMessage(&_NetSock, &sockAddr, buffer, messageSize);
+
+    // cout << (*messageSize) << endl;
+
+    if (*messageSize < 0) return;
+
+    sockaddr_in* sockAddrIn = (sockaddr_in*)&sockAddr;
+
+    // char* ip = inet_ntoa(sockAddrIn->sin_addr);
+    // cout << ip << endl;
+
+    uint64_t id = 0;
+
+    // cout << "===RECV===" << endl;
+    // cout << ((int)sockAddrIn->sin_addr.S_un.S_un_b.s_b1) << endl;
+    // cout << ((int)sockAddrIn->sin_addr.S_un.S_un_b.s_b2) << endl;
+    // cout << ((int)sockAddrIn->sin_addr.S_un.S_un_b.s_b3) << endl;
+    // cout << ((int)sockAddrIn->sin_addr.S_un.S_un_b.s_b4) << endl;
+
+    id += sockAddrIn->sin_addr.S_un.S_un_b.s_b1; id = id <<  8;
+    id += sockAddrIn->sin_addr.S_un.S_un_b.s_b2; id = id <<  8;
+    id += sockAddrIn->sin_addr.S_un.S_un_b.s_b3; id = id <<  8;
+    id += sockAddrIn->sin_addr.S_un.S_un_b.s_b4; id = id << 16;
+    id += ntohs(sockAddrIn->sin_port);
+
+    *addr = id;
+}
+
 void NetSend2(char* buffer, int messageSize, uint64_t id)
 {
     auto addr = NetHelper_htons(id);
@@ -224,7 +335,7 @@ void NetSendFrame(char* frame)
     if (!NetServerProcessCalled)
     {
         NetServerProcessCalled = true;
-        NetListen(27015);
+        NetUsePort(27015);
     }
 
     NetResp(frame, 1024);
@@ -234,7 +345,7 @@ void NetRecvInput(bool* w, bool* a, bool* s, bool* d)
     if (!NetServerProcessCalled)
     {
         NetServerProcessCalled = true;
-        NetListen(27015);
+        NetUsePort(27015);
     }
 
     char recvBuffer[1024];
@@ -266,7 +377,7 @@ bool NetRecvInput2(RecvInput* recvInputOut)
     if (!NetServerProcessCalled)
     {
         NetServerProcessCalled = true;
-        NetListen(27015);
+        NetUsePort(27015);
     }
 
     char recvBuffer[1024];
@@ -296,7 +407,7 @@ void NetSendFrame2(uint64_t id, char* frame)
     if (!NetServerProcessCalled)
     {
         NetServerProcessCalled = true;
-        NetListen(27015);
+        NetUsePort(27015);
     }
 
     NetHelper_PrintId(id);
@@ -319,6 +430,10 @@ void NetRecvFrame(char* frame)
     {
         int messageLength = 0;
         NetRecv(frame, &messageLength);
+        if (messageLength > 0)
+        {
+            cout << "YES" << endl;
+        }
         if (messageLength <= 0) break;
     }
 }
@@ -336,5 +451,8 @@ void NetSendInput(bool w, bool a, bool s, bool d)
     if (s) message += 2;
     if (d) message += 1;
 
-    NetSend((char*)&message, 1);
+    auto id = NetHelper_CreateId(127, 0, 0, 1, 27015);
+
+    NetHelper_SendMessage2(&_NetSock, id, (char*)&message, 1);
 }
+

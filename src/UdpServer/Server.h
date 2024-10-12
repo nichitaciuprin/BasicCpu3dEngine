@@ -175,6 +175,8 @@ void UpdateGame(float deltaTime)
 
     while (NetRecvInput2(&recvInput))
     {
+        // cout << "123" << endl;
+
         // UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
         // UpdateCameraPosition(&camera, 0.008f, w, a, s, d, e, q);
 
