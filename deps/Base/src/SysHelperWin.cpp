@@ -72,3 +72,10 @@ void FixedTimeEnd()
     else
         printf("SLOW!\n");
 }
+
+
+uint64_t GetPid()
+{
+    // printf("Process PID:%ld\n", (long)getpid());
+    return (uint64_t)getpid();
+}

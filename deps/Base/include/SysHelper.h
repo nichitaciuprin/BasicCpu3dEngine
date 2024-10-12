@@ -4,3 +4,4 @@ long GetTime();
 void CheckFPS();
 void FixedTimeStart();
 void FixedTimeEnd();
+uint64_t GetPid();

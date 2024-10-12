@@ -12,7 +12,7 @@
 
 int main()
 {
-    printf("Process PID:%ld\n", (long)getpid());
+    printf("Process PID:%ld\n", (long)GetPid());
 
     InitGame();
 
