@@ -1,7 +1,6 @@
 unique_ptr<BitmapWindow2> window = nullptr;
 
 char frame[1024];
-// uint64_t targetAddr;
 
 void InitClientWindow()
 {

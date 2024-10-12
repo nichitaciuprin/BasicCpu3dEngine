@@ -20,7 +20,7 @@ int main()
     {
         FixedTimeStart();
 
-        TestRender();
+        // TestRender();
         RenderGame();
         UpdateGame(0.010f);
 

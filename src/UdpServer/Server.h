@@ -47,6 +47,7 @@ void UpdatePlayer(uint64_t playerAddr, NetInput& recvInput)
     Player player = {};
     player.id = playerAddr;
     player.timer = 10;
+    player.camera = { 0, 1, 95 };
     players.push_back(player);
 }
 
@@ -124,18 +125,23 @@ void InitGameWindow()
 
 void RenderGame()
 {
-    for (auto& i : players)
+    // Camera cam = { 0, 1, 95 };
+
+    for (auto& player : players)
     {
-        Draw(*bitmapNet, i.camera, clock());
+        // Draw(*bitmapNet, cam, clock());
+        Draw(*bitmapNet, player.camera, clock());
 
         char buffer[1024];
+
+        // uint8_t duno = 255;
 
         for (int i = 0; i < 1024; i++)
             buffer[i] = PixelToLightValue(bitmapNet->pixels[i]);
 
         // cout << i.id << endl;
 
-        NetSendFrame(&i.id, buffer);
+        NetSendFrame(&player.id, buffer);
     }
 }
 void UpdateGame(float deltaTime)

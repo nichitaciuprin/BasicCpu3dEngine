@@ -32,24 +32,3 @@ int main()
 
     return 0;
 }
-
-// int main()
-// {
-//     InitClientWindow();
-
-//     while (true)
-//     {
-//         FixedTimeStart();
-
-//         if (ClientWindowClosed()) break;
-
-//         UpdateClientWindow();
-
-//         RenderClientWindow();
-//         SendInput();
-
-//         FixedTimeEnd();
-//     }
-
-//     return 0;
-// }
