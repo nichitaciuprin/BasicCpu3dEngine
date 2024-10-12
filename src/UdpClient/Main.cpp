@@ -1,30 +1,55 @@
 #include "Std.h"
+#include "StdExt.h"
 #include "SysHelper.h"
+#include "Subgen.h"
+#include "Helper.h"
+#include "Models.h"
+#include "Clipping.h"
+#include "Bitmap.h"
+#include "BitmapWindow.h"
 #include "NetHelper.h"
+#include "Client.h"
 
 int main()
 {
-    NetUsePort(27016);
+    printf("Process PID:%ld\n", (long)getpid());
 
-    char buffer[1024];
-    int messageSize = 0;
-    uint64_t addr = NetCreateAddr(127, 0, 0, 1, 27015);
+    InitClientWindow();
 
     while (true)
     {
-        const char* message = "client";
-        strcpy(buffer, message);
-        messageSize = strlen(message);
-        NetSend(&addr, buffer, &messageSize);
+        FixedTimeStart();
 
-        Halt(1000);
+        if (ClientWindowClosed()) break;
 
-        NetRecv(&addr, buffer, &messageSize);
-        if (messageSize >= 0)
-            printf("got message \"%.*s\"\n", messageSize, buffer);
+        UpdateClientWindow();
 
-        Halt(1000);
+        RecvFrame();
+        SendInput();
+
+        FixedTimeEnd();
     }
 
     return 0;
 }
+
+// int main()
+// {
+//     InitClientWindow();
+
+//     while (true)
+//     {
+//         FixedTimeStart();
+
+//         if (ClientWindowClosed()) break;
+
+//         UpdateClientWindow();
+
+//         RenderClientWindow();
+//         SendInput();
+
+//         FixedTimeEnd();
+//     }
+
+//     return 0;
+// }
