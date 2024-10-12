@@ -30,7 +30,7 @@ void DestroyPlayers(float deltaTime)
             erase_back(players, i);
     }
 }
-void UpdatePlayer(NetInput& recvInput)
+void UpdatePlayer(uint64_t playerAddr, NetInput& recvInput)
 {
     for (size_t i = 0; i < players.size(); i++)
     {
@@ -38,7 +38,7 @@ void UpdatePlayer(NetInput& recvInput)
 
         // cout << player.id << ":" << recvInput.id << endl;
 
-        if (player.id == recvInput.id)
+        if (player.id == playerAddr)
         {
             player.timer == 10;
             bool w = recvInput.w;
@@ -57,7 +57,7 @@ void UpdatePlayer(NetInput& recvInput)
     // cout << recvInput.id << endl;
 
     Player player = {};
-    player.id = recvInput.id;
+    player.id = playerAddr;
     player.timer = 10;
     players.push_back(player);
 }
@@ -153,7 +153,7 @@ void RenderGame()
 
         // cout << i.id << endl;
 
-        NetSendFrame2(i.id, buffer);
+        NetSendFrame(&i.id, buffer);
     }
 }
 void UpdateGame(float deltaTime)
@@ -171,16 +171,17 @@ void UpdateGame(float deltaTime)
 
     DestroyPlayers(deltaTime);
 
-    NetInput recvInput;
+    uint64_t addr;
+    NetInput netInput;
 
-    while (NetRecvInput2(&recvInput))
+    while (NetRecvInput(&addr, &netInput))
     {
         // cout << "123" << endl;
 
         // UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
         // UpdateCameraPosition(&camera, 0.008f, w, a, s, d, e, q);
 
-        UpdatePlayer(recvInput);
+        UpdatePlayer(addr, netInput);
     }
 }
 

@@ -14,7 +14,7 @@ struct NetInput
 };
 
 void NetSendFrame(uint64_t* addr, char* frame);
-void NetSendInput(uint64_t* addr, NetInput* input);
+void NetSendInput(NetInput* input);
 
-bool NetRecvFrame(uint64_t* addr, char* frame);
+bool NetRecvFrame(char* frame);
 bool NetRecvInput(uint64_t* addr, NetInput* input);

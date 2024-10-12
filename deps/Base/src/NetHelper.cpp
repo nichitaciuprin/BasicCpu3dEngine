@@ -232,7 +232,7 @@ void NetSendFrame(uint64_t* addr, char* frame)
     int messageSize = 1024;
     NetSend(addr, frame, &messageSize);
 }
-void NetSendInput(uint64_t* addr, NetInput* input)
+void NetSendInput(NetInput* input)
 {
     NetInitClient();
 
@@ -242,18 +242,22 @@ void NetSendInput(uint64_t* addr, NetInput* input)
     if (input->s) message += 2;
     if (input->d) message += 1;
 
+    uint64_t addr;
+
     int messageSize = 1;
 
-    NetSend(addr, (char*)&message, &messageSize);
+    NetSend(&addr, (char*)&message, &messageSize);
 }
 
-bool NetRecvFrame(uint64_t* addr, char* frame)
+bool NetRecvFrame(char* frame)
 {
     NetInitClient();
 
     int messageSize = 0;
 
-    NetRecv(addr, frame, &messageSize);
+    uint64_t addr;
+
+    NetRecv(&addr, frame, &messageSize);
 
     if (messageSize < 0) return false;
 

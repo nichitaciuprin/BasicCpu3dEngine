@@ -1,9 +1,12 @@
 unique_ptr<BitmapWindow2> window = nullptr;
 
 char frame[1024];
+// uint64_t targetAddr;
 
 void InitClientWindow()
 {
+    // targetAddr = NetCreateAddr(127, 0, 0, 1, 27015);
+
     auto width = 32;
     auto height = 32;
     auto scale = 16;
@@ -21,7 +24,8 @@ void UpdateClientWindow()
 }
 void RenderClientWindow()
 {
-    NetRecvFrame(frame);
+    bool messageReceived = NetRecvFrame(frame);
+    if (!messageReceived) return;
 
     auto width = 32;
     auto height = 32;
@@ -32,11 +36,12 @@ void RenderClientWindow()
 }
 void SendInput()
 {
-    bool w = window->KeyDown_W();
-    bool a = window->KeyDown_A();
-    bool s = window->KeyDown_S();
-    bool d = window->KeyDown_D();
-    NetSendInput(w, a, s, d);
+    NetInput netInput = {};
+    netInput.w = window->KeyDown_W();
+    netInput.a = window->KeyDown_A();
+    netInput.s = window->KeyDown_S();
+    netInput.d = window->KeyDown_D();
+    NetSendInput(&netInput);
 }
 void RecvFrame()
 {
