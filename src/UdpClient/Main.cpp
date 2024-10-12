@@ -15,7 +15,7 @@ int main()
 
     char frame[1024];
 
-    auto window = make_unique<BitmapWindow2>(700, 100, 512, 512);
+    auto window = make_unique<BitmapWindow2>(1000, 0, 512, 512);
 
     while (true)
     {
@@ -27,10 +27,20 @@ int main()
         NetRecvFrame(frame);
 
         NetInput netInput = {};
+
         netInput.w = window->KeyDown_W();
         netInput.a = window->KeyDown_A();
         netInput.s = window->KeyDown_S();
         netInput.d = window->KeyDown_D();
+
+        netInput.up    = window->KeyDown_UP();
+        netInput.left  = window->KeyDown_LEFT();
+        netInput.down  = window->KeyDown_DOWN();
+        netInput.right = window->KeyDown_RIGHT();
+
+        netInput.q = window->KeyDown_Q();
+        netInput.e = window->KeyDown_E();
+
         NetSendInput(&netInput);
 
         FixedTimeEnd();

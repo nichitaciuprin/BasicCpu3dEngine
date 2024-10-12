@@ -15,27 +15,39 @@ void DestroyPlayers(float deltaTime)
         auto& player = players[i];
         player.timer -= deltaTime;
         if (player.timer <= 0)
+        {
+            cout << "Player disconnected ";
+            NetPrintAddr(player.id);
+            cout << endl;
+
             erase_back(players, i);
+        }
     }
 }
-void UpdatePlayer(uint64_t playerAddr, NetInput& recvInput)
+void UpdatePlayer(uint64_t playerAddr, NetInput& input)
 {
     for (size_t i = 0; i < players.size(); i++)
     {
         auto& player = players[i];
 
-        // cout << player.id << ":" << recvInput.id << endl;
-
         if (player.id == playerAddr)
         {
-            player.timer == 10;
-            bool w = recvInput.w;
-            bool a = recvInput.a;
-            bool s = recvInput.s;
-            bool d = recvInput.d;
+            player.timer = 10;
+
+            bool w = input.w;
+            bool a = input.a;
+            bool s = input.s;
+            bool d = input.d;
+            bool up    = input.up;
+            bool left  = input.left;
+            bool down  = input.down;
+            bool right = input.right;
             bool q = false;
             bool e = false;
+
+            UpdateCameraRotation(&player.camera, 0.023f, left, up, down, right);
             UpdateCameraPosition(&player.camera, 0.008f, w, a, s, d, q, e);
+
             return;
         }
     }
@@ -43,6 +55,10 @@ void UpdatePlayer(uint64_t playerAddr, NetInput& recvInput)
     if (players.size() == 4) return;
 
     // cout << recvInput.id << endl;
+
+    cout << "Player connected ";
+    NetPrintAddr(playerAddr);
+    cout << endl;
 
     Player player = {};
     player.id = playerAddr;
@@ -104,59 +120,23 @@ void InitGame()
     players = vector<Player>();
     players.reserve(4);
 }
-void InitGameWindow()
-{
-    auto scale = 16;
-    auto size1 = 32;
-    auto size2 = 32*scale;
-
-    // bitmapNet = make_unique<Bitmap>(size1, size1);
-    // bitmap = make_unique<Bitmap>(size2, size2);
-    // window = make_unique<BitmapWindow2>(0, 100, size2, size2);
-}
-// bool GameWindowClosed()
-// {
-//     return !window->Exists();
-// }
-// void UpdateGameWindow()
-// {
-//     window->Update();
-// }
 
 void RenderGame()
 {
-    // Camera cam = { 0, 1, 95 };
-
     for (auto& player : players)
     {
-        // Draw(*bitmapNet, cam, clock());
         Draw(*bitmapNet, player.camera, clock());
 
         char buffer[1024];
 
-        // uint8_t duno = 255;
-
         for (int i = 0; i < 1024; i++)
             buffer[i] = PixelToLightValue(bitmapNet->pixels[i]);
-
-        // cout << i.id << endl;
 
         NetSendFrame(&player.id, buffer);
     }
 }
 void UpdateGame(float deltaTime)
 {
-    bool w, a, s, d;
-    bool up, left, down, right;
-    bool e, q;
-
-    // left = window->KeyDown_LEFT();
-    // up = window->KeyDown_UP();
-    // down = window->KeyDown_DOWN();
-    // right = window->KeyDown_RIGHT();
-    // e = window->KeyDown_E();
-    // q = window->KeyDown_Q();
-
     DestroyPlayers(deltaTime);
 
     uint64_t addr;
@@ -164,16 +144,10 @@ void UpdateGame(float deltaTime)
 
     while (NetRecvInput(&addr, &netInput))
     {
-        // cout << "123" << endl;
-
-        // UpdateCameraRotation(&camera, 0.023f, left, up, down, right);
-        // UpdateCameraPosition(&camera, 0.008f, w, a, s, d, e, q);
-
         UpdatePlayer(addr, netInput);
     }
 }
 
-Camera testCamera;
 unique_ptr<Bitmap> testBitmap;
 unique_ptr<BitmapWindow2> testWindow;
 bool TestRenderCalled = false;
@@ -183,17 +157,14 @@ void TestRender()
     {
         TestRenderCalled = true;
 
-        testCamera = { 0, 1, 95 };
-
-        auto size = 32*16;
-
-        testBitmap = make_unique<Bitmap>(size, size);
+        testBitmap = make_unique<Bitmap>(512, 512);
         testWindow = make_unique<BitmapWindow2>(0, 0, 512, 512);
 
         return;
     }
 
-    Draw(*testBitmap, testCamera, clock());
+    Camera camera = { 0, 1, 95 };
+    Draw(*testBitmap, camera, clock());
     testWindow->SetPixels(testBitmap->pixels.data(), 32*16, 32*16);
     testWindow->Update();
 }

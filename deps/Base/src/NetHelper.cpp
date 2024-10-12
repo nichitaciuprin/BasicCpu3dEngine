@@ -177,7 +177,7 @@ void NetRecv(uint64_t* addr, char* buffer, int* messageSize)
 
     *addr = id;
 }
-void NetPrintAddr(uint64_t addr)
+void NetPrintAddrAsHex(uint64_t addr)
 {
     for (size_t i = 0; i < 6; i++)
     {
@@ -186,6 +186,15 @@ void NetPrintAddr(uint64_t addr)
     }
 
     printf("\n");
+}
+void NetPrintAddr(uint64_t addr)
+{
+    { uint8_t byte = addr >> 8 * (5 - 0); int byte2 = byte; printf("%i", byte2); } printf(".");
+    { uint8_t byte = addr >> 8 * (5 - 1); int byte2 = byte; printf("%i", byte2); } printf(".");
+    { uint8_t byte = addr >> 8 * (5 - 2); int byte2 = byte; printf("%i", byte2); } printf(".");
+    { uint8_t byte = addr >> 8 * (5 - 3); int byte2 = byte; printf("%i", byte2); } printf(":");
+
+    { uint16_t port = addr; printf("%i", port); }
 }
 uint64_t NetCreateAddr(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint16_t port)
 {
@@ -202,10 +211,9 @@ uint64_t NetCreateAddr(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint16_t 
 
 struct NetInput
 {
-    bool w;
-    bool a;
-    bool s;
-    bool d;
+    bool w, a, s, d;
+    bool up, left, down, right;
+    bool q, e;
 };
 
 bool NetInitServerCalled = false;
@@ -237,10 +245,14 @@ bool NetRecvInput(uint64_t* addr, NetInput* input)
 
     uint8_t byte = ((uint8_t*)buffer)[0];
 
-    input->w = (1 << 3 & byte) != 0;
-    input->a = (1 << 2 & byte) != 0;
-    input->s = (1 << 1 & byte) != 0;
-    input->d = (1 << 0 & byte) != 0;
+    input->w     = (1 << 7 & byte) != 0;
+    input->a     = (1 << 6 & byte) != 0;
+    input->s     = (1 << 5 & byte) != 0;
+    input->d     = (1 << 4 & byte) != 0;
+    input->up    = (1 << 3 & byte) != 0;
+    input->left  = (1 << 2 & byte) != 0;
+    input->down  = (1 << 1 & byte) != 0;
+    input->right = (1 << 0 & byte) != 0;
 
     return true;
 }
@@ -251,7 +263,8 @@ void NetInitClient()
     if (NetInitClientCalled) return;
         NetInitClientCalled = true;
 
-    NetUseAnyPort();
+    // NetUseAnyPort();
+    NetUsePort(27016);
 }
 bool NetRecvFrame(char* frame)
 {
@@ -272,10 +285,18 @@ void NetSendInput(NetInput* input)
     NetInitClient();
 
     uint8_t message = 0;
-    if (input->w) message += 8;
-    if (input->a) message += 4;
-    if (input->s) message += 2;
-    if (input->d) message += 1;
+
+    if (input->w)     message += 128;
+    if (input->a)     message +=  64;
+    if (input->s)     message +=  32;
+    if (input->d)     message +=  16;
+    if (input->up)    message +=   8;
+    if (input->left)  message +=   4;
+    if (input->down)  message +=   2;
+    if (input->right) message +=   1;
+
+    // if (input->w) message += 2;
+    // if (input->a) message += 1;
 
     uint64_t addr = NetCreateAddr(127, 0, 0, 1, 27015);
 
