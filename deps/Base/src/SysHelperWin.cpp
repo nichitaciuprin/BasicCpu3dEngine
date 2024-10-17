@@ -73,9 +73,24 @@ void FixedTimeEnd()
         printf("SLOW!\n");
 }
 
-
 uint64_t GetPid()
 {
     // printf("Process PID:%ld\n", (long)getpid());
     return (uint64_t)getpid();
+}
+
+void GetConsolePosition(int* x, int* y)
+{
+    RECT rect = {};
+
+    HWND handle = GetConsoleWindow();
+
+    // GetClientRect(handle, &rect)
+    GetWindowRect(handle, &rect);
+
+    *x = rect.left;
+    *y = rect.top;
+
+    // TODO fix this
+    *x += 7;
 }

@@ -5,3 +5,4 @@ void CheckFPS();
 void FixedTimeStart();
 void FixedTimeEnd();
 uint64_t GetPid();
+void GetConsolePosition(int* x, int* y);

@@ -11,23 +11,29 @@
 
 int main()
 {
+    int x, y;
+    GetConsolePosition(&x, &y);
+
     printf("Process PID:%ld\n", (long)GetPid());
 
     // missing memset to render stack, for fun
     char frame[1024];
 
-    auto window = make_unique<BitmapWindow2>(1000, 0, 512, 512);
+    auto window = make_unique<BitmapWindow2>(x, y, 512, 512);
 
     while (true)
     {
         FixedTimeStart();
 
-        if (!window->Exists()) break;
+        if (!window->Exists())
+            break;
 
         window->Update();
-        window->SetPixelsScaled2((uint8_t*)frame, 32, 32, 16);
+        window->SetPixelsScaled2((uint8_t *)frame, 32, 32, 16);
 
-        while (NetRecvFrame(frame)) {}
+        while (NetRecvFrame(frame))
+        {
+        }
 
         NetInput netInput = {};
 
@@ -36,9 +42,9 @@ int main()
         netInput.s = window->KeyDown_S();
         netInput.d = window->KeyDown_D();
 
-        netInput.up    = window->KeyDown_UP();
-        netInput.left  = window->KeyDown_LEFT();
-        netInput.down  = window->KeyDown_DOWN();
+        netInput.up = window->KeyDown_UP();
+        netInput.left = window->KeyDown_LEFT();
+        netInput.down = window->KeyDown_DOWN();
         netInput.right = window->KeyDown_RIGHT();
 
         netInput.q = window->KeyDown_Q();
