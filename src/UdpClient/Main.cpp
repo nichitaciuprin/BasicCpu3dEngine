@@ -13,7 +13,7 @@ int main()
 {
     printf("Process PID:%ld\n", (long)GetPid());
 
-    // miss memset to render stack, for fun
+    // missing memset to render stack, for fun
     char frame[1024];
 
     auto window = make_unique<BitmapWindow2>(1000, 0, 512, 512);
