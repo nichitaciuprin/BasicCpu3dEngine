@@ -263,8 +263,8 @@ void NetInitClient()
     if (NetInitClientCalled) return;
         NetInitClientCalled = true;
 
-    // NetUseAnyPort();
-    NetUsePort(27016);
+    NetUseAnyPort();
+    // NetUsePort(27016);
 }
 bool NetRecvFrame(char* frame)
 {
