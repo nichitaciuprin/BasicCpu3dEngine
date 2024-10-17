@@ -21,6 +21,7 @@ int main()
         FixedTimeStart();
 
         // TestRender();
+
         RenderGame();
         UpdateGame(0.010f);
 

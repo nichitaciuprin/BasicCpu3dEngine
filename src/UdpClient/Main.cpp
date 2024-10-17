@@ -23,6 +23,7 @@ int main()
         FixedTimeStart();
 
         if (!window->Exists()) break;
+
         window->Update();
         window->SetPixelsScaled2((uint8_t*)frame, 32, 32, 16);
 
