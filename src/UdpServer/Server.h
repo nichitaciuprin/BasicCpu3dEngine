@@ -67,9 +67,60 @@ void UpdatePlayer(uint64_t playerAddr, NetInput& input)
     players.push_back(player);
 }
 
+void Draw(Bitmap& bitmap, Player& player, long time)
+{
+    bitmap.Fill(BLACK);
+
+    auto view = MatrixView(&player.camera);
+
+    for (auto& i : players)
+    {
+        if (player.id == i.id) continue;
+        bitmap.DrawCube(i.camera.position, {}, player.camera, RED);
+    }
+
+    {
+        Vector3 p0 = { -1, 0,  2 }; p0 *= view;
+        Vector3 p1 = { -1, 0, 95 }; p1 *= view;
+        Vector3 p2 = {  1, 0, 95 }; p2 *= view;
+        Vector3 p3 = {  1, 0,  2 }; p3 *= view;
+        bitmap.DrawPoligon1(p0, p1, p2, p3, WHITE);
+    }
+    {
+        float size = 5;
+        Vector3 p0 = { -size, 0, -size + 100 }; p0 *= view;
+        Vector3 p1 = { -size, 0,  size + 100 }; p1 *= view;
+        Vector3 p2 = {  size, 0,  size + 100 }; p2 *= view;
+        Vector3 p3 = {  size, 0, -size + 100 }; p3 *= view;
+        bitmap.DrawPoligon1(p0, p1, p2, p3, WHITE);
+    }
+
+    // TODO fix this
+    // bitmap->ApplyBlackWhiteColorDepth();
+
+    {
+        auto time2 = (float)time / 600;
+        Vector3 position = { 0, 0.5f, 100 };
+        Vector3 rotation = { 0, time2, 0 };
+        Vector3 scale = { 1, 1, 1 };
+        auto world = MatrixWorld(position, rotation, scale);
+        bitmap.DrawCubeColored(world * view);
+    }
+    {
+        auto time2 = (float)time / 300;
+        Vector3 position = { 0, 1.5f, 100 };
+        Vector3 rotation = { 0, time2, 0 };
+        Vector3 scale = { 1, 1, 1 };
+        auto world = MatrixWorld(position, rotation, scale);
+        bitmap.DrawCubeColored(world * view);
+    }
+}
 void Draw(Bitmap& bitmap, Camera camera, long time)
 {
     bitmap.Fill(BLACK);
+
+    for (auto& i : players)
+        bitmap.DrawCube(i.camera.position, {}, camera, RED);
 
     auto view = MatrixView(&camera);
 
@@ -109,6 +160,7 @@ void Draw(Bitmap& bitmap, Camera camera, long time)
         bitmap.DrawCubeColored(world * view);
     }
 }
+
 void InitGame()
 {
     auto scale = 16;
@@ -125,7 +177,7 @@ void RenderGame()
 {
     for (auto& player : players)
     {
-        Draw(*bitmapNet, player.camera, clock());
+        Draw(*bitmapNet, player, clock());
 
         char buffer[1024];
 

@@ -81,6 +81,14 @@ public:
         return height;
     }
 
+    void DrawCube(Vector3 position, Vector3 rotation, Camera camera, Pixel pixel)
+    {
+        Vector3 scale = { 1, 1, 1 };
+        auto world = MatrixWorld(position, rotation, scale);
+        auto view = MatrixView(&camera);
+        DrawCube(world * view, pixel);
+    }
+
     void DrawCubeWireframe(Matrix modelView, Pixel pixel)
     {
         int indices[12][2] =
@@ -143,6 +151,44 @@ public:
         DRAW(3, YELLOW)
         DRAW(4, MAGENTA)
         DRAW(5, RED)
+
+        #undef DRAW
+    }
+    void DrawCube(Matrix modelView, Pixel color)
+    {
+        int indexData[6][4] =
+        {
+            2, 6, 4, 0,
+            6, 7, 5, 4,
+            7, 3, 1, 5,
+            3, 2, 0, 1,
+            1, 0, 4, 5,
+            3, 7, 6, 2,
+        };
+
+        #define DRAW(INDEX, COLOR)                \
+        {                                         \
+            auto i0 = indexData[INDEX][0];        \
+            auto i1 = indexData[INDEX][1];        \
+            auto i2 = indexData[INDEX][2];        \
+            auto i3 = indexData[INDEX][3];        \
+            auto p0 = Model::Cube::vertices[i0];  \
+            auto p1 = Model::Cube::vertices[i1];  \
+            auto p2 = Model::Cube::vertices[i2];  \
+            auto p3 = Model::Cube::vertices[i3];  \
+            p0 *= modelView;                      \
+            p1 *= modelView;                      \
+            p2 *= modelView;                      \
+            p3 *= modelView;                      \
+            DrawPoligon1(p0, p1, p2, p3, COLOR);  \
+        }                                         \
+
+        DRAW(0, color)
+        DRAW(1, color)
+        DRAW(2, color)
+        DRAW(3, color)
+        DRAW(4, color)
+        DRAW(5, color)
 
         #undef DRAW
     }
