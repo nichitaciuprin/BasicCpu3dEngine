@@ -42,11 +42,11 @@ void UpdatePlayer(uint64_t playerAddr, NetInput& input)
             bool left  = input.left;
             bool down  = input.down;
             bool right = input.right;
-            bool q = false;
-            bool e = false;
+            bool e = input.e;
+            bool q = input.q;
 
             UpdateCameraRotation(&player.camera, 0.023f, left, up, down, right);
-            UpdateCameraPosition(&player.camera, 0.008f, w, a, s, d, q, e);
+            UpdateCameraPosition(&player.camera, 0.008f, w, a, s, d, e, q);
 
             return;
         }

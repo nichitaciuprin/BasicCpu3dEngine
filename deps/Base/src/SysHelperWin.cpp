@@ -69,8 +69,8 @@ void FixedTimeEnd()
     long haltTime = endTime - GetTime();
     if (haltTime > 0)
         Halt(haltTime);
-    else
-        printf("SLOW!\n");
+    // else
+    //     printf("SLOW!\n");
 }
 
 uint64_t GetPid()

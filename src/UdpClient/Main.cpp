@@ -11,29 +11,26 @@
 
 int main()
 {
+    printf("PID:%ld\n", (long)GetPid());
+
     int x, y;
     GetConsolePosition(&x, &y);
 
-    printf("PID:%ld\n", (long)GetPid());
+    auto window = make_unique<BitmapWindow2>(x, y, 512, 512);
 
     // missing memset to render stack, for fun
     char frame[1024];
-
-    auto window = make_unique<BitmapWindow2>(x, y, 512, 512);
 
     while (true)
     {
         FixedTimeStart();
 
-        if (!window->Exists())
-            break;
+        if (!window->Exists()) break;
 
         window->Update();
         window->SetPixelsScaled2((uint8_t *)frame, 32, 32, 16);
 
-        while (NetRecvFrame(frame))
-        {
-        }
+        while (NetRecvFrame(frame)) {}
 
         NetInput netInput = {};
 

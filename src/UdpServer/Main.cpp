@@ -12,9 +12,6 @@
 
 int main()
 {
-    int x, y;
-    GetConsolePosition(&x, &y);
-
     printf("PID:%ld\n", (long)GetPid());
 
     InitGame();
