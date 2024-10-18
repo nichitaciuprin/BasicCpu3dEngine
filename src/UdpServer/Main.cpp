@@ -15,9 +15,7 @@ int main()
     int x, y;
     GetConsolePosition(&x, &y);
 
-    cout << x << "|" << y << endl;
-
-    printf("Process PID:%ld\n", (long)GetPid());
+    printf("PID:%ld\n", (long)GetPid());
 
     InitGame();
 
@@ -25,7 +23,7 @@ int main()
     {
         FixedTimeStart();
 
-        TestRender();
+        // TestRender();
 
         RenderGame();
         UpdateGame(0.010f);

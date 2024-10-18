@@ -14,7 +14,7 @@ int main()
     int x, y;
     GetConsolePosition(&x, &y);
 
-    printf("Process PID:%ld\n", (long)GetPid());
+    printf("PID:%ld\n", (long)GetPid());
 
     // missing memset to render stack, for fun
     char frame[1024];
