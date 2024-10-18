@@ -16,9 +16,9 @@
 
 #pragma once
 
-#define M_PI        (float)3.14159265358979323846
-#define M_PI_MUL_2  (float)6.28318530717958647692
-#define M_PI_DIV_2  (float)1.57079632679489661923
+#define MY_PI        (float)3.14159265358979323846
+#define MY_PI_MUL_2  (float)6.28318530717958647692
+#define MY_PI_DIV_2  (float)1.57079632679489661923
 
 struct Vector2
 {
@@ -752,7 +752,7 @@ inline Matrix MatrixOrthographic(float width, float height, float zNear, float z
 inline Matrix MatrixPerspective(float width, float height, float zNear, float zFar)
 {
     float aspectRatio = width / height;
-    float fov = (float)(M_PI_DIV_2);
+    float fov = (float)(MY_PI_DIV_2);
     float h = 1.0f / tanf(fov / 2);
     float w = h / aspectRatio;
     float a = zFar / (zFar - zNear);
@@ -852,7 +852,7 @@ inline bool InFrustum(Vector3 point)
 
 inline void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, bool up, bool down, bool right)
 {
-    float speed = (float)M_PI;
+    float speed = (float)MY_PI;
     float speedDelta = speed * deltaTime;
     if (up)    camera->pitch += speedDelta;
     if (down)  camera->pitch -= speedDelta;
@@ -861,8 +861,8 @@ inline void UpdateCameraRotation(Camera* camera, float deltaTime, bool left, boo
 
     // TODO review
     // Wrap yaw to avoid floating-point errors if we turn too far
-    while (camera->yaw >=  M_PI_MUL_2) camera->yaw -= M_PI_MUL_2;
-    while (camera->yaw <= -M_PI_MUL_2) camera->yaw += M_PI_MUL_2;
+    while (camera->yaw >=  MY_PI_MUL_2) camera->yaw -= MY_PI_MUL_2;
+    while (camera->yaw <= -MY_PI_MUL_2) camera->yaw += MY_PI_MUL_2;
 
     // Clamp pitch to stop camera flipping upside down
     float degree = MathToRadians(85);
