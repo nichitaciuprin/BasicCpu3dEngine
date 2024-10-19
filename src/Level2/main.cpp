@@ -15,7 +15,9 @@ int main()
 
     while (true)
     {
-        if (!BitmapWindow_Exists(window) && !BitmapWindow_Exists(window2)) break;
+        auto window1Closed = !BitmapWindow_Exists(window);
+        auto window2Closed = !BitmapWindow_Exists(window2);
+        if (window1Closed && window2Closed) break;
 
         long time1 = GetTime();
 
