@@ -2,9 +2,6 @@
 #include <StdExt.h>
 #include <SysHelper.h>
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <X11/Xlib.h>
 
 typedef struct BitmapWindow
@@ -20,88 +17,80 @@ typedef struct BitmapWindow
     bool keydown_DOWN;
     bool keydown_RIGHT;
 
-    // HWND       _hwnd;
-    // HDC        _hdc;
-    // HBITMAP    _hbitmap;
-    int        _width;
-    int        _height;
+    int _width;
+    int _height;
+
+    bool windowClosed;
+    Display* display;
+    XImage* image;
+    Window window;
+    Atom wm_delete_window;
+    uint32_t* pixels;
 }
 BitmapWindow;
-
-bool windowClosed = false;
-Display* display;
-Window window;
-Atom wm_delete_window;
-Visual* visual;
-int depth;
-GC gc;
-uint32_t* pixels;
-XImage* image;
-int width;
-int height;
 
 BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeight)
 {
     BitmapWindow* instance = (BitmapWindow*)malloc(sizeof(BitmapWindow));
 
-    instance->keydown_W = 0;
-    instance->keydown_A = 0;
-    instance->keydown_S = 0;
-    instance->keydown_D = 0;
-    instance->keydown_E = 0;
-    instance->keydown_Q = 0;
-    instance->keydown_UP = 0;
-    instance->keydown_LEFT = 0;
-    instance->keydown_DOWN = 0;
-    instance->keydown_RIGHT = 0;
+    instance->windowClosed = false;
 
-    width = clientWidth;
-    height = clientHeight;
+    instance->_width = clientWidth;
+    instance->_height = clientHeight;
 
-    instance->_width = width;
-    instance->_height = height;
+    instance->keydown_W = false;
+    instance->keydown_A = false;
+    instance->keydown_S = false;
+    instance->keydown_D = false;
+    instance->keydown_E = false;
+    instance->keydown_Q = false;
+    instance->keydown_UP = false;
+    instance->keydown_LEFT = false;
+    instance->keydown_DOWN = false;
+    instance->keydown_RIGHT = false;
 
-    display = XOpenDisplay(NULL);
-    int screen = DefaultScreen(display);
-    Window root = DefaultRootWindow(display);
-    window = XCreateSimpleWindow(display, root, 0, 0, width, height, 0, 0, 0xffffffff);
-    XSelectInput(display, window, ExposureMask | KeyPressMask);
-    XMapWindow(display, window);
-    wm_delete_window = XInternAtom(display, "WM_DELETE_WINDOW", False);
-    XSetWMProtocols(display, window, &wm_delete_window, 1);
+    instance->display = XOpenDisplay(NULL);
+    int screen = DefaultScreen(instance->display);
+    Window root = DefaultRootWindow(instance->display);
+    instance->window = XCreateSimpleWindow(instance->display, root, 0, 0, instance->_width, instance->_height, 0, 0, 0xffffffff);
+    XSelectInput(instance->display, instance->window, ExposureMask | KeyPressMask);
+    XMapWindow(instance->display, instance->window);
+    instance->wm_delete_window = XInternAtom(instance->display, "WM_DELETE_WINDOW", False);
+    XSetWMProtocols(instance->display, instance->window, &instance->wm_delete_window, 1);
 
-    visual = DefaultVisual(display, screen);
-    depth = DefaultDepth(display, screen);
-    gc = DefaultGC(display, screen);
+    Visual* visual = DefaultVisual(instance->display, screen);
+    int depth = DefaultDepth(instance->display, screen);
 
-    pixels = (uint32_t*)malloc(4 * width * height);
+    instance->pixels = (uint32_t*)malloc(4 * instance->_width * instance->_height);
 
-    image = XCreateImage
+    instance->image = XCreateImage
     (
-        display, visual, depth, ZPixmap, 0,
-        (char*)pixels, width, height, 32, 0
+        instance->display, visual, depth, ZPixmap, 0,
+        (char*)instance->pixels, instance->_width, instance->_height, 32, 0
     );
 
     return instance;
 }
 bool BitmapWindow_Exists(BitmapWindow* instance)
 {
-    return !windowClosed;
+    return !instance->windowClosed;
 }
 void BitmapWindow_Destroy(BitmapWindow* instance)
 {
-    windowClosed = true;
-    XDestroyWindow(display, window);
+    if (!BitmapWindow_Exists(instance)) return;
+
+    instance->windowClosed = true;
+    XDestroyWindow(instance->display, instance->window);
 }
 void BitmapWindow_Update(BitmapWindow* instance)
 {
     XEvent event;
 
-    int messageCount = XPending(display);
+    int messageCount = XPending(instance->display);
 
     for (size_t i = 0; i < messageCount; i++)
     {
-        XNextEvent(display, &event);
+        XNextEvent(instance->display, &event);
 
         switch (event.type)
         {
@@ -109,10 +98,10 @@ void BitmapWindow_Update(BitmapWindow* instance)
             {
                 printf("!\n");
 
-                if (event.xclient.data.l[0] == wm_delete_window)
+                if (event.xclient.data.l[0] == instance->wm_delete_window)
                 {
-                    windowClosed = true;
-                    XDestroyWindow(display, window);
+                    instance->windowClosed = true;
+                    XDestroyWindow(instance->display, instance->window);
                     // XDestroyWindow(event.xclient.display, event.xclient.window);
                 }
             }
@@ -120,10 +109,13 @@ void BitmapWindow_Update(BitmapWindow* instance)
 
             case Expose:
             {
+                if (instance->windowClosed)
+                    break;
+
                 // long time1 = GetTime();
 
-                // for (int x = 0; x < width; x++)
-                // for (int y = 0; y < height; y++)
+                // for (int x = 0; x < instance->_width; x++)
+                // for (int y = 0; y < instance->_height; y++)
                 // {
                 //     uint8_t r = (time1 / 10) % 255;
                 //     uint8_t g = (time1 / 10) % 255;
@@ -137,23 +129,26 @@ void BitmapWindow_Update(BitmapWindow* instance)
                 //     pixel += g; pixel <<= 8;
                 //     pixel += b;
 
-                //     pixels[y * width + x] = pixel;
+                //     instance->pixels[y * instance->_width + x] = pixel;
                 // }
 
-                // XPutImage(display, window, gc, image, 0, 0, 0, 0, width, height);
+                int screen = DefaultScreen(instance->display);
+                GC defaultGc = DefaultGC(instance->display, screen);
 
-                // XEvent se;
-                // se.type = Expose;
-                // se.xexpose.type = Expose;
-                // se.xexpose.serial = 0;
-                // se.xexpose.send_event = 1;
-                // se.xexpose.window = window;
-                // se.xexpose.x = 0;
-                // se.xexpose.y = 0;
-                // se.xexpose.width = width;
-                // se.xexpose.height = height;
-                // se.xexpose.count = 0;
-                // XSendEvent(display, window, false, 0, &se);
+                XPutImage(instance->display, instance->window, defaultGc, instance->image, 0, 0, 0, 0, instance->_width, instance->_height);
+
+                XEvent se;
+                se.type = Expose;
+                se.xexpose.type = Expose;
+                se.xexpose.serial = 0;
+                se.xexpose.send_event = 1;
+                se.xexpose.window = instance->window;
+                se.xexpose.x = 0;
+                se.xexpose.y = 0;
+                se.xexpose.width = instance->_width;
+                se.xexpose.height = instance->_height;
+                se.xexpose.count = 0;
+                XSendEvent(instance->display, instance->window, false, 0, &se);
             }
             break;
 
@@ -186,3 +181,68 @@ void BitmapWindow_Update(BitmapWindow* instance)
         }
     }
 }
+void BitmapWindow_SetPixel(BitmapWindow* instance, int x, int y, uint32_t pixel)
+{
+    if (!BitmapWindow_Exists(instance)) return;
+
+    instance->pixels[x + y * instance->_width] = pixel;
+}
+void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width, int height)
+{
+    if (!BitmapWindow_Exists(instance)) return;
+
+    memcpy(instance->pixels, pixels, 4 * width * height);
+
+    // for (int y = 0; y < height; y++)
+    // for (int x = 0; x < width; x++)
+    // {
+    //     uint32_t pixel = pixels[x + y * width];
+    //     int y2 = height - 1 - y;
+    //     instance->_pixels[x + y2 * width] = pixel;
+    // }
+}
+void BitmapWindow_SetPixelsScaled(BitmapWindow* instance, uint32_t* pixels, int width, int height, int scale)
+{
+    if (!BitmapWindow_Exists(instance)) return;
+
+    for (int y = 0; y < height; y++)
+    for (int x = 0; x < width; x++)
+    {
+        uint32_t pixel = pixels[x + y * width];
+        // pixel = PixelToBwPixel(pixel);
+        int x2 = x * scale;
+        int y2 = y * scale;
+        for (int i = 0; i < scale; i++)
+        for (int j = 0; j < scale; j++)
+            BitmapWindow_SetPixel(instance, x2+i, y2+j, pixel);
+    }
+}
+void BitmapWindow_SetPixelsScaled2(BitmapWindow* instance, uint8_t* pixels, int width, int height, int scale)
+{
+    if (!BitmapWindow_Exists(instance)) return;
+
+    for (int y = 0; y < height; y++)
+    for (int x = 0; x < width; x++)
+    {
+        uint32_t pixel = pixels[x + y * width];
+
+        float fraction = (float)pixel / 255;
+        pixel = 0x00FFFFFF * fraction;
+
+        int x2 = x * scale;
+        int y2 = y * scale;
+        for (int i = 0; i < scale; i++)
+        for (int j = 0; j < scale; j++)
+            BitmapWindow_SetPixel(instance, x2+i, y2+j, pixel);
+    }
+}
+bool BitmapWindow_KeyDown_W(BitmapWindow* instance) { return instance->keydown_W; }
+bool BitmapWindow_KeyDown_A(BitmapWindow* instance) { return instance->keydown_A; }
+bool BitmapWindow_KeyDown_S(BitmapWindow* instance) { return instance->keydown_S; }
+bool BitmapWindow_KeyDown_D(BitmapWindow* instance) { return instance->keydown_D; }
+bool BitmapWindow_KeyDown_E(BitmapWindow* instance) { return instance->keydown_E; }
+bool BitmapWindow_KeyDown_Q(BitmapWindow* instance) { return instance->keydown_Q; }
+bool BitmapWindow_KeyDown_UP(BitmapWindow* instance) { return instance->keydown_UP; }
+bool BitmapWindow_KeyDown_LEFT(BitmapWindow* instance) { return instance->keydown_LEFT; }
+bool BitmapWindow_KeyDown_DOWN(BitmapWindow* instance) { return instance->keydown_DOWN; }
+bool BitmapWindow_KeyDown_RIGHT(BitmapWindow* instance) { return instance->keydown_RIGHT; }

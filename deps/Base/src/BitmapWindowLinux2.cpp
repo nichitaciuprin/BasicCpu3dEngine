@@ -17,15 +17,15 @@ typedef struct BitmapWindow
     bool keydown_DOWN;
     bool keydown_RIGHT;
 
-    int  _width;
-    int  _height;
+    int _width;
+    int _height;
 
-    XImage* image;
-    uint32_t* _pixels;
-    Atom wm_delete_window;
-    bool windowClosed = false;
+    bool windowClosed;
     Display* display;
+    XImage* image;
     Window window;
+    Atom wm_delete_window;
+    uint32_t* pixels;
 }
 BitmapWindow;
 
@@ -50,28 +50,23 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
     instance->keydown_RIGHT = false;
 
     instance->display = XOpenDisplay(NULL);
-
     int screen = DefaultScreen(instance->display);
     Window root = DefaultRootWindow(instance->display);
-
-    instance->window = XCreateSimpleWindow(instance->display, root, 0, 0, clientWidth, clientHeight, 0, 0, 0xffffffff);
-
+    instance->window = XCreateSimpleWindow(instance->display, root, 0, 0, instance->_width, instance->_height, 0, 0, 0xffffffff);
     XSelectInput(instance->display, instance->window, ExposureMask | KeyPressMask);
     XMapWindow(instance->display, instance->window);
-
     instance->wm_delete_window = XInternAtom(instance->display, "WM_DELETE_WINDOW", False);
-
     XSetWMProtocols(instance->display, instance->window, &instance->wm_delete_window, 1);
 
     Visual* visual = DefaultVisual(instance->display, screen);
     int depth = DefaultDepth(instance->display, screen);
 
-    instance->_pixels = (uint32_t*)malloc(clientWidth * clientHeight * 4);
+    instance->pixels = (uint32_t*)malloc(4 * instance->_width * instance->_height);
 
     instance->image = XCreateImage
     (
         instance->display, visual, depth, ZPixmap, 0,
-        (char*)instance->_pixels, clientWidth, clientHeight, 32, 0
+        (char*)instance->pixels, instance->_width, instance->_height, 32, 0
     );
 
     return instance;
@@ -116,25 +111,8 @@ void BitmapWindow_Update(BitmapWindow* instance)
 
             case Expose:
             {
-                // long time1 = GetTime();
-
-                // for (int x = 0; x < width; x++)
-                // for (int y = 0; y < height; y++)
-                // {
-                //     uint8_t r = (time1 / 10) % 255;
-                //     uint8_t g = (time1 / 10) % 255;
-                //     uint8_t b = 0;
-                //     uint8_t a = 0;
-
-                //     uint32_t pixel = 0;
-
-                //     pixel += a; pixel <<= 8;
-                //     pixel += r; pixel <<= 8;
-                //     pixel += g; pixel <<= 8;
-                //     pixel += b;
-
-                //     pixels[y * width + x] = pixel;
-                // }
+                if (instance->windowClosed)
+                    break;
 
                 // TODO should be cached?
                 int screen = DefaultScreen(instance->display);
@@ -190,20 +168,20 @@ void BitmapWindow_SetPixel(BitmapWindow* instance, int x, int y, uint32_t pixel)
 {
     if (!BitmapWindow_Exists(instance)) return;
 
-    instance->_pixels[x + y * instance->_width] = pixel;
+    instance->pixels[x + y * instance->_width] = pixel;
 }
 void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width, int height)
 {
     if (!BitmapWindow_Exists(instance)) return;
 
-    memcpy(instance->_pixels, pixels, 4 * width * height);
+    memcpy(instance->pixels, pixels, 4 * width * height);
 
     // for (int y = 0; y < height; y++)
     // for (int x = 0; x < width; x++)
     // {
     //     uint32_t pixel = pixels[x + y * width];
     //     int y2 = height - 1 - y;
-    //     instance->_pixels[x + y2 * width] = pixel;
+    //     instance->pixels[x + y2 * width] = pixel;
     // }
 }
 void BitmapWindow_SetPixelsScaled(BitmapWindow* instance, uint32_t* pixels, int width, int height, int scale)
