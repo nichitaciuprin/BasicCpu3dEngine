@@ -45,7 +45,7 @@ int GetCpuUsage()
 }
 
 
-void Halt(long milliseconds)
+void Halt(unsigned long milliseconds)
 {
     // TODO review
 
