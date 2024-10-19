@@ -250,6 +250,7 @@ void BitmapWindow_SetPixel(BitmapWindow* instance, int x, int y, uint32_t pixel)
 
     // window bitmap is bottom-up
     y = instance->_height - 1 - y;
+
     instance->_pixels[x + y * instance->_width] = pixel;
 }
 void BitmapWindow_SetPixels(BitmapWindow* instance, uint32_t* pixels, int width, int height)

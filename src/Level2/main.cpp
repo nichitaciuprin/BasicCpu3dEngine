@@ -1,57 +1,51 @@
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <X11/Xlib.h>
+#include <Std.h>
+#include <StdExt.h>
+#include <SysHelper.h>
+#include <BitmapWindow.h>
 
-bool quited = false;
-
-void on_delete(Display * display, Window window)
+int main()
 {
-    XDestroyWindow(display, window);
-    quited = true;
-}
+    int width = 512;
+    int height = 512;
 
-extern int main(int argc, char *argv[])
-{
-    Display * display = XOpenDisplay(NULL);
-    if (NULL == display) {
-        fprintf(stderr, "Failed to initialize display");
-        return EXIT_FAILURE;
+    uint32_t* pixels = (uint32_t*)malloc(4 * width * height);
+
+    auto window = BitmapWindow_Create(0, 0, width, height);
+    // auto window2 = BitmapWindow_Create(200, 0, width, height);
+
+    while (true)
+    {
+        // if (!BitmapWindow_Exists(window) && !BitmapWindow_Exists(window2)) break;
+
+        // long time1 = GetTime();
+
+        // for (int x = 0; x < width; x++)
+        // for (int y = 0; y < height; y++)
+        // {
+        //     uint8_t r = (time1 / 10) % 255;
+        //     uint8_t g = (time1 / 10) % 255;
+        //     uint8_t b = 0;
+        //     uint8_t a = 0;
+
+        //     uint32_t pixel = 0;
+
+        //     pixel += a; pixel <<= 8;
+        //     pixel += r; pixel <<= 8;
+        //     pixel += g; pixel <<= 8;
+        //     pixel += b;
+
+        //     pixels[y * width + x] = pixel;
+        // }
+
+        // BitmapWindow_SetPixelsScaled(window, pixels, 16, 16, 4);
+        // BitmapWindow_SetPixelsScaled2(window, (uint8_t*)pixels, 16, 16, 4);
+
+        BitmapWindow_SetPixels(window, pixels, width, height);
+        // BitmapWindow_SetPixels(window2, pixels, width, height);
+
+        BitmapWindow_Update(window);
+        // BitmapWindow_Update(window2);
     }
-
-    Window root = DefaultRootWindow(display);
-    if (None == root) {
-        fprintf(stderr, "No root window found");
-        XCloseDisplay(display);
-        return EXIT_FAILURE;
-    }
-
-    Window window = XCreateSimpleWindow(display, root, 0, 0, 800, 600, 0, 0, 0xffffffff);
-    if (None == window) {
-        fprintf(stderr, "Failed to create window");
-        XCloseDisplay(display);
-        return EXIT_FAILURE;
-    }
-
-    XMapWindow(display, window);
-
-    Atom wm_delete_window = XInternAtom(display, "WM_DELETE_WINDOW", False);
-    XSetWMProtocols(display, window, & wm_delete_window, 1);
-
-    XEvent event;
-    while (!quited) {
-        XNextEvent(display, &event);
-
-        switch(event.type) {
-        case ClientMessage:
-            if(event.xclient.data.l[0] == wm_delete_window) {
-                on_delete(event.xclient.display, event.xclient.window);
-            }
-            break;
-        }
-    }
-
-    XCloseDisplay(display);
 
     return 0;
 }
