@@ -177,7 +177,7 @@ void RenderGame()
 {
     for (auto& player : players)
     {
-        Draw(*bitmapNet, player, clock());
+        Draw(*bitmapNet, player, GetTime());
 
         char buffer[1024];
 
@@ -219,7 +219,7 @@ void TestRender()
     }
 
     Camera camera = { 0, 1, 95 };
-    Draw(*testBitmap, camera, clock());
+    Draw(*testBitmap, camera, GetTime());
     // testBitmap->DrawBorder(GREEN);
     testWindow->SetPixels(testBitmap->pixels.data(), 32*16, 32*16);
     testWindow->Update();
