@@ -6,21 +6,22 @@
 
 int main()
 {
+    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == -1)
+        abort();
+
     int bufferSize = 512;
     int port = 8888;
 
     char buffer[bufferSize];
 
-    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (sock == -1)
-        abort();
-
     struct sockaddr_in si_other = {};
+
+    socklen_t socklen = sizeof(si_other);
+
     si_other.sin_family = AF_INET;
     si_other.sin_port = htons(port);
     inet_aton("127.0.0.1", &si_other.sin_addr);
-
-    socklen_t socklen = sizeof(si_other);
 
     while (true)
     {
