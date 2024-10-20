@@ -44,7 +44,6 @@ int GetCpuUsage()
     return 100;
 }
 
-
 void Halt(unsigned long milliseconds)
 {
     // TODO review
@@ -65,4 +64,20 @@ void Halt(unsigned long milliseconds)
     while (res && errno == EINTR);
 
     // usleep(milliseconds * 1000);
+}
+
+long timeStep = 10;
+int endTime = 0;
+
+void FixedTimeStart()
+{
+    endTime = GetTime() + timeStep;
+}
+void FixedTimeEnd()
+{
+    long haltTime = endTime - GetTime();
+    if (haltTime > 0)
+        Halt(haltTime);
+    // else
+    //     printf("SLOW!\n");
 }

@@ -1,52 +1,103 @@
-#include <Std.h>
-#include <StdExt.h>
-#include <SysHelper.h>
-#include <BitmapWindow.h>
+#include "Std.h"
+#include "StdExt.h"
+#include "SysHelper.h"
+#include "Subgen.h"
+#include "Helper.h"
+#include "Models.h"
+#include "Clipping.h"
+#include "Bitmap.h"
+#include "BitmapWindow.h"
+
+void Draw(Bitmap& bitmap, Camera camera, long time)
+{
+    bitmap.Fill(BLACK);
+
+    auto view = MatrixView(&camera);
+
+    {
+        Vector3 p0 = { -1, 0,  2 }; p0 *= view;
+        Vector3 p1 = { -1, 0, 95 }; p1 *= view;
+        Vector3 p2 = {  1, 0, 95 }; p2 *= view;
+        Vector3 p3 = {  1, 0,  2 }; p3 *= view;
+        bitmap.DrawPoligon1(p0, p1, p2, p3, WHITE);
+    }
+    {
+        float size = 5;
+        Vector3 p0 = { -size, 0, -size + 100 }; p0 *= view;
+        Vector3 p1 = { -size, 0,  size + 100 }; p1 *= view;
+        Vector3 p2 = {  size, 0,  size + 100 }; p2 *= view;
+        Vector3 p3 = {  size, 0, -size + 100 }; p3 *= view;
+        bitmap.DrawPoligon1(p0, p1, p2, p3, WHITE);
+    }
+
+    // TODO fix this
+    // bitmap->ApplyBlackWhiteColorDepth();
+
+    {
+        auto time2 = (float)time / 600;
+        Vector3 position = { 0, 0.5f, 100 };
+        Vector3 rotation = { 0, time2, 0 };
+        Vector3 scale = { 1, 1, 1 };
+        auto world = MatrixWorld(position, rotation, scale);
+        bitmap.DrawCubeColored(world * view);
+    }
+    {
+        auto time2 = (float)time / 300;
+        Vector3 position = { 0, 1.5f, 100 };
+        Vector3 rotation = { 0, time2, 0 };
+        Vector3 scale = { 1, 1, 1 };
+        auto world = MatrixWorld(position, rotation, scale);
+        bitmap.DrawCubeColored(world * view);
+    }
+}
+
+unique_ptr<Bitmap> testBitmap;
+unique_ptr<BitmapWindow2> testWindow;
+bool TestRenderCalled = false;
+void TestRender()
+{
+    if (!TestRenderCalled)
+    {
+        TestRenderCalled = true;
+
+        // int x, y;
+        // GetConsolePosition(&x, &y);
+
+        testBitmap = make_unique<Bitmap>(512, 512);
+        testWindow = make_unique<BitmapWindow2>(0, 0, 512, 512);
+
+        return;
+    }
+
+    Camera camera = { 0, 1, 95 };
+    Draw(*testBitmap, camera, GetTime());
+    // testBitmap->DrawBorder(GREEN);
+    testWindow->SetPixels(testBitmap->pixels.data(), 32*16, 32*16);
+    testWindow->Update();
+}
+
 
 int main()
 {
-    int width = 512;
-    int height = 512;
+    auto scale = 16;
+    auto size1 = 32;
+    auto size2 = 32*scale;
 
-    uint32_t* pixels = (uint32_t*)malloc(4 * width * height);
+    unique_ptr<Bitmap> bitmapNet = make_unique<Bitmap>(size1, size1);
 
-    auto window = BitmapWindow_Create(0, 0, width, height);
-    auto window2 = BitmapWindow_Create(200, 0, width, height);
+    Camera camera;
 
     while (true)
     {
-        auto window1Closed = !BitmapWindow_Exists(window);
-        auto window2Closed = !BitmapWindow_Exists(window2);
-        if (window1Closed && window2Closed) break;
+        FixedTimeStart();
 
-        long time1 = GetTime();
+        // cout << "!" << endl;
 
-        for (int x = 0; x < width; x++)
-        for (int y = 0; y < height; y++)
-        {
-            uint8_t r = (time1 / 10) % 255;
-            uint8_t g = (time1 / 10) % 255;
-            uint8_t b = 0;
-            uint8_t a = 0;
+        // Halt(1000);
 
-            uint32_t pixel = 0;
+        TestRender();
 
-            pixel += a; pixel <<= 8;
-            pixel += r; pixel <<= 8;
-            pixel += g; pixel <<= 8;
-            pixel += b;
-
-            pixels[y * width + x] = pixel;
-        }
-
-        // BitmapWindow_SetPixelsScaled(window, pixels, 16, 16, 4);
-        // BitmapWindow_SetPixelsScaled2(window, (uint8_t*)pixels, 16, 16, 4);
-
-        BitmapWindow_SetPixels(window, pixels, width, height);
-        BitmapWindow_SetPixels(window2, pixels, width, height);
-
-        BitmapWindow_Update(window);
-        BitmapWindow_Update(window2);
+        FixedTimeEnd();
     }
 
     return 0;
