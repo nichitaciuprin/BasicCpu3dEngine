@@ -68,7 +68,7 @@ void main2()
         UpdateCameraRotation(&camera, 0.0230f, window->KeyDown_LEFT(), window->KeyDown_UP(), window->KeyDown_DOWN(), window->KeyDown_RIGHT());
         UpdateCameraPosition(&camera, 0.0080f, window->KeyDown_W(), window->KeyDown_A(), window->KeyDown_S(), window->KeyDown_D(), window->KeyDown_E(), window->KeyDown_Q());
 
-        Draw(*bitmap, camera, clock());
+        Draw(*bitmap, camera, GetTime());
 
         window->SetPixels(bitmap->pixels.data(), bitmap->Width(), bitmap->Height());
 

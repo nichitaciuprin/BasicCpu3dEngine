@@ -12,7 +12,7 @@
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
 
-static void NetHelper_InitNetHelper()
+static void InitNetHelper()
 {
     WSADATA wsaData;
 
@@ -21,15 +21,15 @@ static void NetHelper_InitNetHelper()
     if (result != NO_ERROR)
         printf("WSAStartup failed with error %d\n", result);
 }
-static SOCKADDR NetHelper_CreateSocketAddress(const char* ip, short port)
+static SOCKADDR CreateSocketAddress(const char* ip, short port)
 {
-    struct sockaddr_in addr1;
-    addr1.sin_family = AF_INET;
-    addr1.sin_port = htons(port);
-    addr1.sin_addr.s_addr = inet_addr(ip);
-    return *((SOCKADDR*)&addr1);
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = inet_addr(ip);
+    return *((SOCKADDR*)&addr);
 }
-static SOCKET NetHelper_CreateSocketNoBind()
+static SOCKET CreateSocketNoBind()
 {
     SOCKET sock = INVALID_SOCKET;
     sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -43,7 +43,7 @@ static SOCKET NetHelper_CreateSocketNoBind()
 
     return sock;
 }
-static SOCKET NetHelper_CreateSocket(int port)
+static SOCKET CreateSocket(int port)
 {
     SOCKET sock = INVALID_SOCKET;
     sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -69,12 +69,12 @@ static SOCKET NetHelper_CreateSocket(int port)
 
     return sock;
 }
-static void NetHelper_SendMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int messageSize)
+static void SendMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int messageSize)
 {
     int addrSize = (sizeof(*addr));
     sendto(*sock, buffer, messageSize, 0, addr, addrSize);
 }
-static void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* messageSize)
+static void RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* messageSize)
 {
     int addrSize = (sizeof(*addr));
     int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
@@ -88,24 +88,57 @@ static void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, in
     *messageSize = byteCount;
 }
 
-static SOCKET _NetSock;
+void NetPrintAddrAsHex(uint64_t addr)
+{
+    for (size_t i = 0; i < 6; i++)
+    {
+        uint8_t byte = addr >> 8 * (5 - i);
+        printf("%02x", byte);
+    }
+
+    printf("\n");
+}
+void NetPrintAddr(uint64_t addr)
+{
+    { uint8_t byte = addr >> 8 * (5 - 0); int byte2 = byte; printf("%i", byte2); } printf(".");
+    { uint8_t byte = addr >> 8 * (5 - 1); int byte2 = byte; printf("%i", byte2); } printf(".");
+    { uint8_t byte = addr >> 8 * (5 - 2); int byte2 = byte; printf("%i", byte2); } printf(".");
+    { uint8_t byte = addr >> 8 * (5 - 3); int byte2 = byte; printf("%i", byte2); } printf(":");
+
+    { uint16_t port = addr; printf("%i", port); }
+}
+uint64_t NetCreateAddr(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint16_t port)
+{
+    uint64_t ip = 0;
+
+    ip += b1; ip = ip <<  8;
+    ip += b2; ip = ip <<  8;
+    ip += b3; ip = ip <<  8;
+    ip += b4; ip = ip << 16;
+    ip += port;
+
+    return ip;
+}
+
+static SOCKET netsock;
 bool NetInitCalled = false;
+
 void NetInit()
 {
     if (NetInitCalled) return;
         NetInitCalled = true;
 
-    NetHelper_InitNetHelper();
+    InitNetHelper();
 }
 void NetUseAnyPort()
 {
     NetInit();
-    _NetSock = NetHelper_CreateSocketNoBind();
+    netsock = CreateSocketNoBind();
 }
 void NetUsePort(int port)
 {
     NetInit();
-    _NetSock = NetHelper_CreateSocket(port);
+    netsock = CreateSocket(port);
 }
 void NetSend(uint64_t* addr, char* buffer, int* messageSize)
 {
@@ -146,13 +179,13 @@ void NetSend(uint64_t* addr, char* buffer, int* messageSize)
     SOCKADDR* sockAddr = (SOCKADDR*)&sockAddrIn;
     int sockAddrSize = (sizeof(*sockAddr));
 
-    NetHelper_SendMessage(&_NetSock, sockAddr, buffer, *messageSize);
+    SendMessage(&netsock, sockAddr, buffer, *messageSize);
 }
 void NetRecv(uint64_t* addr, char* buffer, int* messageSize)
 {
     SOCKADDR sockAddr;
 
-    NetHelper_RecvMessage(&_NetSock, &sockAddr, buffer, messageSize);
+    RecvMessage(&netsock, &sockAddr, buffer, messageSize);
 
     if (*messageSize < 0) return;
 
@@ -176,37 +209,6 @@ void NetRecv(uint64_t* addr, char* buffer, int* messageSize)
     id += ntohs(sockAddrIn->sin_port);
 
     *addr = id;
-}
-void NetPrintAddrAsHex(uint64_t addr)
-{
-    for (size_t i = 0; i < 6; i++)
-    {
-        uint8_t byte = addr >> 8 * (5 - i);
-        printf("%02x", byte);
-    }
-
-    printf("\n");
-}
-void NetPrintAddr(uint64_t addr)
-{
-    { uint8_t byte = addr >> 8 * (5 - 0); int byte2 = byte; printf("%i", byte2); } printf(".");
-    { uint8_t byte = addr >> 8 * (5 - 1); int byte2 = byte; printf("%i", byte2); } printf(".");
-    { uint8_t byte = addr >> 8 * (5 - 2); int byte2 = byte; printf("%i", byte2); } printf(".");
-    { uint8_t byte = addr >> 8 * (5 - 3); int byte2 = byte; printf("%i", byte2); } printf(":");
-
-    { uint16_t port = addr; printf("%i", port); }
-}
-uint64_t NetCreateAddr(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint16_t port)
-{
-    uint64_t ip = 0;
-
-    ip += b1; ip = ip <<  8;
-    ip += b2; ip = ip <<  8;
-    ip += b3; ip = ip <<  8;
-    ip += b4; ip = ip << 16;
-    ip += port;
-
-    return ip;
 }
 
 struct NetInput

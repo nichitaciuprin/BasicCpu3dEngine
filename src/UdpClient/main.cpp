@@ -11,12 +11,12 @@
 
 int main()
 {
-    printf("PID:%ld\n", (long)GetPid());
+    // printf("PID:%ld\n", (long)GetPid());
 
-    int x, y;
-    GetConsolePosition(&x, &y);
+    // int x, y;
+    // GetConsolePosition(&x, &y);
 
-    auto window = make_unique<BitmapWindow2>(x, y, 512, 512);
+    auto window = make_unique<BitmapWindow2>(100, 0, 512, 512);
 
     // missing memset to render stack, for fun
     char frame[1024];

@@ -8,26 +8,22 @@
 #include "Bitmap.h"
 #include "BitmapWindow.h"
 #include "NetHelper.h"
-#include "Temp1.h"
+#include "Server.h"
 
 int main()
 {
-    char frame[1024];
+    // printf("PID:%ld\n", (long)GetPid());
+
+    InitGame();
 
     while (true)
     {
         FixedTimeStart();
 
-        NetRecvFrame(frame);
-        Window32RenderBw(frame);
+        TestRender();
 
-        bool w = Window32_W();
-        bool a = Window32_A();
-        bool s = Window32_S();
-        bool d = Window32_D();
-        NetSendInput(w, a, s, d);
-
-        if (Window32Closed()) break;
+        RenderGame();
+        UpdateGame(0.010f);
 
         FixedTimeEnd();
     }

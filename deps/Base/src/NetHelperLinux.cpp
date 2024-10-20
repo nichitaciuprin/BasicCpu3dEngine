@@ -1,40 +1,40 @@
 #include <Std.h>
 #include <StdExt.h>
 
+#include <fcntl.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
 typedef int SOCKET;
+typedef struct sockaddr SOCKADDR;
 
-static struct sockaddr NetHelper_CreateSocketAddress(const char* ip, short port)
+static SOCKADDR CreateSocketAddress(const char* ip, short port)
 {
-    struct sockaddr_in addr1;
-    addr1.sin_family = AF_INET;
-    addr1.sin_port = htons(port);
-    inet_aton(ip, &addr1.sin_addr);
-    return *((struct sockaddr*)&addr1);
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    inet_aton(ip, &addr.sin_addr);
+    return *((SOCKADDR*)&addr);
 }
-static SOCKET NetHelper_CreateSocketNoBind()
+static SOCKET CreateSocketNoBind()
 {
     SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sock == -1)
         abort();
 
     // makes socket non-blocking
-    // u_long mode = 1;
-    // ioctlsocket(sock, FIONBIO, &mode);
+    fcntl(sock, F_SETFL, O_NONBLOCK);
 
     return sock;
 }
-static SOCKET NetHelper_CreateSocket(int port)
+static SOCKET CreateSocket(int port)
 {
     SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sock == -1)
         abort();
 
     // makes socket non-blocking
-    // u_long mode = 1;
-    // ioctlsocket(sock, FIONBIO, &mode);
+    fcntl(sock, F_SETFL, O_NONBLOCK);
 
     struct sockaddr_in addr = {};
     addr.sin_family = AF_INET;
@@ -42,21 +42,21 @@ static SOCKET NetHelper_CreateSocket(int port)
     // addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     // socklen_t socklen = sizeof(addr);
-    auto bindResult = bind(sock, (struct sockaddr*)&addr, sizeof(addr));
+    auto bindResult = bind(sock, (SOCKADDR*)&addr, sizeof(addr));
     if (bindResult == -1)
         abort();
 
     return sock;
 }
-static void NetHelper_SendMessage(SOCKET* sock, struct sockaddr* addr, char* buffer, int messageSize)
+static void SendMessage(SOCKET sock, SOCKADDR* addr, char* buffer, int messageSize)
 {
     socklen_t addrSize = sizeof(*addr);
-    sendto(*sock, buffer, messageSize, 0, addr, addrSize);
+    sendto(sock, buffer, messageSize, 0, addr, addrSize);
 }
-static void NetHelper_RecvMessage(SOCKET* sock, struct sockaddr* addr, char* buffer, int* messageSize)
+static void RecvMessage(SOCKET sock, SOCKADDR* addr, char* buffer, int* messageSize)
 {
     socklen_t addrSize = sizeof(*addr);
-    int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
+    int byteCount = recvfrom(sock, buffer, 1024, 0, addr, &addrSize);
 
     *messageSize = byteCount;
 }
@@ -93,14 +93,15 @@ uint64_t NetCreateAddr(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint16_t 
     return ip;
 }
 
-static SOCKET _NetSock;
+static SOCKET netsock;
+
 void NetUseAnyPort()
 {
-    _NetSock = NetHelper_CreateSocketNoBind();
+    netsock = CreateSocketNoBind();
 }
 void NetUsePort(int port)
 {
-    _NetSock = NetHelper_CreateSocket(port);
+    netsock = CreateSocket(port);
 }
 void NetSend(uint64_t* addr, char* buffer, int* messageSize)
 {
@@ -138,17 +139,16 @@ void NetSend(uint64_t* addr, char* buffer, int* messageSize)
     // char* ip = inet_ntoa(sockAddrIn.sin_addr);
     // cout << ip << endl;
 
-    struct sockaddr* sockAddr = (struct sockaddr*)&sockAddrIn;
+    SOCKADDR* sockAddr = (SOCKADDR*)&sockAddrIn;
     int sockAddrSize = (sizeof(*sockAddr));
 
-    NetHelper_SendMessage(&_NetSock, sockAddr, buffer, *messageSize);
+    SendMessage(netsock, sockAddr, buffer, *messageSize);
 }
-
 void NetRecv(uint64_t* addr, char* buffer, int* messageSize)
 {
     struct sockaddr sockAddr = {};
 
-    NetHelper_RecvMessage(&_NetSock, &sockAddr, buffer, messageSize);
+    RecvMessage(netsock, &sockAddr, buffer, messageSize);
 
     if (*messageSize < 0) return;
 

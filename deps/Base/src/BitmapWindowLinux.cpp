@@ -50,11 +50,12 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
     instance->keydown_RIGHT = false;
 
     instance->display = XOpenDisplay(NULL);
-    // instance->display = XOpenDisplay(NULL);
+    XAutoRepeatOn(instance->display);
     int screen = DefaultScreen(instance->display);
     Window root = DefaultRootWindow(instance->display);
     instance->window = XCreateSimpleWindow(instance->display, root, 0, 0, instance->width, instance->height, 0, 0, 0xffffffff);
-    XSelectInput(instance->display, instance->window, ExposureMask | KeyPressMask);
+    XSelectInput(instance->display, instance->window, ExposureMask | KeyPressMask | KeyReleaseMask);
+    // XSelectInput(instance->display, instance->window, ExposureMask | ButtonPressMask);
     XMapWindow(instance->display, instance->window);
     instance->wm_delete_window = XInternAtom(instance->display, "WM_DELETE_WINDOW", False);
     XSetWMProtocols(instance->display, instance->window, &instance->wm_delete_window, 1);
@@ -86,17 +87,6 @@ void BitmapWindow_Destroy(BitmapWindow* instance)
 void BitmapWindow_Update(BitmapWindow* instance)
 {
     if (!BitmapWindow_Exists(instance)) return;
-
-    instance->keydown_W = false;
-    instance->keydown_A = false;
-    instance->keydown_S = false;
-    instance->keydown_D = false;
-    instance->keydown_UP = false;
-    instance->keydown_LEFT = false;
-    instance->keydown_DOWN = false;
-    instance->keydown_RIGHT = false;
-    instance->keydown_E = false;
-    instance->keydown_Q = false;
 
     XEvent event;
 
@@ -144,6 +134,7 @@ void BitmapWindow_Update(BitmapWindow* instance)
             break;
 
             case KeyPress:
+            case KeyRelease:
             {
                 uint32_t keyKode = event.xkey.keycode;
 
@@ -159,23 +150,20 @@ void BitmapWindow_Update(BitmapWindow* instance)
                 uint32_t q     = 0x18;
                 uint32_t e     = 0x1a;
 
-                // printf("keyKode:%x\n", keyKode);
-                // bool value = event.type == KeyPress;
-                // cout << event.type << endl;
-                // cout << keyKode << "|" << value << endl;
+                bool value = event.type == KeyPress;
 
                 switch (keyKode)
                 {
-                    case 0x19: { instance->keydown_W     = true; } break;
-                    case 0x26: { instance->keydown_A     = true; } break;
-                    case 0x27: { instance->keydown_S     = true; } break;
-                    case 0x28: { instance->keydown_D     = true; } break;
-                    case 0x6f: { instance->keydown_UP    = true; } break;
-                    case 0x71: { instance->keydown_LEFT  = true; } break;
-                    case 0x74: { instance->keydown_DOWN  = true; } break;
-                    case 0x72: { instance->keydown_RIGHT = true; } break;
-                    case 0x18: { instance->keydown_Q     = true; } break;
-                    case 0x1a: { instance->keydown_E     = true; } break;
+                    case 0x19: { instance->keydown_W     = value; } break;
+                    case 0x26: { instance->keydown_A     = value; } break;
+                    case 0x27: { instance->keydown_S     = value; } break;
+                    case 0x28: { instance->keydown_D     = value; } break;
+                    case 0x6f: { instance->keydown_UP    = value; } break;
+                    case 0x71: { instance->keydown_LEFT  = value; } break;
+                    case 0x74: { instance->keydown_DOWN  = value; } break;
+                    case 0x72: { instance->keydown_RIGHT = value; } break;
+                    case 0x18: { instance->keydown_Q     = value; } break;
+                    case 0x1a: { instance->keydown_E     = value; } break;
                 }
 
                 if (keyKode == esc)

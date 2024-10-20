@@ -19,26 +19,25 @@ flags="-g3 $optimisationLevel -Werror -std=c++17 -pthread -m64"
 # @REM set lib=%lib% -lpthread -lm
 
 lib=
-lib="$lib -L$deps/raylib/lib -lraylib -lgdi32 -lwinmm"
-lib="$lib -L$deps/ReactPhysics3D/lib -lreactphysics3d"
-lib="$lib -lWs2_32"
+# lib="$lib -L$deps/raylib/lib -lraylib"
+# lib="$lib -L$deps/ReactPhysics3D/lib -lreactphysics3d"
 
 include=
 include="$include -I$deps/Base/include"
-include="$include -I$deps/raylib/include"
-include="$include -I$deps/raylibWrap/include"
-include="$include -I$deps/ReactPhysics3D/include"
-include="$include -I$deps/ReactPhysics3DWrap/include"
+# include="$include -I$deps/raylib/include"
+# include="$include -I$deps/raylibWrap/include"
+# include="$include -I$deps/ReactPhysics3D/include"
+# include="$include -I$deps/ReactPhysics3DWrap/include"
 include="$include -I./src"
 
 src=
-src="$src $deps/Base/src/BitmapWindow.cpp"
-src="$src $deps/Base/src/SysHelperWin.cpp"
-src="$src $deps/Base/src/SysHelperWin2.cpp"
-src="$src $deps/Base/src/NetHelper.cpp"
-src="$src $deps/raylibWrap/src/RaylibWrap.cpp"
+# src="$src $deps/Base/src/BitmapWindow.cpp"
+src="$src $deps/Base/src/BitmapWindowLinux.cpp"
+src="$src $deps/Base/src/SysHelperLinux.cpp"
+src="$src $deps/Base/src/NetHelperLinux.cpp"
+# src="$src $deps/raylibWrap/src/RaylibWrap.cpp"
 
 rm -rf build
 mkdir build
 
-g++ main.cpp $src -o build/main.exe $flags $include $lib
+g++ main.cpp $src -o build/main.exe $flags $include $lib -lGL -lm -lpthread -ldl -lrt -lX11
