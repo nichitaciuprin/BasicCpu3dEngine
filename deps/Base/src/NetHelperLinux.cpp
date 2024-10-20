@@ -1,89 +1,66 @@
 #include <Std.h>
 #include <StdExt.h>
 
-#include <sys/types.h>
+#include <arpa/inet.h>
 #include <sys/socket.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/un.h>
-#include <stdio.h>
 
-// static SOCKET _NetSock;
-// static void NetHelper_InitNetHelper()
-// {
-//     WSADATA wsaData;
+typedef int SOCKET;
 
-//     int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
+static int _NetSock;
+static struct sockaddr NetHelper_CreateSocketAddress(const char* ip, short port)
+{
+    struct sockaddr_in addr1;
+    addr1.sin_family = AF_INET;
+    addr1.sin_port = htons(port);
+    inet_aton(ip, &addr1.sin_addr);
+    return *((struct sockaddr*)&addr1);
+}
+static SOCKET NetHelper_CreateSocketNoBind()
+{
+    SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == -1)
+        abort();
 
-//     if (result != NO_ERROR)
-//         printf("WSAStartup failed with error %d\n", result);
-// }
-// static SOCKADDR NetHelper_CreateSocketAddress(const char* ip, short port)
-// {
-//     struct sockaddr_in addr1;
-//     addr1.sin_family = AF_INET;
-//     addr1.sin_port = htons(port);
-//     addr1.sin_addr.s_addr = inet_addr(ip);
-//     return *((SOCKADDR*)&addr1);
-// }
-// static SOCKET NetHelper_CreateSocketNoBind()
-// {
-//     SOCKET sock = INVALID_SOCKET;
-//     sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    // makes socket non-blocking
+    // u_long mode = 1;
+    // ioctlsocket(sock, FIONBIO, &mode);
 
-//     // makes socket non-blocking
-//     u_long mode = 1;
-//     ioctlsocket(sock, FIONBIO, &mode);
+    return sock;
+}
+static SOCKET NetHelper_CreateSocket(int port)
+{
+    SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock == -1)
+        abort();
 
-//     if (sock == INVALID_SOCKET)
-//         printf("socket failed with error %d\n", WSAGetLastError());
+    // makes socket non-blocking
+    // u_long mode = 1;
+    // ioctlsocket(sock, FIONBIO, &mode);
 
-//     return sock;
-// }
-// static SOCKET NetHelper_CreateSocket(int port)
-// {
-//     SOCKET sock = INVALID_SOCKET;
-//     sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    struct sockaddr_in addr = {};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    // addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-//     // makes socket non-blocking
-//     u_long mode = 1;
-//     ioctlsocket(sock, FIONBIO, &mode);
+    // socklen_t socklen = sizeof(addr);
+    auto bindResult = bind(sock, (struct sockaddr*)&addr, sizeof(addr));
+    if (bindResult == -1)
+        abort();
 
-//     if (sock == INVALID_SOCKET)
-//         printf("socket failed with error %d\n", WSAGetLastError());
+    return sock;
+}
+static void NetHelper_SendMessage(SOCKET* sock, struct sockaddr* addr, char* buffer, int messageSize)
+{
+    socklen_t addrSize = sizeof(*addr);
+    sendto(*sock, buffer, messageSize, 0, addr, addrSize);
+}
+static void NetHelper_RecvMessage(SOCKET* sock, struct sockaddr* addr, char* buffer, int* messageSize)
+{
+    socklen_t addrSize = sizeof(*addr);
+    int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
 
-//     struct sockaddr_in addr = {};
-//     addr.sin_family = AF_INET;
-//     addr.sin_port = htons(port);
-//     // addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-//     // addr.sin_addr.s_addr = INADDR_ANY;
-
-//     if (bind(sock, (SOCKADDR*)&addr, sizeof(addr)))
-//     {
-//         printf("bind failed with error %d\n", WSAGetLastError());
-//         return 1;
-//     }
-
-//     return sock;
-// }
-// static void NetHelper_SendMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int messageSize)
-// {
-//     int addrSize = (sizeof(*addr));
-//     sendto(*sock, buffer, messageSize, 0, addr, addrSize);
-// }
-// static void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* messageSize)
-// {
-//     int addrSize = (sizeof(*addr));
-//     int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
-
-//     // if (byteCount > 0)
-//     // {
-//     //     char* ip = inet_ntoa(((sockaddr_in*)addr)->sin_addr);
-//     //     // cout << ip << endl;
-//     // }
-
-//     *messageSize = byteCount;
-// }
+    *messageSize = byteCount;
+}
 
 // bool NetInitCalled = false;
 // void NetInit()
@@ -91,7 +68,7 @@
 //     if (NetInitCalled) return;
 //         NetInitCalled = true;
 
-//     NetHelper_InitNetHelper();
+//     // NetHelper_InitNetHelper();
 // }
 // void NetUseAnyPort()
 // {

@@ -17,7 +17,7 @@ int main()
 
     struct sockaddr_in si_other = {};
 
-    socklen_t socklen = sizeof(si_other);
+    socklen_t sockaddrlen = sizeof(si_other);
 
     si_other.sin_family = AF_INET;
     si_other.sin_port = htons(port);
@@ -34,7 +34,7 @@ int main()
 
         cout << "send" << endl;
 
-        auto sendtoResult = sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr*)&si_other, socklen);
+        auto sendtoResult = sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr*)&si_other, sockaddrlen);
         if (sendtoResult == -1)
             abort();
 
@@ -43,7 +43,7 @@ int main()
         cout << "recv" << endl;
 
         // blocks
-        auto recvfromResult = recvfrom(sock, buffer, bufferSize, 0, (struct sockaddr*)&si_other, &socklen);
+        auto recvfromResult = recvfrom(sock, buffer, bufferSize, 0, (struct sockaddr*)&si_other, &sockaddrlen);
         if (recvfromResult == -1)
             abort();
 

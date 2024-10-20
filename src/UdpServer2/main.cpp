@@ -18,7 +18,7 @@ int main()
     struct sockaddr_in si_me = {};
     struct sockaddr_in si_other = {};
 
-    socklen_t socklen = sizeof(si_other);
+    socklen_t sockaddrlen = sizeof(si_other);
 
     si_me.sin_family = AF_INET;
     si_me.sin_port = htons(port);
@@ -32,13 +32,13 @@ int main()
     while (true)
     {
         // try to receive some data, this is a blocking call
-        int recvfromResult = recvfrom(sock, buffer, bufferSize, 0, (struct sockaddr*)&si_other, &socklen);
+        int recvfromResult = recvfrom(sock, buffer, bufferSize, 0, (struct sockaddr*)&si_other, &sockaddrlen);
         if (recvfromResult == -1) abort();
         printf("recv: %s\n", buffer);
 
         // printf("Received packet from %s:%d\n", inet_ntoa(si_other.sin_addr), ntohs(si_other.sin_port));
 
-        int sendToResult = sendto(sock, buffer, recvfromResult, 0, (struct sockaddr*)&si_other, socklen);
+        int sendToResult = sendto(sock, buffer, recvfromResult, 0, (struct sockaddr*)&si_other, sockaddrlen);
         if (sendToResult == -1) abort();
         printf("sendto: %s\n", buffer);
     }
