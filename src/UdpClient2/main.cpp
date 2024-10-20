@@ -1,56 +1,28 @@
 #include <Std.h>
 #include <StdExt.h>
-
-#include <arpa/inet.h>
-#include <sys/socket.h>
+#include <SysHelper.h>
+#include <NetHelper.h>
 
 int main()
 {
-    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (sock == -1)
-        abort();
+    NetUseAnyPort();
 
-    int bufferSize = 512;
-    int port = 8888;
+    auto addr = NetCreateAddr(127, 0, 0, 1, 8888);
 
-    char buffer[bufferSize];
+    char buffer[1024] = {};
+    const char* message = "sendtome\0";
+    int messageSize = strlen(message);
+    strcpy(buffer, message);
 
-    struct sockaddr_in si_other = {};
+    NetSend(&addr, buffer, &messageSize);
+    NetRecv(&addr, buffer, &messageSize);
+    printf("%.*s\n", messageSize, buffer);
 
-    socklen_t sockaddrlen = sizeof(si_other);
-
-    si_other.sin_family = AF_INET;
-    si_other.sin_port = htons(port);
-    inet_aton("127.0.0.1", &si_other.sin_addr);
-
-    while (true)
-    {
-        const char* message2 = "sendtome\0";
-        int messageLength = strlen(message2);
-        strcpy(buffer, message2);
-
-        // printf(buffer);
-        // printf("\n");
-
-        cout << "send" << endl;
-
-        auto sendtoResult = sendto(sock, buffer, strlen(buffer), 0, (struct sockaddr*)&si_other, sockaddrlen);
-        if (sendtoResult == -1)
-            abort();
-
-        memset(buffer,'\0', bufferSize);
-
-        cout << "recv" << endl;
-
-        // blocks
-        auto recvfromResult = recvfrom(sock, buffer, bufferSize, 0, (struct sockaddr*)&si_other, &sockaddrlen);
-        if (recvfromResult == -1)
-            abort();
-
-        puts(buffer);
-    }
-
-    // close(s);
+    // while (true)
+    // {
+    //     FixedTimeStart();
+    //     FixedTimeEnd();
+    // }
 
     return 0;
 }

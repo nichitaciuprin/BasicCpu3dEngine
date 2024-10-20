@@ -12,7 +12,6 @@
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
 
-static SOCKET _NetSock;
 static void NetHelper_InitNetHelper()
 {
     WSADATA wsaData;
@@ -89,6 +88,7 @@ static void NetHelper_RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, in
     *messageSize = byteCount;
 }
 
+static SOCKET _NetSock;
 bool NetInitCalled = false;
 void NetInit()
 {
