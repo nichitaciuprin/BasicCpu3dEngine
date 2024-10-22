@@ -69,15 +69,15 @@ static SOCKET CreateSocket(int port)
 
     return sock;
 }
-static void SendMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int messageSize)
+static void SendMessage(SOCKET sock, SOCKADDR* addr, char* buffer, int messageSize)
 {
     int addrSize = (sizeof(*addr));
-    sendto(*sock, buffer, messageSize, 0, addr, addrSize);
+    sendto(sock, buffer, messageSize, 0, addr, addrSize);
 }
-static void RecvMessage(SOCKET* sock, SOCKADDR* addr, char* buffer, int* messageSize)
+static void RecvMessage(SOCKET sock, SOCKADDR* addr, char* buffer, int* messageSize)
 {
     int addrSize = (sizeof(*addr));
-    int byteCount = recvfrom(*sock, buffer, 1024, 0, addr, &addrSize);
+    int byteCount = recvfrom(sock, buffer, 1024, 0, addr, &addrSize);
 
     // if (byteCount > 0)
     // {
@@ -179,13 +179,13 @@ void NetSend(uint64_t* addr, char* buffer, int* messageSize)
     SOCKADDR* sockAddr = (SOCKADDR*)&sockAddrIn;
     int sockAddrSize = (sizeof(*sockAddr));
 
-    SendMessage(&netsock, sockAddr, buffer, *messageSize);
+    SendMessage(netsock, sockAddr, buffer, *messageSize);
 }
 void NetRecv(uint64_t* addr, char* buffer, int* messageSize)
 {
     SOCKADDR sockAddr;
 
-    RecvMessage(&netsock, &sockAddr, buffer, messageSize);
+    RecvMessage(netsock, &sockAddr, buffer, messageSize);
 
     if (*messageSize < 0) return;
 
