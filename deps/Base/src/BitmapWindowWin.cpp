@@ -1,23 +1,13 @@
-#include <stdlib.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <assert.h>
-
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <memory>
-#include <vector>
-#include <array>
-
-using namespace std;
 
 #define WIN32_LEAN_AND_MEAN
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
 
-#include <windows.h>
+#include <windef.h>
+#include <wingdi.h>
 #include <winuser.h>
 
 typedef struct BitmapWindow
@@ -26,12 +16,12 @@ typedef struct BitmapWindow
     bool keydown_A;
     bool keydown_S;
     bool keydown_D;
-    bool keydown_E;
     bool keydown_UP;
-    bool keydown_Q;
     bool keydown_LEFT;
     bool keydown_DOWN;
     bool keydown_RIGHT;
+    bool keydown_Q;
+    bool keydown_E;
 
     HWND       _hwnd;
     HDC        _hdc;
@@ -156,16 +146,16 @@ BitmapWindow* BitmapWindow_Create(int x, int y, int clientWidth, int clientHeigh
 {
     BitmapWindow* instance = (BitmapWindow*)malloc(sizeof(BitmapWindow));
 
-    instance->keydown_W = 0;
-    instance->keydown_A = 0;
-    instance->keydown_S = 0;
-    instance->keydown_D = 0;
-    instance->keydown_E = 0;
-    instance->keydown_Q = 0;
-    instance->keydown_UP = 0;
-    instance->keydown_LEFT = 0;
-    instance->keydown_DOWN = 0;
-    instance->keydown_RIGHT = 0;
+    instance->keydown_W = false;
+    instance->keydown_A = false;
+    instance->keydown_S = false;
+    instance->keydown_D = false;
+    instance->keydown_UP = false;
+    instance->keydown_LEFT = false;
+    instance->keydown_DOWN = false;
+    instance->keydown_RIGHT = false;
+    instance->keydown_Q = false;
+    instance->keydown_E = false;
 
     instance->_hwnd = 0;
 
