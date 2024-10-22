@@ -37,8 +37,7 @@ set include=%include% -I%~dp0src
 
 set src=
 set src=%src% %deps%\Base\src\BitmapWindow.cpp
-set src=%src% %deps%\Base\src\SysHelperWin.cpp
-set src=%src% %deps%\Base\src\SysHelperWin2.cpp
+set src=%src% %deps%\Base\src\SysHelper.cpp
 set src=%src% %deps%\Base\src\NetHelper.cpp
 set src=%src% %deps%\RaylibWrap\src\RaylibWrap.cpp
 
