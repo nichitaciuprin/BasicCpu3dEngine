@@ -81,3 +81,18 @@ void FixedTimeEnd()
     // else
     //     printf("SLOW!\n");
 }
+
+uint64_t GetPid()
+{
+    #error GetPid not implemented
+
+    return 0;
+}
+
+void GetConsolePosition(int* x, int* y)
+{
+    #error GetConsolePosition not implemented
+
+    *x = 0;
+    *y = 0;
+}

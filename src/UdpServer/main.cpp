@@ -12,7 +12,7 @@
 
 int main()
 {
-    // printf("PID:%ld\n", (long)GetPid());
+    printf("PID:%ld\n", (long)GetPid());
 
     InitGame();
 

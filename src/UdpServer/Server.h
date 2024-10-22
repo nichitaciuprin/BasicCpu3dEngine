@@ -209,11 +209,11 @@ void TestRender()
     {
         TestRenderCalled = true;
 
-        // int x, y;
-        // GetConsolePosition(&x, &y);
+        int x, y;
+        GetConsolePosition(&x, &y);
 
         testBitmap = make_unique<Bitmap>(512, 512);
-        testWindow = make_unique<BitmapWindow2>(0, 0, 512, 512);
+        testWindow = make_unique<BitmapWindow2>(x, y, 512, 512);
 
         return;
     }
