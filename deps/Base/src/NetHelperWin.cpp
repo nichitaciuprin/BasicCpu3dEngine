@@ -88,6 +88,9 @@ static void RecvMessage(SOCKET sock, SOCKADDR* addr, char* buffer, int* messageS
     *messageSize = byteCount;
 }
 
+static SOCKET netsock;
+static bool NetInitCalled = false;
+
 void NetPrintAddrAsHex(uint64_t addr)
 {
     for (size_t i = 0; i < 6; i++)
@@ -119,9 +122,6 @@ uint64_t NetCreateAddr(uint8_t b1, uint8_t b2, uint8_t b3, uint8_t b4, uint16_t 
 
     return ip;
 }
-
-static SOCKET netsock;
-bool NetInitCalled = false;
 
 void NetInit()
 {
