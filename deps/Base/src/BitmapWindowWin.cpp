@@ -7,8 +7,8 @@
 #endif
 
 #include <windef.h>
-#include <wingdi.h>
 #include <winuser.h>
+#include <wingdi.h>
 
 typedef struct BitmapWindow
 {

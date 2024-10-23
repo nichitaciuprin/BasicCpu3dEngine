@@ -1,4 +1,6 @@
-#include <Std.h>
+#include <stdint.h>
+#include <process.h>
+#include <time.h>
 
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
@@ -6,12 +8,12 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#ifndef UNICODE
-#define UNICODE
-#endif
 
-#include <windows.h>
-#include <time.h>
+#include <windef.h>
+#include <winbase.h>
+#include <wingdi.h>
+#include <winuser.h>
+#include <wincon.h>
 
 FILETIME idleOld = {};
 FILETIME idleNew = {};
@@ -53,6 +55,7 @@ void Halt(unsigned long milliseconds)
 }
 long GetTime()
 {
+    // TODO maybe change to QueryPerformanceCounter
     // return clock()/(CLOCKS_PER_SEC/1000);
     return clock();
 }
