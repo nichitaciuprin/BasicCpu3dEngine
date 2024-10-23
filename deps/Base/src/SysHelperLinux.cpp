@@ -1,13 +1,7 @@
-#include <errno.h>
-#include <unistd.h>
-#include <time.h>
-
-#define _POSIX_C_SOURCE 200809L
-
-#include <inttypes.h>
+#include <stdint.h>
 #include <math.h>
-#include <stdio.h>
 #include <time.h>
+#include <errno.h>
 
 static bool setInitSpec = true;
 static struct timespec initSpec;

@@ -1,6 +1,8 @@
-#include <Std.h>
-#include <StdExt.h>
-#include <SysHelper.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <assert.h>
 
 #include <X11/Xlib.h>
 
