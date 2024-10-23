@@ -24,6 +24,7 @@ lib=
 
 include=
 include="$include -I$deps/Base/include"
+include="$include -I$deps/Sys/include"
 # include="$include -I$deps/raylib/include"
 # include="$include -I$deps/raylibWrap/include"
 # include="$include -I$deps/ReactPhysics3D/include"
@@ -31,9 +32,9 @@ include="$include -I$deps/Base/include"
 include="$include -I./src"
 
 src=
-src="$src $deps/Base/src/BitmapWindow.cpp"
-src="$src $deps/Base/src/SysHelper.cpp"
-src="$src $deps/Base/src/NetHelper.cpp"
+src="$src $deps/Sys/src/SysHelper.c"
+src="$src $deps/Sys/src/SysWindow.c"
+src="$src $deps/Sys/src/SysNet.c"
 # src="$src $deps/raylibWrap/src/RaylibWrap.cpp"
 
 rm -rf build

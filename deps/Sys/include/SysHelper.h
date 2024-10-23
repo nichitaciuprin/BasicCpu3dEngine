@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 uint64_t GetPid();
 int GetCpuUsage();
 long GetTime();

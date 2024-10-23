@@ -6,7 +6,7 @@
 #include "Models.h"
 #include "Clipping.h"
 #include "Bitmap.h"
-#include "BitmapWindow.h"
+#include "SysWindow.h"
 
 void Draw(Bitmap& bitmap, Camera camera, long time)
 {

@@ -1,9 +1,9 @@
 #if defined(_WIN64)
-    #include "NetHelperWin.cpp"
+    #include "SysNetWin.c"
 #elif defined(__unix)
-    #include "NetHelperLinux.cpp"
+    #include "SysNetLinux.c"
 #else
-    #error "NetHelper not supported"
+    #error "SysNet not supported"
 #endif
 
 struct NetInput

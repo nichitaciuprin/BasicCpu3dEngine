@@ -1,8 +1,7 @@
 #if defined(_WIN64)
-    #include "SysHelperWin.cpp"
+    #include "SysHelperWin.c"
 #elif defined(__unix)
-    // #error asdfasdfafd
-    #include "SysHelperLinux.cpp"
+    #include "SysHelperLinux.c"
 #else
     #error "SysHelper not supported"
 #endif

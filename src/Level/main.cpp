@@ -6,8 +6,8 @@
 #include "Models.h"
 #include "Clipping.h"
 #include "Bitmap.h"
-#include "BitmapWindow.h"
-#include "NetHelper.h"
+#include "SysWindow.h"
+#include "SysNet.h"
 
 void Draw(Bitmap& bitmap, Camera camera, long time)
 {
