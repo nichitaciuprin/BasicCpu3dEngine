@@ -13,8 +13,8 @@ struct NetInput
     bool q, e;
 };
 
-bool NetInitServerCalled = false;
-void NetInitServer()
+static bool NetInitServerCalled = false;
+static void NetInitServer()
 {
     if (NetInitServerCalled) return;
         NetInitServerCalled = true;
@@ -58,8 +58,8 @@ bool NetRecvInput(uint64_t* addr, NetInput* input)
     return true;
 }
 
-bool NetInitClientCalled = false;
-void NetInitClient()
+static bool NetInitClientCalled = false;
+static void NetInitClient()
 {
     if (NetInitClientCalled) return;
         NetInitClientCalled = true;
