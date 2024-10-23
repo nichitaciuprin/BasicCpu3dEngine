@@ -22,12 +22,12 @@ static long clock2()
 
 uint64_t GetPid()
 {
-    #error GetPid not implemented
+    // #error GetPid not implemented
     return 0;
 }
 int GetCpuUsage()
 {
-    #error GetCpuUsage not implemented
+    // #error GetCpuUsage not implemented
     return 100;
 }
 long GetTime()
@@ -52,7 +52,7 @@ long GetTime()
 }
 void GetConsolePosition(int* x, int* y)
 {
-    #error GetConsolePosition not implemented
+    // #error GetConsolePosition not implemented
     *x = 0;
     *y = 0;
 }

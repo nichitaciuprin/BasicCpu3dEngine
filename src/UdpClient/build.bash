@@ -31,10 +31,9 @@ include="$include -I$deps/Base/include"
 include="$include -I./src"
 
 src=
-# src="$src $deps/Base/src/BitmapWindow.cpp"
-src="$src $deps/Base/src/BitmapWindowLinux.cpp"
-src="$src $deps/Base/src/SysHelperLinux.cpp"
-src="$src $deps/Base/src/NetHelperLinux.cpp"
+src="$src $deps/Base/src/BitmapWindow.cpp"
+src="$src $deps/Base/src/SysHelper.cpp"
+src="$src $deps/Base/src/NetHelper.cpp"
 # src="$src $deps/raylibWrap/src/RaylibWrap.cpp"
 
 rm -rf build

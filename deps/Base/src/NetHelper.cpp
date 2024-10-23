@@ -1,6 +1,6 @@
 #if defined(_WIN64)
     #include "NetHelperWin.cpp"
-#elif defined(unix)
+#elif defined(__unix)
     #include "NetHelperLinux.cpp"
 #else
     #error "NetHelper not supported"
