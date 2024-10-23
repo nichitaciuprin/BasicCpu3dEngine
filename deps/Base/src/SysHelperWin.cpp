@@ -15,13 +15,22 @@
 #include <winuser.h>
 #include <wincon.h>
 
-FILETIME idleOld = {};
-FILETIME idleNew = {};
-FILETIME userOld = {};
-FILETIME userNew = {};
-int cpu = 0;
-int cpuTimer = 0;
+static FILETIME idleOld = {};
+static FILETIME idleNew = {};
+static FILETIME userOld = {};
+static FILETIME userNew = {};
 
+static int cpu = 0;
+static int cpuTimer = 0;
+
+static long timeStep = 10;
+static int endTime = 0;
+
+uint64_t GetPid()
+{
+    // printf("Process PID:%ld\n", (long)getpid());
+    return (uint64_t)getpid();
+}
 int GetCpuUsage()
 {
     // TODO
@@ -49,39 +58,12 @@ int GetCpuUsage()
 
     return cpu;
 }
-void Halt(unsigned long milliseconds)
-{
-    Sleep(milliseconds);
-}
 long GetTime()
 {
     // TODO maybe change to QueryPerformanceCounter
     // return clock()/(CLOCKS_PER_SEC/1000);
     return clock();
 }
-
-long timeStep = 10;
-int endTime = 0;
-
-void FixedTimeStart()
-{
-    endTime = GetTime() + timeStep;
-}
-void FixedTimeEnd()
-{
-    long haltTime = endTime - GetTime();
-    if (haltTime > 0)
-        Halt(haltTime);
-    // else
-    //     printf("SLOW!\n");
-}
-
-uint64_t GetPid()
-{
-    // printf("Process PID:%ld\n", (long)getpid());
-    return (uint64_t)getpid();
-}
-
 void GetConsolePosition(int* x, int* y)
 {
     RECT rect = {};
@@ -96,4 +78,20 @@ void GetConsolePosition(int* x, int* y)
 
     // TODO fix this
     *x += 7;
+}
+void Halt(unsigned long milliseconds)
+{
+    Sleep(milliseconds);
+}
+void FixedTimeStart()
+{
+    endTime = GetTime() + timeStep;
+}
+void FixedTimeEnd()
+{
+    long haltTime = endTime - GetTime();
+    if (haltTime > 0)
+        Halt(haltTime);
+    // else
+    //     printf("SLOW!\n");
 }

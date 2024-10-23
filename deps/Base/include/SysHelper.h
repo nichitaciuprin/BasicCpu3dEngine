@@ -1,8 +1,7 @@
+uint64_t GetPid();
 int GetCpuUsage();
-void Halt(unsigned long milliseconds);
 long GetTime();
-void CheckFPS();
+void GetConsolePosition(int* x, int* y);
+void Halt(unsigned long milliseconds);
 void FixedTimeStart();
 void FixedTimeEnd();
-uint64_t GetPid();
-void GetConsolePosition(int* x, int* y);

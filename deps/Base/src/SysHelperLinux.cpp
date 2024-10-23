@@ -1,6 +1,6 @@
-#include <time.h>
 #include <errno.h>
 #include <unistd.h>
+#include <time.h>
 
 #define _POSIX_C_SOURCE 200809L
 
@@ -9,14 +9,27 @@
 #include <stdio.h>
 #include <time.h>
 
-bool setInitSpec = true;
-struct timespec initSpec;
+static bool setInitSpec = true;
+static struct timespec initSpec;
 
-long clock2()
+static long timeStep = 10;
+static int endTime = 0;
+
+static long clock2()
 {
     return clock()/(CLOCKS_PER_SEC/1000);
 }
 
+uint64_t GetPid()
+{
+    #error GetPid not implemented
+    return 0;
+}
+int GetCpuUsage()
+{
+    #error GetCpuUsage not implemented
+    return 100;
+}
 long GetTime()
 {
     if (setInitSpec)
@@ -37,13 +50,12 @@ long GetTime()
 
     return ms;
 }
-
-int GetCpuUsage()
+void GetConsolePosition(int* x, int* y)
 {
-    // TODO implement
-    return 100;
+    #error GetConsolePosition not implemented
+    *x = 0;
+    *y = 0;
 }
-
 void Halt(unsigned long milliseconds)
 {
     // TODO review
@@ -65,10 +77,6 @@ void Halt(unsigned long milliseconds)
 
     // usleep(milliseconds * 1000);
 }
-
-long timeStep = 10;
-int endTime = 0;
-
 void FixedTimeStart()
 {
     endTime = GetTime() + timeStep;
@@ -80,19 +88,4 @@ void FixedTimeEnd()
         Halt(haltTime);
     // else
     //     printf("SLOW!\n");
-}
-
-uint64_t GetPid()
-{
-    #error GetPid not implemented
-
-    return 0;
-}
-
-void GetConsolePosition(int* x, int* y)
-{
-    #error GetConsolePosition not implemented
-
-    *x = 0;
-    *y = 0;
 }
