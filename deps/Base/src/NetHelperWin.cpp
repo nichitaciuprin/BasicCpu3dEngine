@@ -1,14 +1,13 @@
-#include <Std.h>
-#include <StdExt.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <assert.h>
 
 #define WIN32_LEAN_AND_MEAN
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
 
-#include <windef.h>
-#include <WinSock2.h>
-#include <Ws2tcpip.h>
+#include <winsock.h>
 
 static void InitNetHelper()
 {
