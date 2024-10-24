@@ -16,11 +16,7 @@ set build=%batdir%build
 @REM -Os (Optimize for size. -Os enables all -O2 optimizations that do not typically increase code size. It also performs further optimizations designed to reduce code size. -Os disables the following optimization flags: -falign-functions -falign-jumps -falign-loops -falign-labels -freorder-blocks -freorder-blocks-and-partition -fprefetch-loop-arrays -ftree-vect-loop-version)
 set optimisationLevel=-Og
 
-set flags=-g3 %optimisationLevel% -Werror -std=c++17 -pthread -m64
-
-@REM set lib=%lib% -L%deps%\raylib\lib -ldloadhelper -lglmf32 -lm -lopengl32 -lgdi32 -lwinmm -ld3d11 -ld3dcompiler
-
-@REM set lib=%lib% -lpthread -lm
+set flags=-g3 %optimisationLevel% -Werror -Wall -std=c++17 -Wno-missing-braces -pthread -m64
 
 set lib=
 set lib=%lib% -L%deps%\raylib\lib -lraylib -lgdi32 -lwinmm

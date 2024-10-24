@@ -163,9 +163,9 @@ void Draw(Bitmap& bitmap, Camera camera, long time)
 
 void InitGame()
 {
-    auto scale = 16;
+    // auto scale = 16;
     auto size1 = 32;
-    auto size2 = 32*scale;
+    // auto size2 = 32*scale;
 
     bitmapNet = make_unique<Bitmap>(size1, size1);
 

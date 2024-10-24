@@ -19,14 +19,14 @@ static void InitNetHelper()
         printf("WSAStartup failed with error %d\n", result);
 }
 
-static SOCKADDR CreateSocketAddress(const char* ip, short port)
-{
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = inet_addr(ip);
-    return *((SOCKADDR*)&addr);
-}
+// static SOCKADDR CreateSocketAddress(const char* ip, short port)
+// {
+//     struct sockaddr_in addr;
+//     addr.sin_family = AF_INET;
+//     addr.sin_port = htons(port);
+//     addr.sin_addr.s_addr = inet_addr(ip);
+//     return *((SOCKADDR*)&addr);
+// }
 static SOCKET CreateSocketNoBind()
 {
     SOCKET sock = INVALID_SOCKET;
@@ -175,7 +175,6 @@ void NetSend(uint64_t* addr, char* buffer, int* messageSize)
     // cout << ip << endl;
 
     SOCKADDR* sockAddr = (SOCKADDR*)&sockAddrIn;
-    int sockAddrSize = (sizeof(*sockAddr));
 
     SendMessage(netsock, sockAddr, buffer, *messageSize);
 }
